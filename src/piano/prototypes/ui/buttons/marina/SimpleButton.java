@@ -1,4 +1,4 @@
-package piano.prototypes.ui.marina;
+package piano.prototypes.ui.buttons.marina;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -6,12 +6,16 @@ import java.awt.Graphics;
 
 import javax.swing.JFrame;
 
+import piano.prototypes.ui.marina.Fonts;
+import piano.prototypes.ui.marina.SubView;
+import piano.prototypes.ui.marina.View;
+
 public class SimpleButton extends Button {
 
 	private boolean chosen = false;
 	
 	public SimpleButton(String text, int x, int y, int width, int height,
-			View parent, View nextView, JFrame parentFrame) {
+			SubView parent, View nextView, JFrame parentFrame) {
 		
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 	}

@@ -1,16 +1,20 @@
-package piano.prototypes.ui.marina;
+package piano.prototypes.ui.buttons.marina;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
+import piano.prototypes.ui.marina.PianoUI;
+import piano.prototypes.ui.marina.SubView;
+import piano.prototypes.ui.marina.View;
+
 public class StartingButton extends Button {
 	
 	protected BufferedImage bgImage;
 	
 	public StartingButton(String text, int x, int y, int width, int height,
-			View parent, BufferedImage bgImage, View nextView, JFrame parentFrame) {
+			SubView parent, BufferedImage bgImage, View nextView, JFrame parentFrame) {
 		
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		this.bgImage = bgImage;

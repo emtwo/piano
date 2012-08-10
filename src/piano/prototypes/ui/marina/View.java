@@ -38,29 +38,20 @@ public abstract class View extends JPanel implements MouseMotionListener, MouseL
     parentFrame.setVisible(true);
 	}
 
-	
-  void eventOutput(String eventDescription, MouseEvent e) {
-    System.out.println(eventDescription + " detected on "
-            + e.getComponent().getClass().getName()
-            + ".");
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 	}
 	 
 	public void mousePressed(MouseEvent e) {
-	    eventOutput("Mouse pressed (# of clicks: "
-	            + e.getClickCount() + ")", e);
 	}
 	 
 	public void mouseReleased(MouseEvent e) {
-	    eventOutput("Mouse released (# of clicks: "
-	            + e.getClickCount() + ")", e);
 	}
 	 
 	public void mouseEntered(MouseEvent e) {
-	    eventOutput("Mouse entered", e);
 	}
 	 
 	public void mouseExited(MouseEvent e) {
-	    eventOutput("Mouse exited", e);
 	}
 	 
 	public void mouseClicked(MouseEvent e) {
@@ -69,7 +60,6 @@ public abstract class View extends JPanel implements MouseMotionListener, MouseL
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		eventOutput("Mouse exited", e);
 	}
 	
 	@Override

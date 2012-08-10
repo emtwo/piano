@@ -1,4 +1,4 @@
-package piano.prototypes.ui.marina;
+package piano.prototypes.ui.buttons.marina;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -10,10 +10,14 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import piano.prototypes.ui.marina.Fonts;
+import piano.prototypes.ui.marina.SubView;
+import piano.prototypes.ui.marina.View;
+
 public abstract class Button extends JPanel {
 
 	public String text;
-	protected View parent;
+	protected SubView parent;
 	protected boolean bold = false;
 	protected int x, y, width, height;
 	
@@ -36,7 +40,7 @@ public abstract class Button extends JPanel {
 	public abstract void hoverOut();
 	
 	public Button(String text, int x, int y, int width, int height,
-			View parent, View nextView, JFrame parentFrame) {
+			SubView parent, View nextView, JFrame parentFrame) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -92,6 +96,7 @@ public abstract class Button extends JPanel {
 			return false;
 		}
 
+		hoverOut();
 		outButton();
 		nextView.switchToView(parentFrame);
 		return true;

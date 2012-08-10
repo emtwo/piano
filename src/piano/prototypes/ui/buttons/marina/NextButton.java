@@ -1,4 +1,4 @@
-package piano.prototypes.ui.marina;
+package piano.prototypes.ui.buttons.marina;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -6,18 +6,24 @@ import java.awt.Graphics;
 
 import javax.swing.JFrame;
 
-public class PrevButton extends Button {
+import piano.prototypes.ui.marina.Fonts;
+import piano.prototypes.ui.marina.PlayUI;
+import piano.prototypes.ui.marina.SongView;
+import piano.prototypes.ui.marina.SubView;
+import piano.prototypes.ui.marina.View;
+
+public class NextButton extends Button {
+
+	SongView parent;
 	
-	PlayUI parent;
-	
-	public PrevButton(String text, int x, int y, int width, int height,
-			View parent, View nextView, JFrame parentFrame) {
+	public NextButton(String text, int x, int y, int width, int height,
+			SubView parent, View nextView, JFrame parentFrame) {
 
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		super.setDiff(4);
 		super.setFont(Fonts.italic_small);
 		
-		this.parent = (PlayUI) parent;
+		this.parent = (SongView) parent;
 	}
 
 	@Override
@@ -34,18 +40,26 @@ public class PrevButton extends Button {
 			return false;
 		}
 
-		parent.onLastPage = false;
-		int currStartIndex = ((PlayUI)parent).getStartIndex();
-		//int numSongs = ((PlayUI)parent).songs.size();
+		int currStartIndex = ((SongView)parent).startIndex;
+		int numSongs = ((SongView)parent).songs.size();
+		
+		if (numSongs <= 6) {
+			return false;
+		}
+		
+		parent.onFirstPage = false;
 		
 		// If there are more songs, create a new page
-		if (currStartIndex > 0) {
-			((PlayUI)parent).setStartIndex(currStartIndex - 6);
+		System.out.println("currstartindex: " + currStartIndex);
+		System.out.println("numSongs: " + numSongs);
+
+		if ((numSongs - 1) - currStartIndex >= 6) {
+			((SongView)parent).startIndex = currStartIndex + 6;
 		}
 		
 		// Note that this is the last page
-		if (((PlayUI)parent).getStartIndex() == 0) {
-			parent.onFirstPage = true;
+		if (numSongs - ((SongView)parent).startIndex <= 6) {
+			parent.onLastPage = true;
 		}
 		
 		return true;
@@ -58,7 +72,7 @@ public class PrevButton extends Button {
 		int hgt = metrics.getHeight();
 		int adv = metrics.stringWidth(text);
 		
-		if (parent.onFirstPage) {
+		if (parent.onLastPage) {
 			
 			gc.setColor(Color.LIGHT_GRAY);
 			gc.fillRoundRect(x, y, width, height, 10, 10);

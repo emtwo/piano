@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-public class PianoUI extends View {
+import piano.prototypes.ui.buttons.marina.StartingButton;
+
+public class PianoUI extends SubView {
 	
   final static float dash1[] = {10.0f};
 	
@@ -23,7 +25,7 @@ public class PianoUI extends View {
 	public PianoUI(JFrame parentFrame) throws IOException {
 		super();
 
-		this.play = new PlayUI(parentFrame);
+		this.play = new PlayUI(parentFrame, this);
 		
 		// Import piano image.
 		File f  = new File("resources/piano2.jpg");
@@ -69,8 +71,6 @@ public class PianoUI extends View {
 	}
 
 	public void mouseClicked(MouseEvent e) {
-	    eventOutput("Mouse clicked (# of clicks: "
-	            + e.getClickCount() + ")", e);
 	    for (StartingButton button : buttons) {
 	    	button.setMouseClicked(e.getX(), e.getY());
 	    }
@@ -91,6 +91,6 @@ public class PianoUI extends View {
 			button.computeMouseEntered(e.getX(), e.getY());
 			button.computeMouseExited(e.getX(), e.getY());
 		}
-		super.mouseMoved(e);
+		this.repaint();
 	}
 }

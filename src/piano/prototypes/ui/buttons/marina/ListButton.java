@@ -1,23 +1,37 @@
-package piano.prototypes.ui.marina;
+package piano.prototypes.ui.buttons.marina;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.JFrame;
 
+import piano.prototypes.repository.marina.Song;
 import piano.prototypes.repository.marina.SongDatabaseAccessor;
+import piano.prototypes.ui.marina.ListView;
+import piano.prototypes.ui.marina.PlayUI;
+import piano.prototypes.ui.marina.SubView;
+import piano.prototypes.ui.marina.View;
 
 public class ListButton extends Button {
 
 	String column;
+	List<Song> songs;
 	
 	public ListButton(String text, int x, int y, int width, int height,
-			View parent, View nextView, JFrame parentFrame, String column) {
+			SubView parent, View nextView, JFrame parentFrame, String column) {
 	
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		this.column = column;
+		
+		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
+		try {
+			songs = accessor.getAllByCriterion(column, text);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -30,17 +44,18 @@ public class ListButton extends Button {
 	
 	@Override
 	public boolean setMouseClicked(int x, int y) {
+		System.out.println("ListButton clicked");
 		if (!overButton) {
 			return false;
 		}
-		
-		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
-		try {
-			((PlayUI)parent).setSongs(accessor.getAllByCriterion(column, text));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
+		switchView();
 		return true;
+	}
+	
+	public void switchView() {
+		((ListView)parent).setSongs(songs);
+		((ListView)parent).switchView();
 	}
 
 	public void paintComponent(Graphics gc) {
