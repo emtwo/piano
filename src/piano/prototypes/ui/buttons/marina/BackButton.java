@@ -35,7 +35,6 @@ public class BackButton extends Button {
 		}
 		
 		parent.switchView();
-		
 		return true;
 	}
 	
