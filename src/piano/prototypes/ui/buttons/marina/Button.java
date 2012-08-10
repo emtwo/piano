@@ -23,7 +23,7 @@ public abstract class Button extends JPanel {
 	
 	protected View nextView;
 	protected JFrame parentFrame;
-	protected boolean overButton = false;
+	public boolean overButton = false;
 	
 	protected Font font = Fonts.italic_big;
 	protected int diff = 10;
@@ -39,6 +39,13 @@ public abstract class Button extends JPanel {
 	public abstract void hoverOver();
 	public abstract void hoverOut();
 	
+	public Button(String text, int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+
 	public Button(String text, int x, int y, int width, int height,
 			SubView parent, View nextView, JFrame parentFrame) {
 		super();

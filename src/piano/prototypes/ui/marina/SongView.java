@@ -1,8 +1,10 @@
 package piano.prototypes.ui.marina;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -33,6 +35,9 @@ public class SongView extends SubView {
 	
 	public boolean onLastPage = false;
 	public boolean onFirstPage = true;	
+	private boolean filledBoxes = false;
+
+	Box[] boxes = new Box[6];
 	
 	public int startIndex = 0, width = 800;
 	SubView parentView;
@@ -68,6 +73,13 @@ public class SongView extends SubView {
 		nextButton.computeMouseExited(e.getX(), e.getY());
 		prevButton.computeMouseEntered(e.getX(), e.getY());
 		prevButton.computeMouseExited(e.getX(), e.getY());
+
+		for (Box button : boxes) {
+			if (button == null) continue;
+			button.computeMouseEntered(e.getX(), e.getY());
+			button.computeMouseExited(e.getX(), e.getY());
+		}
+
 		if (parentView.hasBack())  {
 			backButton.computeMouseEntered(e.getX(), e.getY());
 			backButton.computeMouseExited(e.getX(), e.getY());
@@ -92,10 +104,19 @@ public class SongView extends SubView {
 		
 		try {
 			int max = Math.min(startIndex + 6, songs.size());
-			for (int i = startIndex; i < max; i++) {
+			for (int i = startIndex, j = 0; i < max; i++, j++) {
 				// Draw outline
+				Graphics2D g2D = (Graphics2D) g;
+				g2D.setStroke(new BasicStroke(1F));  // set stroke width of 10
 				g.setColor(Color.BLACK);
+
+				if (boxes[j] != null && boxes[j].overButton) {
+			    g2D.setStroke(new BasicStroke(6F));  // set stroke width of 10
+				}
 				g.drawRoundRect(currX - 10, currY - 10, 250, 255, 10, 10);
+				if (!filledBoxes) {
+					boxes[j] = new Box(currX - 10, currY - 10, 250, 255);
+				}
 				
 				// Draw music image.
 				Song s = songs.get(i);
@@ -120,6 +141,7 @@ public class SongView extends SubView {
 					currY += 270;
 				}				
 			}
+			filledBoxes = true;
 			
 			prevButton.paintComponent(g);
 			nextButton.paintComponent(g);
