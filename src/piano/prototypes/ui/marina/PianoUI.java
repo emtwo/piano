@@ -26,6 +26,7 @@ public class PianoUI extends SubView {
 		super();
 
 		this.play = new PlayUI(parentFrame, this);
+		this.practice = new PracticeUI(parentFrame);
 		
 		// Import piano image.
 		File f  = new File("resources/piano2.jpg");
@@ -38,7 +39,7 @@ public class PianoUI extends SubView {
     main_image     = bgImage;
 		
 		buttons.add(new StartingButton("Play", 600, 250, 150, 60, this, hover_play, play, parentFrame));
-		buttons.add(new StartingButton("Practice", 600, 470, 150, 60, this, hover_practice, play, parentFrame));
+		buttons.add(new StartingButton("Practice", 600, 470, 150, 60, this, hover_practice, practice, parentFrame));
 	}
 	
 	public void paintComponent(Graphics g) {
