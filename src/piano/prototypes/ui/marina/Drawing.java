@@ -14,9 +14,9 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public abstract class View extends JPanel implements MouseMotionListener, MouseListener {
+public abstract class Drawing extends JPanel implements MouseMotionListener, MouseListener {
 
-	public View() {
+	public Drawing() {
 		super(new GridLayout(15,15));
 		
 		//Register for mouse events on blankArea and the panel.

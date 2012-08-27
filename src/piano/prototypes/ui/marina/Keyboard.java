@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
-public class Keyboard extends SubView {
+public class Keyboard extends Drawing {
 	
 	public Keyboard(JFrame parentFrame) throws IOException {
 		super();

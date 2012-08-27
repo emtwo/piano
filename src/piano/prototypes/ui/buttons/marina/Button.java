@@ -12,16 +12,16 @@ import javax.swing.JPanel;
 
 import piano.prototypes.ui.marina.Fonts;
 import piano.prototypes.ui.marina.SubView;
-import piano.prototypes.ui.marina.View;
+import piano.prototypes.ui.marina.Drawing;
 
 public abstract class Button extends JPanel {
 
 	public String text;
-	protected View parent;
+	protected Drawing parent;
 	protected boolean bold = false;
 	protected int x, y, width, height;
 	
-	protected View nextView;
+	protected Drawing nextView;
 	protected JFrame parentFrame;
 	public boolean overButton = false;
 	
@@ -47,7 +47,7 @@ public abstract class Button extends JPanel {
 	}
 
 	public Button(String text, int x, int y, int width, int height,
-			View parent, View nextView, JFrame parentFrame) {
+			Drawing parent, Drawing nextView, JFrame parentFrame) {
 		super();
 		this.x = x;
 		this.y = y;

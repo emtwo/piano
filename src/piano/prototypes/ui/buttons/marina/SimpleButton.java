@@ -8,14 +8,14 @@ import javax.swing.JFrame;
 
 import piano.prototypes.ui.marina.Fonts;
 import piano.prototypes.ui.marina.SubView;
-import piano.prototypes.ui.marina.View;
+import piano.prototypes.ui.marina.Drawing;
 
 public class SimpleButton extends Button {
 
 	private boolean chosen = false;
 	
 	public SimpleButton(String text, int x, int y, int width, int height,
-			View parent, View nextView, JFrame parentFrame) {
+			Drawing parent, Drawing nextView, JFrame parentFrame) {
 		
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 	}
