@@ -14,7 +14,7 @@ public class StartingButton extends Button {
 	protected BufferedImage bgImage;
 	
 	public StartingButton(String text, int x, int y, int width, int height,
-			SubView parent, BufferedImage bgImage, View nextView, JFrame parentFrame) {
+			View parent, BufferedImage bgImage, View nextView, JFrame parentFrame) {
 		
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		this.bgImage = bgImage;

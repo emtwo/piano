@@ -15,7 +15,7 @@ public class SimpleButton extends Button {
 	private boolean chosen = false;
 	
 	public SimpleButton(String text, int x, int y, int width, int height,
-			SubView parent, View nextView, JFrame parentFrame) {
+			View parent, View nextView, JFrame parentFrame) {
 		
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 	}

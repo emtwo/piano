@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 
 import piano.prototypes.ui.buttons.marina.StartingButton;
 
-public class PianoUI extends SubView {
+public class PianoUI extends View {
 	
   final static float dash1[] = {10.0f};
 	
