@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
-public class PracticeUI extends View {
+public class PracticeUI extends Drawing {
 
-	SubView keyboard;
+	Drawing keyboard;
 
 	public PracticeUI(JFrame parentFrame) throws IOException {
 		super();

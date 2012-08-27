@@ -10,14 +10,14 @@ import piano.prototypes.ui.marina.Fonts;
 import piano.prototypes.ui.marina.PlayUI;
 import piano.prototypes.ui.marina.SongView;
 import piano.prototypes.ui.marina.SubView;
-import piano.prototypes.ui.marina.View;
+import piano.prototypes.ui.marina.Drawing;
 
 public class NextButton extends Button {
 
 	SongView parent;
 	
 	public NextButton(String text, int x, int y, int width, int height,
-			SubView parent, View nextView, JFrame parentFrame) {
+			Drawing parent, Drawing nextView, JFrame parentFrame) {
 
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		super.setDiff(4);

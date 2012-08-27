@@ -12,16 +12,16 @@ import piano.prototypes.ui.buttons.marina.BackButton;
 import piano.prototypes.ui.buttons.marina.MainMenuButton;
 import piano.prototypes.ui.buttons.marina.SimpleButton;
 
-public class PlayUI extends View {
+public class PlayUI extends Drawing {
 	
 	ArrayList<SimpleButton> buttons = new ArrayList<SimpleButton>();
 	
 	SubView currentSubView, allView, genreView, composerView;
-	View menuView;
+	Drawing menuView;
 	MainMenuButton mainMenu;
 	int width = 800;
 
-	public PlayUI(JFrame parentFrame, View mainMenuView) throws IOException {
+	public PlayUI(JFrame parentFrame, Drawing mainMenuView) throws IOException {
 		super();
 
 		buttons.add(new SimpleButton("All", 0, 100, width/3, 60, this, null, parentFrame));

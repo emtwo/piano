@@ -5,13 +5,11 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
-public abstract class SubView extends View {
+public class SubView extends Drawing {
 	
 	protected ListView listView;
 	protected SongView songView;
-	protected SubView currentView;
-	
-	public SubView() {}
+	protected Drawing currentView;
 	
 	public SubView(String column, JFrame parentFrame) {
 		songView = new SongView(parentFrame, this);

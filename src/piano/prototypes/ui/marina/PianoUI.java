@@ -13,12 +13,12 @@ import javax.swing.JFrame;
 
 import piano.prototypes.ui.buttons.marina.StartingButton;
 
-public class PianoUI extends View {
+public class PianoUI extends Drawing {
 	
   final static float dash1[] = {10.0f};
 	
 	BufferedImage bgImage, main_image, hover_play, hover_practice;
-	View play, practice;
+	Drawing play, practice;
 	
 	ArrayList<StartingButton> buttons = new ArrayList<StartingButton>();
 

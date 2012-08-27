@@ -25,7 +25,7 @@ import piano.prototypes.ui.buttons.marina.ListButton;
 import piano.prototypes.ui.buttons.marina.NextButton;
 import piano.prototypes.ui.buttons.marina.PrevButton;
 
-public class SongView extends SubView {
+public class SongView extends Drawing {
 	
 	public List<Song> songs;
 	
