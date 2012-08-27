@@ -80,7 +80,7 @@ public class SongView extends Drawing {
 			button.computeMouseExited(e.getX(), e.getY());
 		}
 
-		if (parentView.hasBack())  {
+		if (parentView.hasBack)  {
 			backButton.computeMouseEntered(e.getX(), e.getY());
 			backButton.computeMouseExited(e.getX(), e.getY());
 		}
@@ -90,7 +90,7 @@ public class SongView extends Drawing {
 		System.out.println("SongView mouse clicked.");
     nextButton.setMouseClicked(e.getX(), e.getY());
     prevButton.setMouseClicked(e.getX(), e.getY());
-    if (parentView.hasBack())  {
+    if (parentView.hasBack)  {
     	backButton.setMouseClicked(e.getX(), e.getY());
     }
 	}
@@ -145,7 +145,7 @@ public class SongView extends Drawing {
 			
 			prevButton.paintComponent(g);
 			nextButton.paintComponent(g);
-			if (parentView.hasBack())  {
+			if (parentView.hasBack)  {
 				backButton.paintComponent(g);
 			}
 		} catch (IOException e) {

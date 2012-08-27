@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 
+import piano.prototypes.repository.marina.SongDatabase;
 import piano.prototypes.ui.buttons.marina.BackButton;
 import piano.prototypes.ui.buttons.marina.MainMenuButton;
 import piano.prototypes.ui.buttons.marina.SimpleButton;
@@ -32,9 +33,9 @@ public class PlayUI extends Drawing {
 		menuView = mainMenuView;
 		mainMenu = new MainMenuButton("Main Menu", width/2 - width/12, width - 60, width/6, 25, this, menuView, parentFrame);
 		
-		allView = new AllSubView(parentFrame);
-		genreView = new GenreSubView(parentFrame);
-		composerView = new ComposerSubView(parentFrame);
+		allView = new SubView(null, parentFrame, false);
+		genreView = new SubView(SongDatabase.COL_CATEGORY, parentFrame, true);
+		composerView = new SubView(SongDatabase.COL_AUTHOR, parentFrame, true);
 		
 		currentSubView = allView;
 	}
