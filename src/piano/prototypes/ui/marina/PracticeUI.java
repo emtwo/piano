@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
-public class PracticeUI extends SubView {
+public class PracticeUI extends View {
 
 	SubView keyboard;
 

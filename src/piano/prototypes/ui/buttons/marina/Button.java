@@ -17,7 +17,7 @@ import piano.prototypes.ui.marina.View;
 public abstract class Button extends JPanel {
 
 	public String text;
-	protected SubView parent;
+	protected View parent;
 	protected boolean bold = false;
 	protected int x, y, width, height;
 	
@@ -47,7 +47,7 @@ public abstract class Button extends JPanel {
 	}
 
 	public Button(String text, int x, int y, int width, int height,
-			SubView parent, View nextView, JFrame parentFrame) {
+			View parent, View nextView, JFrame parentFrame) {
 		super();
 		this.x = x;
 		this.y = y;

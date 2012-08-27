@@ -13,7 +13,7 @@ import piano.prototypes.ui.marina.View;
 public class MainMenuButton extends Button {
 
 	public MainMenuButton(String text, int x, int y, int width, int height,
-			SubView parent, View nextView, JFrame parentFrame) {
+			View parent, View nextView, JFrame parentFrame) {
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		
 		super.setDiff(4);
