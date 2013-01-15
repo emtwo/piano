@@ -44,6 +44,7 @@ public abstract class Button extends JPanel {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.text = text;
 	}
 
 	public Button(String text, int x, int y, int width, int height,
