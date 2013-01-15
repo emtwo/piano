@@ -1,54 +1,77 @@
 package piano.prototypes.ui.marina;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.io.IOException;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.HashMap;
 
-import javax.swing.JFrame;
+public class Keyboard extends KeyAdapter implements KeyListener{
 
-@SuppressWarnings("serial")
-public class Keyboard extends Drawing {
+	private enum Colour {RED, GREEN, NORMAL};
 
-	private static final int NUM_KEYS = 7;
-	private static final int NUM_OCTAVES = 1;
+	private HashMap<Integer, Colour> keyToColorMap = new HashMap<Integer, Colour>();
+	private HashMap<Integer, Integer> intToKeyMap = new HashMap<Integer, Integer>();
 
-	private int width, height, xVal, yVal, keyWidth, blackKeyWidth;
+	private KeyPressedCallback callback;
 
-	public Keyboard(JFrame parentFrame) throws IOException {
-		super();
+	private char expectedKey;
+
+	public Keyboard(KeyPressedCallback callback) {
+		resetKeyColours();
+
+		intToKeyMap.put(0, (int) 'c');
+		intToKeyMap.put(1, (int) 'd');
+		intToKeyMap.put(2, (int) 'e');
+		intToKeyMap.put(3, (int) 'f');
+		intToKeyMap.put(4, (int) 'g');
+		intToKeyMap.put(5, (int) 'a');
+		intToKeyMap.put(6, (int) 'b');
+
+		this.callback = callback;
 	}
 
-	public void setDimensions(int parentWidth, int parentHeight) {
-		width = (int)(parentWidth * 0.95);
-		height = parentHeight / 2;
-		xVal = (parentWidth - width) / 2;
-		yVal = (parentHeight - height) / 2;
-		keyWidth = width / NUM_KEYS;
-		blackKeyWidth = keyWidth / 2;
+	private void resetKeyColours() {
+		keyToColorMap.put((int) 'a', Colour.NORMAL);
+		keyToColorMap.put((int) 'b', Colour.NORMAL);
+		keyToColorMap.put((int) 'c', Colour.NORMAL);
+		keyToColorMap.put((int) 'd', Colour.NORMAL);
+		keyToColorMap.put((int) 'e', Colour.NORMAL);
+		keyToColorMap.put((int) 'f', Colour.NORMAL);
+		keyToColorMap.put((int) 'g', Colour.NORMAL);
 	}
 
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
+	@Override
+	public void keyPressed(KeyEvent e) {
+    if (e.getID() != KeyEvent.KEY_PRESSED || expectedKey == '\u0000') {
+	return;
+    }
 
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setColor(Color.BLACK);
-		g2.setStroke(new BasicStroke(5));
+    if (expectedKey == e.getKeyChar()) {
+	keyToColorMap.put((int)e.getKeyChar(), Colour.GREEN);
+    } else {
+	keyToColorMap.put((int)e.getKeyChar(), Colour.RED);
+    }
+    callback.informKeyPressed(e.getKeyChar());
+	}
 
-		int keyXVal = xVal;
-		int blackKeyXVal = keyXVal + (keyWidth - blackKeyWidth / 2);
-		for (int i = 0; i < NUM_KEYS; i++) {
-			g2.drawRect(keyXVal, yVal, keyWidth, height);
-			keyXVal += keyWidth;
+	public void setExpectedKey(char expectedKey) {
+		this.expectedKey = expectedKey;
+	}
+
+	public Color getKeyColor(int i) {
+		switch(keyToColorMap.get(intToKeyMap.get(i))) {
+			case RED:
+				return Color.RED;
+			case GREEN:
+				return Color.GREEN;
+			default:
+				return Color.WHITE;
 		}
+	}
 
-		for (int i = 0; i < NUM_KEYS - 1; i++) {
-			if (i != 2) {
-				g2.fillRect(blackKeyXVal, yVal, blackKeyWidth, (int) (height * 0.6));
-			}
-			blackKeyXVal += keyWidth;
-		}
+	public void clear() {
+		resetKeyColours();
+		callback.clearKeys();
 	}
 }
