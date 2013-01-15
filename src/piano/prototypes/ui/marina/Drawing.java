@@ -31,7 +31,7 @@ public abstract class Drawing extends JPanel implements MouseMotionListener, Mou
 		//Create and set up the content pane.
     JComponent newContentPane = this;
     newContentPane.setOpaque(true); //content panes must be opaque
-    parentFrame.setContentPane(newContentPane);
+    parentFrame.add(newContentPane, 0);
 
     //Display the window.
     parentFrame.pack();
