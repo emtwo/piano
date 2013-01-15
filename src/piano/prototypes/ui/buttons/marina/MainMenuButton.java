@@ -1,8 +1,10 @@
 package piano.prototypes.ui.buttons.marina;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
 
@@ -39,6 +41,7 @@ public class MainMenuButton extends Button {
 	}
 	
 	public void paintComponent(Graphics gc) {
+		((Graphics2D) gc).setStroke(new BasicStroke(1));
 		gc.setFont(font);
 		
 		FontMetrics metrics = gc.getFontMetrics(font);
