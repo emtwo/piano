@@ -26,13 +26,11 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
 
 	private Font font;
 	private Note note;
-
     private String noteString;
     private int noteHeight, noteWidth, halfNoteHeight;
 
 	private static double paperWidth, paperHeight;
 	private static int imageWidth, imageHeight;
-
 	private static HashMap<String, Font> fonts;
     private static int resolution;
 
@@ -248,7 +246,6 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
 
 	public void repaint() {
         //repaint((int) (x / paperWidth * imageWidth - offX), (int) (y / paperHeight * imageHeight - offY), noteWidth, noteHeight);
-		repaint(0, 0, 10000, 10000);
 
         repaint(absoluteX(), absoluteY() - halfNoteHeight, noteWidth, noteHeight);
         /*if (hasAccidental) {
