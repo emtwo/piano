@@ -14,21 +14,22 @@ import javax.swing.JPanel;
 import piano.prototypes.ui.buttons.marina.HelpButton;
 import piano.prototypes.ui.buttons.marina.MainMenuButton;
 
-public class IntervalTrainingUI extends Drawing implements KeyPressedCallback {
+public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallback {
 
-	private static final String HELP_TEXT = "Observe the first note and listen to the second note. Play the note you think the second one is. Green means correct, red means incorrect.";
-	private static final String TITLE = "Interval Training";
+	private static final int WIDTH = 1400;
+	private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
+	private static final String TITLE = "Advanced Pitch Training";
 
 	private KeyboardView keyboard;
 	private MainMenuButton mainMenu;
 	private HelpButton helpButton;
 	private boolean stopPainting = false;
 
-	public IntervalTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
-		super();
-		keyboard = new KeyboardView(this, false, 60, 71, this, null, parentFrame);
+	public AdvancedPitchTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
+		super(WIDTH, 800);
+		keyboard = new KeyboardView(this, true, 48, 83, this, null, parentFrame, 3);
 		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20, this, parent, parentFrame);
-		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20);
+		helpButton = new HelpButton("?", HELP_TEXT, WIDTH - 25, 5, 20, 20);
 	}
 
 	@Override
@@ -71,6 +72,12 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback {
 		keyboard.informKeyPressed(keyPressed);
 	}
 
+	@Override
+	public void informExitLoop() {
+		stopPainting = true;
+		keyboard.informExitLoop();
+	}
+
 	public void mouseClicked(MouseEvent e) {
 		if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
 			informExitLoop();
@@ -91,11 +98,5 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback {
 	@Override
 	public void clearKeys() {
 		repaint();
-	}
-
-	@Override
-	public void informExitLoop() {
-		stopPainting = true;
-		keyboard.informExitLoop();
 	}
 }

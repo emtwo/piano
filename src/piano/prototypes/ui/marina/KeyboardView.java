@@ -61,6 +61,7 @@ public class KeyboardView extends Drawing {
 	@Override
 	public void switchToView(final JFrame parentFrame) {
 		parentFrame.getContentPane().add(KeyboardView.this, 1);
+		parentFrame.validate();
 		addKeyListener(keyboard);
 		setFocusable(true);
 		requestFocusInWindow();
@@ -73,14 +74,10 @@ public class KeyboardView extends Drawing {
 			private int noteToPlay;
 
 			public void computeNoteToPlay() {
-				/*
-				int maxVal = ASCII_g;
-				if (useBlackKeys) {
-					maxVal = ASCII_l;
-				}
-				noteToPlay =  (char) (ASCII_a + (int)(Math.random() * ((maxVal - ASCII_a) + 1)));
-				*/
 				noteToPlay = (minKey + (int)(Math.random() * ((maxKey - minKey) + 1)));
+				if (!useBlackKeys && keyboard.isSharp(noteToPlay)) {
+					noteToPlay++;
+				}
 			}
 
 			public void run() {

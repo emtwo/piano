@@ -1,12 +1,15 @@
 package piano.prototypes.ui.marina;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import piano.prototypes.ui.buttons.marina.HelpButton;
 import piano.prototypes.ui.buttons.marina.MainMenuButton;
@@ -15,6 +18,7 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 
 	private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
 	private static final String TITLE = "Pitch Training";
+
 
 	private KeyboardView keyboard;
 	private MainMenuButton mainMenu;
@@ -32,6 +36,7 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 	public void switchToView(JFrame parentFrame) {
 		super.switchToView(parentFrame);
 		keyboard.switchToView(parentFrame);
+		stopPainting = false;
 	}
 
 	public void paintComponent(Graphics g) {
@@ -43,9 +48,13 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
+		keyboard.setDimensions(getWidth(), getHeight());
+		keyboard.paintComponent(g);
+
 		// Set font and colour
 		g.setColor(Color.BLACK);
 		g.setFont(Fonts.italic);
+		((Graphics2D) g).setStroke(new BasicStroke(1));
 
 		// Write title.
 		FontMetrics metrics = g.getFontMetrics(Fonts.italic);
@@ -53,8 +62,6 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 		g.drawString(TITLE, getWidth()/2 - adv/2, 23);
 		g.drawLine(0, 30, getWidth(), 30);
 
-		keyboard.setDimensions(getWidth(), getHeight());
-		keyboard.paintComponent(g);
 		mainMenu.paintComponent(g);
 		helpButton.paintComponent(g);
 	}
