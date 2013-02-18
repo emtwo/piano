@@ -22,7 +22,7 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 
 	public PitchTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
 		super();
-		keyboard = new KeyboardView(this, false, this, null, parentFrame);
+		keyboard = new KeyboardView(this, false, 60, 71, this, null, parentFrame);
 		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20, this, parent, parentFrame);
 		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20);
 	}
@@ -56,13 +56,14 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 	}
 
 	@Override
-	public void informKeyPressed(char keyPressed) {
+	public void informKeyPressed(String keyPressed) {
 		repaint();
 		keyboard.informKeyPressed(keyPressed);
 	}
 
 	public void mouseClicked(MouseEvent e) {
 		if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
+			informExitLoop();
 			return;
 		}
 	}
@@ -80,5 +81,10 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 	@Override
 	public void clearKeys() {
 		repaint();
+	}
+
+	@Override
+	public void informExitLoop() {
+		keyboard.informExitLoop();
 	}
 }

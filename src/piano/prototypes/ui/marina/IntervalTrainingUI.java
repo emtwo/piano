@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import piano.prototypes.ui.buttons.marina.HelpButton;
 import piano.prototypes.ui.buttons.marina.MainMenuButton;
@@ -22,7 +23,7 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback {
 
 	public IntervalTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
 		super();
-		keyboard = new KeyboardView(this, false, this, null, parentFrame);
+		keyboard = new KeyboardView(this, false, 60, 71, this, null, parentFrame);
 		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20, this, parent, parentFrame);
 		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20);
 	}
@@ -56,13 +57,14 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback {
 	}
 
 	@Override
-	public void informKeyPressed(char keyPressed) {
+	public void informKeyPressed(String keyPressed) {
 		repaint();
 		keyboard.informKeyPressed(keyPressed);
 	}
 
 	public void mouseClicked(MouseEvent e) {
 		if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
+			informExitLoop();
 			return;
 		}
 	}
@@ -80,5 +82,10 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback {
 	@Override
 	public void clearKeys() {
 		repaint();
+	}
+
+	@Override
+	public void informExitLoop() {
+		keyboard.informExitLoop();
 	}
 }

@@ -5,21 +5,25 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import piano.prototypes.ui.marina.Drawing;
 
 public class KeyboardKey extends Button {
 
 	private boolean isBlack;
+	private int id;
 
-	public KeyboardKey(String text, int x, int y, int width, int height, boolean isBlack) {
+	public KeyboardKey(String text, int x, int y, int width, int height, boolean isBlack, int id) {
 		super(text, x, y, width, height);
 		this.isBlack = isBlack;
+		this.id = id;
 	}
 
-	public KeyboardKey(String text, int x, int y, int width, int height, boolean isBlack, Drawing parent, Drawing nextView, JFrame parentFrame) {
+	public KeyboardKey(String text, int x, int y, int width, int height, boolean isBlack, Drawing parent, Drawing nextView, JFrame parentFrame, int id) {
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		this.isBlack = isBlack;
+		this.id = id;
 	}
 
 	public void paintComponent(Graphics2D g2) {
@@ -30,7 +34,6 @@ public class KeyboardKey extends Button {
 		int adv = metrics.stringWidth(text);
 
 		if (isBlack) {
-			g2.setColor(Color.BLACK);
 			if (overButton) {
 				g2.setColor(Color.LIGHT_GRAY);
 			}
@@ -45,6 +48,10 @@ public class KeyboardKey extends Button {
 		g2.setColor(Color.BLACK);
 		g2.drawRoundRect(x, y, width, height, 5, 5);
 		g2.drawString(text, x + (width - adv) - 20, y + (height - hgt) / 2 + hgt - diff);
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	@Override

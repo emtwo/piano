@@ -6,9 +6,6 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -16,14 +13,20 @@ import javax.swing.JPanel;
 
 public abstract class Drawing extends JPanel implements MouseMotionListener, MouseListener {
 
-	public Drawing() {
+	String id;
+
+  public Drawing() {
+   this(800, 800);
+  }
+
+	public Drawing(int width, int height) {
 		super(new GridLayout(15,15));
 
 		//Register for mouse events on blankArea and the panel.
     addMouseMotionListener(this);
     addMouseListener(this);
 
-    setPreferredSize(new Dimension(800, 800));
+    setPreferredSize(new Dimension(width, height));
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 	}
 
@@ -32,9 +35,11 @@ public abstract class Drawing extends JPanel implements MouseMotionListener, Mou
     JComponent newContentPane = this;
     newContentPane.setOpaque(true); //content panes must be opaque
     parentFrame.add(newContentPane, 0);
+    parentFrame.validate();
 
     //Display the window.
     parentFrame.pack();
+    parentFrame.setLocationRelativeTo(null);
     parentFrame.setVisible(true);
 	}
 

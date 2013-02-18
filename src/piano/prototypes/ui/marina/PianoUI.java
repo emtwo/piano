@@ -19,9 +19,9 @@ public class PianoUI extends Drawing implements KeyPressedCallback {
 		super();
 
 		HashMap<Integer, PianoMenuData> menuData = new HashMap<Integer, PianoMenuData>();
-		menuData.put(2, new PianoMenuData("Play", new PlayUI(parentFrame, this)));
-		menuData.put(4, new PianoMenuData("Ear Training", new EarTrainingUI(parentFrame, this)));
-		keyboard = new KeyboardView(this, true, this, menuData, parentFrame);
+		menuData.put(64, new PianoMenuData("Play", new PlayUI(parentFrame, this)));
+		menuData.put(67, new PianoMenuData("Ear Training", new EarTrainingUI(parentFrame, this)));
+		keyboard = new KeyboardView(this, true, 60, 71, this, menuData, parentFrame);
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -62,8 +62,11 @@ public class PianoUI extends Drawing implements KeyPressedCallback {
 	}
 
 	@Override
-	public void informKeyPressed(char keyPressed) {}
+	public void informKeyPressed(String keyPressed) {}
 
 	@Override
 	public void clearKeys() {}
+
+	@Override
+	public void informExitLoop() {}
 }

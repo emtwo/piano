@@ -18,12 +18,12 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback {
 	public EarTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
 
 		HashMap<Integer, PianoMenuData> menuData = new HashMap<Integer, PianoMenuData>();
-		menuData.put(1, new PianoMenuData("Interval Training", new IntervalTrainingUI(parentFrame, this)));
-		menuData.put(2, new PianoMenuData("Pitch Training", new PitchTrainingUI(parentFrame, this)));
-		menuData.put(3, new PianoMenuData("Advanced Pitch Training", new PitchTrainingUI(parentFrame, this)));
-		menuData.put(4, new PianoMenuData("Chord Training", new PitchTrainingUI(parentFrame, this)));
-		menuData.put(5, new PianoMenuData("Main Menu", parent));
-		keyboard = new KeyboardView(this, true, this, menuData, parentFrame);
+		menuData.put(62, new PianoMenuData("Interval Training", new IntervalTrainingUI(parentFrame, this)));
+		menuData.put(64, new PianoMenuData("Pitch Training", new PitchTrainingUI(parentFrame, this)));
+		menuData.put(65, new PianoMenuData("Advanced Pitch Training", new AdvancedPitchTrainingUI(parentFrame, this)));
+		menuData.put(67, new PianoMenuData("Chord Training", new PitchTrainingUI(parentFrame, this)));
+		menuData.put(69, new PianoMenuData("Main Menu", parent));
+		keyboard = new KeyboardView(this, false, 60, 71, this, menuData, parentFrame);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -63,8 +63,11 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback {
 	}
 
 	@Override
-	public void informKeyPressed(char keyPressed) {}
+	public void informKeyPressed(String keyPressed) {}
 
 	@Override
 	public void clearKeys() {}
+
+	@Override
+	public void informExitLoop() {}
 }
