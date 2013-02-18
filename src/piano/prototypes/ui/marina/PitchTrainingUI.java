@@ -19,6 +19,7 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 	private KeyboardView keyboard;
 	private MainMenuButton mainMenu;
 	private HelpButton helpButton;
+	private boolean stopPainting = false;
 
 	public PitchTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
 		super();
@@ -34,6 +35,9 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 	}
 
 	public void paintComponent(Graphics g) {
+		if (stopPainting) {
+			return;
+		}
 		super.paintComponent(g);
 		// Clear screen.
 		g.setColor(Color.white);
@@ -85,6 +89,7 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 
 	@Override
 	public void informExitLoop() {
+		stopPainting = true;
 		keyboard.informExitLoop();
 	}
 }

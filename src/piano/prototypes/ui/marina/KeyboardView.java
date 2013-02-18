@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import piano.prototypes.marina.NotePlayer;
 import piano.prototypes.ui.buttons.marina.KeyboardKey;
@@ -245,5 +244,6 @@ public class KeyboardView extends Drawing {
 
 	public void informExitLoop() {
 		exitLoop.set(true);
+		removeKeyListener(keyboard);
 	}
 }
