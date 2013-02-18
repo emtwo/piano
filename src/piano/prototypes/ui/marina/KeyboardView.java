@@ -25,7 +25,7 @@ public class KeyboardView extends Drawing {
 	private int minKey;
 	private int maxKey;
 
-	private int width, height, xVal, yVal, keyWidth, blackKeyWidth;
+	private int width, height, parentWidth, xVal, yVal, keyWidth, blackKeyWidth;
 	private boolean pianoExists, useBlackKeys;
 
 	private HashMap<Integer, PianoMenuData> menuData;
@@ -140,12 +140,14 @@ public class KeyboardView extends Drawing {
 			KeyboardKey key = keySet.get(i);
 			g2.setColor(keyboard.getKeyColor(key.getId()));
 			g2.setStroke(new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+			int startX = parentWidth / 2 - 100;
+			int endX = parentWidth / 2 + 100;
 			if (keyboard.getKeyColor(key.getId()) == Color.RED) {
-				g2.drawLine(300, 80, 500, 280);
-				g2.drawLine(300, 280, 500, 80);
+				g2.drawLine(startX, 80, endX, 280);
+				g2.drawLine(startX, 280, endX, 80);
 			} else if (keyboard.getKeyColor(key.getId()) == Color.GREEN) {
-				g2.drawLine(350, 280, 500, 80);
-				g2.drawLine(300, 210, 350, 280);
+				g2.drawLine(startX + 50, 280, endX, 80);
+				g2.drawLine(startX, 210, startX + 50, 280);
 			}
 			g2.setStroke(new BasicStroke(5));
 			key.paintComponent(g2);
@@ -156,6 +158,7 @@ public class KeyboardView extends Drawing {
 	 * Horizontal Piano Functions
 	 */
 	public void setDimensions(int parentWidth, int parentHeight) {
+		this.parentWidth = parentWidth;
 		width = (int)(parentWidth * 0.95);
 		height = parentHeight / 2;
 		xVal = (parentWidth - width) / 2;

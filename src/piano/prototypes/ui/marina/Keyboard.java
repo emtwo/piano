@@ -95,20 +95,6 @@ public class Keyboard extends KeyAdapter implements KeyListener{
 		intToKeyMap.put(82, "l6");
 		intToKeyMap.put(83, "b6");
 		resetKeyColours();
-		/*
-		intToKeyMap.put(0, (int) 'c');
-		intToKeyMap.put(1, (int) 'd');
-		intToKeyMap.put(2, (int) 'e');
-		intToKeyMap.put(3, (int) 'f');
-		intToKeyMap.put(4, (int) 'g');
-		intToKeyMap.put(5, (int) 'a');
-		intToKeyMap.put(6, (int) 'b');
-		intToKeyMap.put(7, (int) 'h'); // c#
-		intToKeyMap.put(8, (int) 'i'); // d#
-		intToKeyMap.put(9, (int) 'j'); // f#
-		intToKeyMap.put(10, (int) 'k'); // g#
-		intToKeyMap.put(11, (int) 'l'); // a#
-		*/
 
 		this.callback = callback;
 	}
@@ -123,20 +109,6 @@ public class Keyboard extends KeyAdapter implements KeyListener{
 			}
 			keyToColorMap.put(keyToIntMap.get(key), value);
 		}
-		/*
-		keyToColorMap.put((int) 'a', Colour.WHITE);
-		keyToColorMap.put((int) 'b', Colour.WHITE);
-		keyToColorMap.put((int) 'c', Colour.WHITE);
-		keyToColorMap.put((int) 'd', Colour.WHITE);
-		keyToColorMap.put((int) 'e', Colour.WHITE);
-		keyToColorMap.put((int) 'f', Colour.WHITE);
-		keyToColorMap.put((int) 'g', Colour.WHITE);
-		keyToColorMap.put((int) 'h', Colour.BLACK); // c#
-		keyToColorMap.put((int) 'i', Colour.BLACK); // d#
-		keyToColorMap.put((int) 'j', Colour.BLACK); // f#
-		keyToColorMap.put((int) 'k', Colour.BLACK); // g#
-		keyToColorMap.put((int) 'l', Colour.BLACK); // a#
-		 */
 	}
 
 	@Override
@@ -152,6 +124,8 @@ public class Keyboard extends KeyAdapter implements KeyListener{
     if (keyInput.length() != 2) {
 	return;
     }
+
+    System.out.println("key? " + keyInput);
 
     if (keyToIntMap.get(keyInput) != null && keyToIntMap.get(keyInput) == expectedKey) {
 	keyToColorMap.put(keyToIntMap.get(keyInput), Colour.GREEN);
