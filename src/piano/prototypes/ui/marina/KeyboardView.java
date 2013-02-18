@@ -99,6 +99,9 @@ public class KeyboardView extends Drawing {
 							}
 							Thread.sleep(100); // Reduce CPU throttling.
 						}
+						if (exitLoop.get() == true) {
+							break;
+						}
 
 						// Key was played correctly,
 						if (keyboard.getKeyInt(keyPressed.get()) != null && keyboard.getKeyInt(keyPressed.get()) == noteToPlay) {
