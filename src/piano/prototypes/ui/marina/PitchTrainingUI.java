@@ -7,19 +7,20 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import piano.prototypes.ui.buttons.marina.HelpButton;
 import piano.prototypes.ui.buttons.marina.MainMenuButton;
+import piano.prototypes.ui.marina.Keyboard.Colour;
 
-public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
+public class PitchTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
 
 	private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
 	private static final String TITLE = "Pitch Training";
 
-
+	private NotesToPlayData data;
 	private KeyboardView keyboard;
 	private MainMenuButton mainMenu;
 	private HelpButton helpButton;
@@ -27,7 +28,13 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 
 	public PitchTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
 		super();
-		keyboard = new KeyboardView(this, false, 60, 71, this, null, parentFrame);
+		data = new NotesToPlayData(this);
+		data.minKey = 60;
+		data.maxKey = 71;
+		data.numOctaves = 1;
+		data.useBlackKeys = true;
+
+		keyboard = new KeyboardView(this, this, null, parentFrame, data);
 		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20, this, parent, parentFrame);
 		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20);
 	}
@@ -98,5 +105,17 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 	public void informExitLoop() {
 		stopPainting = true;
 		keyboard.informExitLoop();
+	}
+
+	@Override
+	public ArrayList<NoteToColourMap> getNextNotes() {
+		ArrayList<NoteToColourMap> list = new ArrayList<NoteToColourMap>();
+		int noteToPlay = (data.minKey + (int)(Math.random() * ((data.maxKey - data.minKey) + 1)));
+		if (keyboard.isSharp(noteToPlay)) {
+			noteToPlay++;
+		}
+		NoteToColourMap map1 = new NoteToColourMap(noteToPlay, Colour.WHITE);
+		list.add(map1);
+		return list;
 	}
 }

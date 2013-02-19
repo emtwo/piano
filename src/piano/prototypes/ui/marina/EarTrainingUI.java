@@ -3,11 +3,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JFrame;
 
-public class EarTrainingUI extends Drawing implements KeyPressedCallback {
+public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
 
   final static float dash1[] = {10.0f};
 
@@ -16,6 +17,11 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback {
 	private KeyboardView keyboard;
 
 	public EarTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
+		super();
+		NotesToPlayData data = new NotesToPlayData(this);
+		data.minKey = 60;
+		data.maxKey = 71;
+		data.numOctaves = 1;
 
 		HashMap<Integer, PianoMenuData> menuData = new HashMap<Integer, PianoMenuData>();
 		menuData.put(62, new PianoMenuData("Interval Training", new IntervalTrainingUI(parentFrame, this)));
@@ -23,7 +29,7 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback {
 		menuData.put(65, new PianoMenuData("Advanced Pitch Training", new AdvancedPitchTrainingUI(parentFrame, this)));
 		menuData.put(67, new PianoMenuData("Chord Training", new PitchTrainingUI(parentFrame, this)));
 		menuData.put(69, new PianoMenuData("Main Menu", parent));
-		keyboard = new KeyboardView(this, false, 60, 71, this, menuData, parentFrame);
+		keyboard = new KeyboardView(this, this, menuData, parentFrame, data);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -70,4 +76,7 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback {
 
 	@Override
 	public void informExitLoop() {}
+
+	@Override
+	public ArrayList<NoteToColourMap> getNextNotes() { return null; }
 }

@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Keyboard extends KeyAdapter implements KeyListener{
 
-	public enum Colour {RED, GREEN, WHITE, BLACK};
+	public enum Colour {RED, GREEN, BLUE, WHITE, BLACK};
 
 	private HashMap<Integer, Colour> keyToColorMap = new HashMap<Integer, Colour>();
 	private HashMap<Integer, String> intToKeyMap = new HashMap<Integer, String>();
@@ -151,12 +151,18 @@ public class Keyboard extends KeyAdapter implements KeyListener{
 		return intToKeyMap.get(key);
 	}
 
+	public void setKeyColour(int key, Colour colour) {
+		keyToColorMap.put(key, colour);
+	}
+
 	public Color getKeyColor(int i) {
 		switch(keyToColorMap.get(i)) {
 			case RED:
 				return Color.RED;
 			case GREEN:
 				return Color.GREEN;
+			case BLUE:
+				return Color.BLUE;
 			case WHITE:
 				return Color.WHITE;
 			default:

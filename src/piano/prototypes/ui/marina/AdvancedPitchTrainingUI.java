@@ -7,19 +7,22 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import piano.prototypes.ui.buttons.marina.HelpButton;
 import piano.prototypes.ui.buttons.marina.MainMenuButton;
+import piano.prototypes.ui.marina.Keyboard.Colour;
 
-public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallback {
+public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
 
 	private static final int WIDTH = 1400;
 	private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
 	private static final String TITLE = "Advanced Pitch Training";
 
+	private NotesToPlayData data;
 	private KeyboardView keyboard;
 	private MainMenuButton mainMenu;
 	private HelpButton helpButton;
@@ -27,7 +30,13 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 
 	public AdvancedPitchTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
 		super(WIDTH, 800);
-		keyboard = new KeyboardView(this, true, 48, 83, this, null, parentFrame, 3);
+		data = new NotesToPlayData(this);
+		data.minKey = 48;
+		data.maxKey = 83;
+		data.numOctaves = 3;
+		data.useBlackKeys = true;
+
+		keyboard = new KeyboardView(this, this, null, parentFrame, data);
 		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20, this, parent, parentFrame);
 		helpButton = new HelpButton("?", HELP_TEXT, WIDTH - 25, 5, 20, 20);
 	}
@@ -98,5 +107,20 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 	@Override
 	public void clearKeys() {
 		repaint();
+	}
+
+	@Override
+	public ArrayList<NoteToColourMap> getNextNotes() {
+		ArrayList<NoteToColourMap> list = new ArrayList<NoteToColourMap>();
+		int noteToPlay = (data.minKey + (int)(Math.random() * ((data.maxKey - data.minKey) + 1)));
+		Colour colour;
+		if (keyboard.isSharp(noteToPlay)) {
+			colour = Colour.BLACK;
+		} else {
+			colour = Colour.WHITE;
+		}
+		NoteToColourMap map1 = new NoteToColourMap(noteToPlay, colour);
+		list.add(map1);
+		return list;
 	}
 }

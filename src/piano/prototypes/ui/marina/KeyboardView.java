@@ -15,23 +15,21 @@ import javax.swing.JFrame;
 
 import piano.prototypes.marina.NotePlayer;
 import piano.prototypes.ui.buttons.marina.KeyboardKey;
+import piano.prototypes.ui.marina.Keyboard.Colour;
 
 @SuppressWarnings("serial")
 public class KeyboardView extends Drawing {
 
 	private final int NUM_KEYS = 7;
-	private int NUM_OCTAVES;
-
-	private int minKey;
-	private int maxKey;
 
 	private int width, height, parentWidth, xVal, yVal, keyWidth, blackKeyWidth;
-	private boolean pianoExists, useBlackKeys;
+	private boolean pianoExists;
 
 	private HashMap<Integer, PianoMenuData> menuData;
 	private Drawing parent;
 	private JFrame parentFrame;
 	private Keyboard keyboard;
+	private NotesToPlayData noteData;
 
 	private AtomicBoolean exitLoop = new AtomicBoolean();
 	private AtomicReference<String> keyPressed = new AtomicReference<String>();
@@ -39,22 +37,14 @@ public class KeyboardView extends Drawing {
 	private ArrayList<KeyboardKey> keyList = new ArrayList<KeyboardKey>();
 	private ArrayList<KeyboardKey> blackKeyList = new ArrayList<KeyboardKey>();
 
-	public KeyboardView(KeyPressedCallback practiceUI, boolean useBlackKeys, int minKey, int maxKey, Drawing parent,
-    HashMap<Integer, PianoMenuData> menuData, final JFrame parentFrame) throws IOException {
-	 this(practiceUI, useBlackKeys, minKey, maxKey, parent, menuData, parentFrame, 1);
-	}
-
-	public KeyboardView(KeyPressedCallback practiceUI, boolean useBlackKeys, int minKey, int maxKey, Drawing parent,
-			HashMap<Integer, PianoMenuData> menuData, final JFrame parentFrame, int numOctaves) throws IOException {
+	public KeyboardView(KeyPressedCallback practiceUI, Drawing parent,
+			HashMap<Integer, PianoMenuData> menuData, final JFrame parentFrame, NotesToPlayData noteData) throws IOException {
 		super();
 		this.parent = parent;
 		this.menuData = menuData;
 		this.parentFrame = parentFrame;
-		this.useBlackKeys = useBlackKeys;
-		this.minKey = minKey;
-		this.maxKey = maxKey;
+		this.noteData = noteData;
 		keyboard = new Keyboard(practiceUI);
-		NUM_OCTAVES = numOctaves;
 		NotePlayer.init();
 	}
 
@@ -71,22 +61,30 @@ public class KeyboardView extends Drawing {
 
 	private void startPlayThread() {
 		Thread thread = new Thread(new Runnable() {
-			private int noteToPlay;
 
-			public void computeNoteToPlay() {
-				noteToPlay = (minKey + (int)(Math.random() * ((maxKey - minKey) + 1)));
-				if (!useBlackKeys && keyboard.isSharp(noteToPlay)) {
-					noteToPlay++;
-				}
+			public ArrayList<NoteToColourMap> computeNoteToPlay() {
+				return noteData.getNotesToPlay();
 			}
 
 			public void run() {
-				computeNoteToPlay();
+				ArrayList<NoteToColourMap> mapList = computeNoteToPlay();
 				while (!exitLoop.get()) {
 					try {
 						Thread.sleep(1000);
-						System.out.println("Note being played: " + noteToPlay);
-						NotePlayer.play("[" + Integer.toString(noteToPlay) + "]");
+						String noteString = "";
+						for (NoteToColourMap map : mapList) {
+							System.out.println("Note being added: " + map.note);
+							noteString += ("[" + map.note + "] ");
+						}
+						NotePlayer.play(noteString);
+						for (NoteToColourMap map : mapList) {
+							keyboard.clear();
+							keyboard.setKeyColour(map.note, map.colour);
+							Thread.sleep(500);
+						}
+						keyboard.clear();
+
+						int noteToPlay = mapList.get(mapList.size() - 1).note;
 						keyboard.setExpectedKey(noteToPlay);
 
 						// Wait for user to press key
@@ -102,7 +100,7 @@ public class KeyboardView extends Drawing {
 
 						// Key was played correctly,
 						if (keyboard.getKeyInt(keyPressed.get()) != null && keyboard.getKeyInt(keyPressed.get()) == noteToPlay) {
-							computeNoteToPlay();
+							mapList = computeNoteToPlay();
 						}
 						keyPressed.set(null);
 
@@ -136,8 +134,7 @@ public class KeyboardView extends Drawing {
 	}
 
 	private void paintKeys(ArrayList<KeyboardKey> keySet, Graphics2D g2) {
-		for (int i = 0; i < keySet.size(); i++) {
-			KeyboardKey key = keySet.get(i);
+		for (KeyboardKey key : keySet) {
 			g2.setColor(keyboard.getKeyColor(key.getId()));
 			g2.setStroke(new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
 			int startX = parentWidth / 2 - 100;
@@ -163,7 +160,7 @@ public class KeyboardView extends Drawing {
 		height = parentHeight / 2;
 		xVal = (parentWidth - width) / 2;
 		yVal = height - 50;
-		keyWidth = width / (NUM_KEYS * NUM_OCTAVES);
+		keyWidth = width / (NUM_KEYS * noteData.numOctaves);
 		blackKeyWidth = keyWidth / 2;
 		if (pianoExists) {
 			return;
@@ -175,7 +172,7 @@ public class KeyboardView extends Drawing {
 	private void createHorizontalPiano() {
 		int keyXVal = xVal;
 		int blackKeyXVal = keyXVal + (keyWidth - blackKeyWidth / 2);
-		for (int i = minKey; i < maxKey + 1; i++) {
+		for (int i = noteData.minKey; i < noteData.maxKey + 1; i++) {
 			if (keyboard.isSharp(i)) {
 				blackKeyList.add(new KeyboardKey("", blackKeyXVal, yVal, blackKeyWidth, (int) (height * 0.6), true, i));
 				blackKeyXVal += keyWidth;
@@ -209,7 +206,7 @@ public class KeyboardView extends Drawing {
 	private void createVerticalPiano() {
 		int keyYVal = yVal;
 		int blackKeyYVal = keyYVal + (keyWidth - blackKeyWidth / 2);
-		for (int i = minKey; i < maxKey + 1; i++) {
+		for (int i = noteData.minKey; i < noteData.maxKey + 1; i++) {
 			if (keyboard.isSharp(i)) {
 				blackKeyList.add(new KeyboardKey("", xVal, blackKeyYVal, (int) (width * 0.6), blackKeyWidth, true, i));
 				blackKeyYVal += keyWidth;
@@ -248,5 +245,9 @@ public class KeyboardView extends Drawing {
 	public void informExitLoop() {
 		exitLoop.set(true);
 		removeKeyListener(keyboard);
+	}
+
+	public boolean isSharp(int i) {
+		return keyboard.isSharp(i);
 	}
 }

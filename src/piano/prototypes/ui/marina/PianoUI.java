@@ -3,25 +3,33 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JFrame;
 
-public class PianoUI extends Drawing implements KeyPressedCallback {
+import piano.prototypes.ui.marina.Keyboard.Colour;
+
+public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
 	
   final static float dash1[] = {10.0f};
 
 	Drawing play, practice;
 	
+	private NotesToPlayData data;
 	private KeyboardView keyboard;
 
 	public PianoUI(JFrame parentFrame) throws IOException {
 		super();
+		NotesToPlayData data = new NotesToPlayData(this);
+		data.minKey = 60;
+		data.maxKey = 71;
+		data.numOctaves = 1;
 
 		HashMap<Integer, PianoMenuData> menuData = new HashMap<Integer, PianoMenuData>();
 		menuData.put(64, new PianoMenuData("Play", new PlayUI(parentFrame, this)));
 		menuData.put(67, new PianoMenuData("Ear Training", new EarTrainingUI(parentFrame, this)));
-		keyboard = new KeyboardView(this, true, 60, 71, this, menuData, parentFrame);
+		keyboard = new KeyboardView(this, this, menuData, parentFrame, data);
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -69,4 +77,7 @@ public class PianoUI extends Drawing implements KeyPressedCallback {
 
 	@Override
 	public void informExitLoop() {}
+
+	@Override
+	public ArrayList<NoteToColourMap> getNextNotes() { return null; }
 }
