@@ -13,8 +13,9 @@ public class Score implements ParserListener {
 	public double PaperWidth = 119.50157480315;
     public Vector<NotePanel> notes[];
     public Vector<Chord> chords[];
-    public Vector<Chord> combinedChords;
-    public Vector<String> fontInfo;
+    public Vector<Chord> combinedChords = new Vector<Chord>(), combinedAllChords = new Vector<Chord>();
+    public Vector<NotePanel> combinedNotes = new Vector<NotePanel>(), combinedAllNotes = new Vector<NotePanel>();
+    public Vector<String> fontInfo = new Vector<String>();
     public int staves = 1;
 	
 	private String Name;
@@ -27,12 +28,9 @@ public class Score implements ParserListener {
 	private int line = 1, layer = 0;
 	private Iterator<NotePanel> currNotes[];
 	
-	
 	public Score(String name) {
 		this.Name = name;
 		this.CurrPage = 1;
-        fontInfo = new Vector<String>();
-        combinedChords = new Vector<Chord>();
 	}
 
     public void parseLY(String S) {
@@ -119,7 +117,6 @@ public class Score implements ParserListener {
 	
 	public void parseMidi(Sequence sequence) {
         NotePanel.setResolution(sequence.getResolution());
-        System.out.println("Resolution: " + sequence.getResolution());
 
 		MidiParser parser = new MidiParser();
 		parser.addParserListener(this);
@@ -155,28 +152,33 @@ public class Score implements ParserListener {
                     time[layer] = chords[layer].get(cChord[layer]).getMillisTime();
                 }
                 Chord chord = new Chord();
+                Chord allChord = new Chord();
 
                 if (time[0] == time[1]) {
                     for (int layer = 0; layer < staves; ++layer) {
                         if (!chords[layer].get(cChord[layer]).isRest()) {
                             chord.addChord(chords[layer].get(cChord[layer]));
                         }
+                        allChord.addChord(chords[layer].get(cChord[layer]));
                         ++(cChord[layer]);
                     }
                 } else if (time[0] < time[1]) {
                     if (!chords[0].get(cChord[0]).isRest()) {
                         chord.addChord(chords[0].get(cChord[0]));
                     }
+                    allChord.addChord(chords[layer].get(cChord[layer]));
                     ++(cChord[0]);
                 } else {
                     if (!chords[1].get(cChord[1]).isRest()) {
                         chord.addChord(chords[1].get(cChord[1]));
                     }
+                    allChord.addChord(chords[layer].get(cChord[layer]));
                     ++(cChord[1]);
                 }
                 if (!chord.notes.isEmpty()) {
                     combinedChords.add(chord);
                 }
+                combinedAllChords.add(allChord);
             }
         }
 
@@ -187,7 +189,20 @@ public class Score implements ParserListener {
                 if (!chords[layer].get(cChord[layer]).isRest()) {
                     combinedChords.add(new Chord(chords[layer].get(cChord[layer])));
                 }
+                combinedAllChords.add(new Chord(chords[layer].get(cChord[layer])));
                 ++(cChord[layer]);
+            }
+        }
+
+        // populate combined notes
+        for (Chord chord : combinedChords) {
+            for (NotePanel note : chord.notes) {
+                combinedNotes.add(note);
+            }
+        }
+        for (Chord chord : combinedAllChords) {
+            for (NotePanel note : chord.notes) {
+                combinedAllNotes.add(note);
             }
         }
 	}
@@ -297,12 +312,10 @@ public class Score implements ParserListener {
 
 	public void polyphonicPressureEvent(PolyphonicPressure arg0) {
 		System.out.println("poly");
-		
 	}
 
-
 	public void tempoEvent(Tempo arg0) {
-		 System.out.println("Tempo: " + arg0.getTempo());
+		 //System.out.println("Tempo: " + arg0.getTempo());
          tempo = arg0.getTempo();
 	}
 

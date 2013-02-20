@@ -52,6 +52,15 @@ public class Chord {
         }
         return this;
 	}
+
+    public boolean contains(NotePanel note) {
+        for (NotePanel n : notes) {
+            if (n.getValue().equals(note.getValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
 	
 	public int size() {
 		return notes.size();
