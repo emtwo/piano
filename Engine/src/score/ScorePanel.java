@@ -24,6 +24,7 @@ public class ScorePanel extends JPanel {
     private MockAdapterParser mock;
     private PracticeParserListener practiceParserListener;
     private ExamParserListener examParserListener;
+    private ExamTest examTest;
 
 	private Action leftAction, rightAction, nextRightNoteAction, nextLeftNoteAction, startPlayAction;
 
@@ -40,6 +41,8 @@ public class ScorePanel extends JPanel {
 		this.frame = frame;
 		this.name = name;
 		this.page = 1;
+
+        NotePanel.setFrame(frame);
 
         NotePlayer.init(); // this takes some time, so initialize music players
         
@@ -70,6 +73,7 @@ public class ScorePanel extends JPanel {
                 System.err.println("Lilypond failed to produce any files");
             }
             currImage = images.get(0);
+
         }
         catch (java.io.IOException e) {
 			System.out.println(e.getMessage());
@@ -144,6 +148,7 @@ public class ScorePanel extends JPanel {
         finishPlaying = new Runnable() {
             public void run() {
                 refresh();
+                examParserListener.finish();
             }
         };
 
@@ -165,6 +170,8 @@ public class ScorePanel extends JPanel {
             }
         };*/
 
+        setPage(page);
+
         scheduler = Executors.newScheduledThreadPool(1);
 
         mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
@@ -172,6 +179,7 @@ public class ScorePanel extends JPanel {
         //mock.addParserListener(practiceParserListener);
 
         examParserListener = new ExamParserListener(this);
+        examTest = new ExamTest(examParserListener);
         mock.addParserListener(examParserListener);
 
         this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "left");
@@ -186,9 +194,7 @@ public class ScorePanel extends JPanel {
         this.getActionMap().put("p", startPlayAction);
 
         //examParserListener.start();
-
-        setBounds(0, 0, currImage.getWidth(), currImage.getHeight());
-        repaint();
+        examTest.basicPerfect();
 
 	}
 
@@ -196,6 +202,9 @@ public class ScorePanel extends JPanel {
         if (newpage >= 1 && newpage <= npages) {
             page = newpage;
         }
+        currImage = images.get(page - 1);
+        NotePanel.setImage(currImage.getWidth(), currImage.getHeight());
+        setBounds(0, 0, currImage.getWidth(), currImage.getHeight());
         repaint();
         repaintActiveNotes();
     }
@@ -315,6 +324,18 @@ public class ScorePanel extends JPanel {
         setPage(1);
     }
 
+    public void finishExam() {
+        repaintGhostNotes();
+    }
+
+    private void repaintGhostNotes() {
+        for (NotePanel note : S.combinedNotes) {
+            if (note.page == page) {
+                note.paintGhosts();
+            }
+        }
+    }
+
 	private void repaintActiveNotes() {
         for (Vector<Chord> chords : S.chords) {
             for (Chord chord : chords) {
@@ -326,9 +347,9 @@ public class ScorePanel extends JPanel {
 	}
 
     public void paintComponent(Graphics g) {
-        currImage = images.get(page - 1);
         frame.setSize(currImage.getWidth(), currImage.getHeight());
-        NotePanel.setImage(currImage.getWidth(), currImage.getHeight());
         g.drawImage(currImage, 0, 0, null);
     }
+
+
 }
