@@ -13,7 +13,8 @@
    \clef treble
    \key c \major
    \time 3/4
-   \tempo "Allegretto" 4 = 105
+   \tempo 4 = 200
+   \set Score.tempoHideNote = ##t
    \relative c' { 
      c2.\mp c2. c2 d4 e2. e2 d4 e2 f4
      g2.~ g2 r4 c4\mf c4 c4 g4 g4 g4 e4 e4 e4 c4 c4 c4
