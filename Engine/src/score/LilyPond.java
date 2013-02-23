@@ -1,37 +1,49 @@
 package score;
 
-import score.Score;
-
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 
 public class LilyPond {
+
 	private LilyPond() {}
+
+    private static void exec(String command) {
+        try {
+            System.out.println("Invoking: " + command);
+            Process p = Runtime.getRuntime().exec(command);
+
+            //get standard output
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = input.readLine()) != null) {
+                System.out.println(line);
+            }
+            input.close();
+
+            //get error output
+            input = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            while ((line = input.readLine()) != null) {
+                System.out.println(line);
+            }
+            input.close();
+
+            p.waitFor();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
 	
 	public static void invokeLilyPond(String name) {
 		String fileLocation = "data/out/" + name + ".ps";
         File ScoreFile = new File(fileLocation);
         if (!ScoreFile.exists()) {
-    		try {
-                String command = "lilypond --png -dresolution=72 --ps --output=data/out/" + name + " data/ly/" + name + ".ly";
-                System.out.println("Invoking Lilypond: " + command);
-				Process p = Runtime.getRuntime().exec(command);
-				p.waitFor();
-			} 
-			catch (java.io.IOException e1) {
-				System.out.println(e1.getMessage());
-			}
-			catch(InterruptedException e2) {
-				System.out.println(e2.getMessage());
-			}
-    		ScoreFile = new File(fileLocation);
-    		if (!ScoreFile.exists()) {
-    			System.err.println("Failed to create score image");
-    		}
+            exec("convert-ly -e data/ly/" + name + ".ly");
+            exec("lilypond --png -dresolution=72 --ps --output=data/out/" + name + " data/ly/" + name + ".ly");
         }
 	}
 	
