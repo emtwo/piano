@@ -101,17 +101,36 @@ public class ExamParserListener extends AdapterParserListener {
                 while (c[layer] < S.chords[layer].size() - 1 && S.chords[layer].get(c[layer] + 1).getMillisTime() < ghost.getMillisTime()) {
                     ++c[layer];
                 }
-
             }
 
             // pick which layer the ghost note should belong to
-            int attachedLayer;
+            int attachedLayer = -1;
             if (S.staves == 1) {
                 attachedLayer = 0;
-            } else if (ghost.getValue() >= 60) {
-                attachedLayer = 0;
             } else {
-                attachedLayer = 1;
+                long matchOffset = 0L; // distance to nearest matching node
+                for (int layer = 0; layer < S.staves; ++layer) {
+                    for (int i = 0; i <= 1; ++i) {
+                        if (c[layer] + i >= S.chords[layer].size()) {
+                            break;
+                        }
+                        Chord chord = S.chords[layer].get(c[layer] + i);
+                        if (chord.contains(ghost)) {
+                            long offSet = Math.abs(chord.getMillisTime() - ghost.getMillisTime());
+                            if (matchOffset == 0L || offSet < matchOffset) {
+                                attachedLayer = layer;
+                                matchOffset = offSet;
+                            }
+                        }
+                    }
+                }
+            }
+            if (attachedLayer == -1) {
+                if (ghost.getValue() >= 60) {
+                    attachedLayer = 0;
+                } else {
+                    attachedLayer = 1;
+                }
             }
 
             // pick which chord to attach the note to. this is based on the constant attachThres
