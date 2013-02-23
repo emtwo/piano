@@ -9,4 +9,4 @@ songs.db
 */.idea/*
 *.iml
 Thumbs.db
-Engine\data\out\*
+Engine/data/out/*
