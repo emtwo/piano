@@ -35,7 +35,6 @@ public class ExamTest {
     }
 
     void basicPerfect() {
-        //fireNoteEvent("C6", 10);
         fireNoteEvent("E5", 0);
         fireNoteEvent("D5", 937);
         fireNoteEvent("C5", 1875);

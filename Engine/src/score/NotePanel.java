@@ -278,6 +278,10 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
         this.ghostNotes.clear();
     }
 
+    public NotePanel getMatchedGhost() {
+        return matchedGhost;
+    }
+
     public void paintGhosts() {
         for (NotePanel ghost : ghostNotes) {
             ghost.active = true;
