@@ -179,6 +179,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
     public NotePanel setTie(boolean isTie) {
         this.isTie = true;
         note = new Note((byte) 0);
+        note.setAttackVelocity((byte) 0);
         return this;
     }
 
@@ -283,6 +284,10 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
         }
         this.matchedGhost = null;
         this.ghostNotes.clear();
+    }
+
+    public NotePanel getMatchedGhost() {
+        return matchedGhost;
     }
 
     public void paintGhosts() {

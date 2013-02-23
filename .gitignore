@@ -4,3 +4,9 @@
 .settings/*
 bin/*
 songs.db
+*.class
+.idea/*
+*/.idea/*
+*.iml
+Thumbs.db
+Engine/data/out/*

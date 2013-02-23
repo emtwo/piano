@@ -23,7 +23,7 @@ public class Score implements ParserListener {
 	private int CurrPage;
 	private int staffLine = 0; //the line where the lilypond starts defining the bottom staff
 	private long time;
-    private int tempo = 120;
+    private int tempo;
 	private int line = 1, layer = 0;
 	private Iterator<NotePanel> currNotes[];
     private Vector<ArrayList<Integer>> ties = new Vector<ArrayList<Integer>>();
@@ -145,27 +145,6 @@ public class Score implements ParserListener {
                 }
             }
         }
-            /*Vector<NotePanel> cNotes = notes[i];
-            for (int cNote = 1; cNote < cNotes.size(); ++cNote) {
-                //increment until tie position is higher than note position
-                ArrayList<Integer> tie = ties.get(cTie);
-                while (tie.get(0) < cNotes.get(cNote).lyLine ||
-                        (tie.get(0) == cNotes.get(cNote).lyLine && tie.get(1) < cNotes.get(cNote).lyNumber)) {
-                    if (cTie == ties.size() - 1) {
-                        break;
-                    }
-                    ++cTie;
-                    tie = ties.get(cTie);
-                }
-
-
-
-                if (note.lyLine > tie.get(0) || (note.lyLine == tie.get(0) && note.lyNumber > tie.get(1))) {
-                    System.out.println("FOUND TIE");
-                    note.setTie(true);
-                    ++cTie;
-                }
-            }    */
 
 	}
 	
@@ -188,12 +167,12 @@ public class Score implements ParserListener {
             while (currNote.hasNext()) {
                 NotePanel notePanel = currNote.next();
                 if (notePanel.getNote() != null) {
-                notePanel.setTime(tempTime)
-                    .setTempo(tempo);
+                    notePanel.setTime(tempTime)
+                        .setTempo(tempo);
 
-                tempTime += notePanel.getDuration();
-                Chord chord = new Chord(notePanel);
-                currChords.add(chord);
+                    tempTime += notePanel.getDuration();
+                    Chord chord = new Chord(notePanel);
+                    currChords.add(chord);
                 }
             }
         }
