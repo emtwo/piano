@@ -1,19 +1,21 @@
 package piano.prototypes.ui.buttons.marina;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
 
 import piano.prototypes.ui.marina.Fonts;
 import piano.prototypes.ui.marina.SubView;
-import piano.prototypes.ui.marina.View;
+import piano.prototypes.ui.marina.Drawing;
 
 public class MainMenuButton extends Button {
 
 	public MainMenuButton(String text, int x, int y, int width, int height,
-			SubView parent, View nextView, JFrame parentFrame) {
+			Drawing parent, Drawing nextView, JFrame parentFrame) {
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		
 		super.setDiff(4);
@@ -39,6 +41,7 @@ public class MainMenuButton extends Button {
 	}
 	
 	public void paintComponent(Graphics gc) {
+		((Graphics2D) gc).setStroke(new BasicStroke(1));
 		gc.setFont(font);
 		
 		FontMetrics metrics = gc.getFontMetrics(font);

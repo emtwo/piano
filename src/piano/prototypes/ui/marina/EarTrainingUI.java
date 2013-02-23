@@ -8,18 +8,15 @@ import java.util.HashMap;
 
 import javax.swing.JFrame;
 
-import piano.prototypes.ui.marina.Keyboard.Colour;
+public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
 
-public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
-	
   final static float dash1[] = {10.0f};
 
-	Drawing play, practice;
-	
-	private NotesToPlayData data;
+	Drawing interval, pitch, pitchAdvanced, chords;
+
 	private KeyboardView keyboard;
 
-	public PianoUI(JFrame parentFrame) throws IOException {
+	public EarTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
 		super();
 		NotesToPlayData data = new NotesToPlayData(this);
 		data.minKey = 60;
@@ -27,18 +24,21 @@ public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteC
 		data.numOctaves = 1;
 
 		HashMap<Integer, PianoMenuData> menuData = new HashMap<Integer, PianoMenuData>();
-		menuData.put(64, new PianoMenuData("Play", new PlayUI(parentFrame, this)));
-		menuData.put(67, new PianoMenuData("Ear Training", new EarTrainingUI(parentFrame, this)));
+		menuData.put(62, new PianoMenuData("Interval Training", new IntervalTrainingUI(parentFrame, this)));
+		menuData.put(64, new PianoMenuData("Pitch Training", new PitchTrainingUI(parentFrame, this)));
+		menuData.put(65, new PianoMenuData("Advanced Pitch Training", new AdvancedPitchTrainingUI(parentFrame, this)));
+		menuData.put(67, new PianoMenuData("Chord Training", new PitchTrainingUI(parentFrame, this)));
+		menuData.put(69, new PianoMenuData("Main Menu", parent));
 		keyboard = new KeyboardView(this, this, menuData, parentFrame, data);
 	}
-	
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
 		// Clear screen.
 		g.setColor(Color.white);
 	  g.fillRect(0, 0, getWidth(), getHeight());
-		
+
 		// draw entire component grey
     g.setColor(Color.lightGray);
     g.fillRect(0, 0, getWidth(), getHeight());
@@ -46,14 +46,13 @@ public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteC
     // Write title.
 		g.setColor(Color.BLACK);
 		g.setFont(Fonts.big);
-		g.drawString("Piano", 20, 150);
-		g.drawString("Like a", 20, 200);
-		g.drawString("Pro", 20, 250);
-		
-		// Write "by Mastodon".
+		g.drawString("Ear", 20, 150);
+		g.drawString("Training", 20, 200);
+
+		// Write "Choose Difficulty".
 		g.setFont(Fonts.italic);
-		g.drawString("By: Mastodon", 20, 300);
-    
+		g.drawString("Choose Difficulty", 20, 300);
+
 		// Draw piano image
 		keyboard.setDimensions(250, 0, getWidth(), getHeight());
 		keyboard.paintComponent(g);

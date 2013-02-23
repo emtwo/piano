@@ -5,19 +5,23 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
-public abstract class SubView extends View {
+public class SubView extends Drawing {
 	
 	protected ListView listView;
 	protected SongView songView;
-	protected SubView currentView;
+	protected Drawing currentView;
+	public final boolean hasBack;
 	
-	public SubView() {}
-	
-	public SubView(String column, JFrame parentFrame) {
+	public SubView(String column, JFrame parentFrame, boolean hasBack) {
+		this.hasBack = hasBack;
+
 		songView = new SongView(parentFrame, this);
 		if (column != null) {
 			listView = new ListView(column, parentFrame, songView, this);
+			currentView = listView;
+			return;
 		}
+		currentView = songView;
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -47,9 +51,5 @@ public abstract class SubView extends View {
 			return;
 		}
 		currentView = songView;
-	}
-
-	public boolean hasBack() {
-		return true;
 	}
 }
