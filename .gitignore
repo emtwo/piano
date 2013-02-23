@@ -10,3 +10,4 @@ songs.db
 *.iml
 Thumbs.db
 Engine/data/out/*
+*.ly~
