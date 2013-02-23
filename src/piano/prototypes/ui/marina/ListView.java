@@ -12,7 +12,7 @@ import piano.prototypes.repository.marina.Song;
 import piano.prototypes.repository.marina.SongDatabaseAccessor;
 import piano.prototypes.ui.buttons.marina.ListButton;
 
-public class ListView extends SubView {
+public class ListView extends Drawing {
 	public List<String> listTitles;
 	ArrayList<ListButton> listButtons = new ArrayList<ListButton>();
 	

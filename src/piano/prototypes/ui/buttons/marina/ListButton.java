@@ -13,7 +13,7 @@ import piano.prototypes.repository.marina.SongDatabaseAccessor;
 import piano.prototypes.ui.marina.ListView;
 import piano.prototypes.ui.marina.PlayUI;
 import piano.prototypes.ui.marina.SubView;
-import piano.prototypes.ui.marina.View;
+import piano.prototypes.ui.marina.Drawing;
 
 public class ListButton extends Button {
 
@@ -21,7 +21,7 @@ public class ListButton extends Button {
 	List<Song> songs;
 	
 	public ListButton(String text, int x, int y, int width, int height,
-			SubView parent, View nextView, JFrame parentFrame, String column) {
+			Drawing parent, Drawing nextView, JFrame parentFrame, String column) {
 	
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		this.column = column;

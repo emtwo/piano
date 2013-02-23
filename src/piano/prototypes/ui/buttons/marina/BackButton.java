@@ -8,13 +8,14 @@ import javax.swing.JFrame;
 
 import piano.prototypes.ui.marina.Fonts;
 import piano.prototypes.ui.marina.ListView;
+import piano.prototypes.ui.marina.SongView;
 import piano.prototypes.ui.marina.SubView;
-import piano.prototypes.ui.marina.View;
+import piano.prototypes.ui.marina.Drawing;
 
 public class BackButton extends Button {
 
 	public BackButton(String text, int x, int y, int width, int height,
-			SubView parent, View nextView, JFrame parentFrame) {
+			Drawing parent, Drawing nextView, JFrame parentFrame) {
 		super(text, x, y, width, height, parent, nextView, parentFrame);
 		
 		super.setDiff(4);
@@ -34,8 +35,7 @@ public class BackButton extends Button {
 			return false;
 		}
 		
-		parent.switchView();
-		
+		((SongView)parent).switchView();
 		return true;
 	}
 	
