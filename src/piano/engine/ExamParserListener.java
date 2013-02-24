@@ -39,28 +39,100 @@ public class ExamParserListener extends AdapterParserListener {
         }
         state = finished;
 
-        Iterator<NotePanel> ghostIt = notes.iterator();
+        // calculate total offset of notes with their matched notes
+        long totalOffset = 0L;
+        int totalMatchedNotes = 0;
+        attachNotes();
+        for (NotePanel note : S.combinedNotes) {
+            if(note.getMatchedGhost() != null) {
+                totalOffset += note.getMillisTime() - note.getMatchedGhost().getMillisTime();
+                ++totalMatchedNotes;
+            }
+        }
+
+        long offset = Math.round((double) totalOffset / totalMatchedNotes);
+
+        if (offset != 0) {
+            //individually offset each note
+            for (NotePanel ghost : notes) {
+                ghost.setMillisTime(ghost.getMillisTime() + offset);
+            }
+
+            //clear all previously matched notes
+            for (NotePanel note : S.combinedNotes) {
+                note.clearGhostNotes();
+            }
+
+            //reattach notes
+            attachNotes();
+        }
+
+        SP.finishExam();
+    }
+
+    public void noteEvent(Note note, long time) {
+        NotePanel ghost = new NotePanel(note);
+        ghost.setGhost(true)
+             .setMillisTime(time);
+
+        notes.add(ghost);
+    }
+
+    public void noteEvent(Note note) {
+        if (note.getMillisDuration() > 0) {
+            //end metronome counting and start timing
+            if (state == counting) {
+                state = playing;
+                metronome.end();
+                metronome = null;
+                SP.play(true);
+                start = new Date().getTime();
+            }
+
+            noteEvent(note, new Date().getTime() - start);
+        }
+    }
+
+    private void attachNotes() {
         int[] c = new int[S.staves];
 
-        while (ghostIt.hasNext()) {
-            NotePanel ghost = ghostIt.next();
+        for (NotePanel ghost : notes) {
 
             // move bounding chords up until the current ghost note is between them
             for (int layer = 0; layer < S.staves; ++layer) {
                 while (c[layer] < S.chords[layer].size() - 1 && S.chords[layer].get(c[layer] + 1).getMillisTime() < ghost.getMillisTime()) {
                     ++c[layer];
                 }
-
             }
 
             // pick which layer the ghost note should belong to
-            int attachedLayer;
+            int attachedLayer = -1;
             if (S.staves == 1) {
                 attachedLayer = 0;
-            } else if (ghost.getValue() >= 60) {
-                attachedLayer = 0;
             } else {
-                attachedLayer = 1;
+                long matchOffset = 0L; // distance to nearest matching node
+                for (int layer = 0; layer < S.staves; ++layer) {
+                    for (int i = 0; i <= 1; ++i) {
+                        if (c[layer] + i >= S.chords[layer].size()) {
+                            break;
+                        }
+                        Chord chord = S.chords[layer].get(c[layer] + i);
+                        if (chord.contains(ghost)) {
+                            long offSet = Math.abs(chord.getMillisTime() - ghost.getMillisTime());
+                            if (matchOffset == 0L || offSet < matchOffset) {
+                                attachedLayer = layer;
+                                matchOffset = offSet;
+                            }
+                        }
+                    }
+                }
+            }
+            if (attachedLayer == -1) {
+                if (ghost.getValue() >= 60) {
+                    attachedLayer = 0;
+                } else {
+                    attachedLayer = 1;
+                }
             }
 
             // pick which chord to attach the note to. this is based on the constant attachThres
@@ -91,29 +163,6 @@ public class ExamParserListener extends AdapterParserListener {
 
             attachedNote.addGhostNote(ghost, referenceNote);
         }
-
-        SP.finishExam();
-    }
-
-    public void noteEvent(Note note, long time) {
-        NotePanel ghost = new NotePanel(note);
-        ghost.setGhost(true)
-             .setMillisTime(time);
-
-        notes.add(ghost);
-    }
-
-    public void noteEvent(Note note) {
-        //end metronome counting and start timing
-        if (state == counting) {
-            state = playing;
-            metronome.end();
-            metronome = null;
-            SP.play(true);
-            start = new Date().getTime();
-        }
-
-        noteEvent(note, new Date().getTime() - start);
     }
 
 

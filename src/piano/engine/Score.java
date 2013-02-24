@@ -20,18 +20,37 @@ public class Score implements ParserListener {
 
 	private String Name;
 	private String PrevLine;
-    private NotePanel lastNote;
 	private int CurrPage;
 	private int staffLine = 0; //the line where the lilypond starts defining the bottom staff
 	private long time;
     private int tempo;
 	private int line = 1, layer = 0;
 	private Iterator<NotePanel> currNotes[];
+    private Vector<ArrayList<Integer>> ties = new Vector<ArrayList<Integer>>();
 
 	public Score(String name) {
 		this.Name = name;
 		this.CurrPage = 1;
 	}
+
+    public void parseHeader(String S) {
+        if (S.startsWith("/page-height")) {
+            this.PaperHeight = Double.parseDouble(S.split(" ")[1]);
+        } else if (S.startsWith("/page-width")) {
+            this.PaperWidth = Double.parseDouble(S.split(" ")[1]);
+        } else if (S.startsWith("/magfont")) {
+            fontInfo.add(S);
+        } else if (S.startsWith("/lily-output-units")) {
+            float scale = Float.parseFloat(S.split(" ")[1]);
+            for (String T : fontInfo) {
+                NotePanel.addFont(T.split(" ")[0].substring(1), T.split(" ")[2].substring(1), scale * Float.parseFloat(T.split(" ")[3]));
+            }
+        }
+    }
+
+    public void finishHeader() {
+        NotePanel.setPaper(PaperWidth, PaperHeight);
+    }
 
     public void parseLY(String S) {
         //TODO: detect new staff location better
@@ -39,6 +58,16 @@ public class Score implements ParserListener {
             staffLine = line;
             staves = 2;
         }
+
+        for (int i = 0; i < S.length(); ++i) {
+            if (S.charAt(i) == '~') {
+                ArrayList<Integer> t = new ArrayList<Integer>();
+                t.add(line);
+                t.add(i);
+                ties.add(t);
+            }
+        }
+
         ++line;
     }
 
@@ -51,25 +80,6 @@ public class Score implements ParserListener {
             notes[i] = new Vector<NotePanel>();
             chords[i] = new Vector<Chord>();
         }
-    }
-
-	public void parseHeader(String S) {
-		if (S.startsWith("/page-height")) {
-			this.PaperHeight = Double.parseDouble(S.split(" ")[1]);
-		} else if (S.startsWith("/page-width")) {
-			this.PaperWidth = Double.parseDouble(S.split(" ")[1]);
-		} else if (S.startsWith("/magfont")) {
-            fontInfo.add(S);
-		} else if (S.startsWith("/lily-output-units")) {
-            float scale = Float.parseFloat(S.split(" ")[1]);
-            for (String T : fontInfo) {
-                NotePanel.addFont(T.split(" ")[0].substring(1), T.split(" ")[2].substring(1), scale * Float.parseFloat(T.split(" ")[3]));
-            }
-        }
-	}
-
-    public void finishHeader() {
-        NotePanel.setPaper(PaperWidth, PaperHeight);
     }
 
 	public void parsePS(String S) {
@@ -94,7 +104,6 @@ public class Score implements ParserListener {
 			} else {
 				notes[1].add(N);
 			}
-            lastNote = N;
 		} else if (S.contains("accidentals")) {
             //String T[] = S.split(" ");
             //lastNote.setAccidentals(Double.parseDouble(T[0]), -Double.parseDouble(T[1]), T[4].substring(1), T[3]);
@@ -109,10 +118,34 @@ public class Score implements ParserListener {
 
 	public void finishPS() {
 		//called when PS is done parsing
-        //sort the notes we found from the PS by where they occured in the .ly
+        //sort the notes we found from the PS by where they occurred in the .ly
         for (int i = 0; i < staves; ++i) {
 		    Collections.sort(notes[i]);
         }
+
+        //find tied notes
+        for (int i = 0; i < staves; ++i) {
+            int cTie = 0;
+            int cNote = 0;
+
+            while (cTie < ties.size() && cNote < notes[i].size() - 1) {
+                ArrayList<Integer> tie = ties.get(cTie);
+                NotePanel prevNote = notes[i].get(cNote);
+                NotePanel nextNote = notes[i].get(cNote + 1);
+                if (pairComp(tie.get(0), tie.get(1), prevNote.lyLine, prevNote.lyNumber) != -1 &&
+                        pairComp(tie.get(0), tie.get(1), nextNote.lyLine, nextNote.lyNumber) != 1) {
+                    // tie is located between these notes
+                    nextNote.setTie(true);
+                    ++cNote;
+                    ++cTie;
+                } else if (pairComp(tie.get(0), tie.get(1), prevNote.lyLine, prevNote.lyNumber) != -1) {
+                    ++cNote;
+                } else {
+                    ++cTie;
+                }
+            }
+        }
+
 	}
 
 	public void parseMidi(Sequence sequence) {
@@ -133,11 +166,14 @@ public class Score implements ParserListener {
 
             while (currNote.hasNext()) {
                 NotePanel notePanel = currNote.next();
-                notePanel.setTime(tempTime)
+                if (notePanel.getNote() != null) {
+                    notePanel.setTime(tempTime)
                         .setTempo(tempo);
-                tempTime += notePanel.getDuration();
-                Chord chord = new Chord(notePanel);
-                currChords.add(chord);
+
+                    tempTime += notePanel.getDuration();
+                    Chord chord = new Chord(notePanel);
+                    currChords.add(chord);
+                }
             }
         }
 
@@ -245,7 +281,7 @@ public class Score implements ParserListener {
             NotePanel notePanel = currNote.next();
             // time the last chord ended
             long tempTime = currChords.isEmpty() ? 0 : currChords.lastElement().getTime() + currChords.lastElement().getDuration();
-            while (notePanel.isRest) {
+            while (notePanel.isRest || notePanel.isTie) {
                 notePanel.setTime(Math.min(tempTime, time - 1)) //hack, in case the rest should be trimmed
                          .setTempo(tempo);
                 tempTime += notePanel.getDuration();
@@ -328,4 +364,17 @@ public class Score implements ParserListener {
 	public void voiceEvent(Voice arg0) {
 		layer = arg0.getVoice();
 	}
+
+    private static int pairComp(int n1, int n2, int m1, int m2) {
+        if (n1 < m1) {
+            return -1;
+        } else if (n1 > m1) {
+            return 1;
+        } else if (n2 < m2) {
+            return -1;
+        } else if (n2 > m2) {
+            return 1;
+        }
+        return 0;
+    }
 }

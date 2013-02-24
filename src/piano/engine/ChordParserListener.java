@@ -2,7 +2,6 @@ package piano.engine;
 
 import org.jfugue.elements.*;
 
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,15 +24,21 @@ public abstract class ChordParserListener extends AdapterParserListener {
     }
 
     public final void noteEvent(Note note) {
-        //TODO: make sure no notes are repeated
-        currChord.add(note);
-        if (!inChord) {
-            inChord = true;
-            scheduler.schedule(new Runnable() {
-                public void run() {
-                    finishChord();
+        if (note.getMillisDuration() > 0) {
+            for (Note n : currChord) {
+                if (note.getValue() == n.getValue()) {
+                    return;
                 }
-            }, chordThreshold, TimeUnit.MILLISECONDS);
+            }
+            currChord.add(note);
+            if (!inChord) {
+                inChord = true;
+                scheduler.schedule(new Runnable() {
+                    public void run() {
+                        finishChord();
+                    }
+                }, chordThreshold, TimeUnit.MILLISECONDS);
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JFrame;
 
 import piano.engine.MockAdapterParser;
+import piano.engine.PianoAdapterParser;
 import piano.prototypes.marina.NotePlayer;
 import piano.prototypes.ui.buttons.marina.KeyboardKey;
 
@@ -36,6 +37,7 @@ public class KeyboardView extends Drawing {
 	private ArrayList<KeyboardKey> blackKeyList = new ArrayList<KeyboardKey>();
 
 	private MockAdapterParser mock;
+	private PianoAdapterParser real;
   private KeyboardParserListener keyboardParserListener;
 
 	public KeyboardView(KeyPressedCallback practiceUI, Drawing parent,
@@ -55,6 +57,7 @@ public class KeyboardView extends Drawing {
 		parentFrame.getContentPane().add(KeyboardView.this, 1);
 		parentFrame.validate();
 		mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
+		real = new PianoAdapterParser();
 		mock.addParserListener(keyboardParserListener);
 		//addKeyListener(keyboard);
 		setFocusable(true);

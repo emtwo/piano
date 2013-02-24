@@ -19,6 +19,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
     public boolean isGhost = false, correct;
     public int restType;
     public int tempo;
+    public boolean isTie = false;
 
    /* public boolean hasAccidental = false;
     public double accidentalX, accidentalY;
@@ -28,7 +29,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
 
     private String fontName, glyphName;
 	private Font font;
-	private Note note;
+	private Note note = null;
     private String noteString;
     private Vector<NotePanel> ghostNotes = new Vector<NotePanel>();
     private NotePanel matchedGhost = null;
@@ -175,6 +176,13 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
         return this;
     }
 
+    public NotePanel setTie(boolean isTie) {
+        this.isTie = true;
+        note = new Note((byte) 0);
+        note.setAttackVelocity((byte) 0);
+        return this;
+    }
+
     /*public NotePanel setAccidentals(double x, double y, String glyphName, String fontName) {
         System.out.println("yay?");
         hasAccidental = true;
@@ -278,6 +286,10 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
         this.ghostNotes.clear();
     }
 
+    public NotePanel getMatchedGhost() {
+        return matchedGhost;
+    }
+
     public void paintGhosts() {
         for (NotePanel ghost : ghostNotes) {
             ghost.active = true;
@@ -288,6 +300,11 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
             repaint();
         }
         //TODO most ghost note painting logic
+    }
+
+
+    public Note getNote() {
+        return note;
     }
 
     public long getDuration() {
