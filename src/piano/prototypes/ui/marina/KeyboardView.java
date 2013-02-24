@@ -9,13 +9,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JFrame;
 
+import piano.engine.MockAdapterParser;
 import piano.prototypes.marina.NotePlayer;
 import piano.prototypes.ui.buttons.marina.KeyboardKey;
-import piano.prototypes.ui.marina.Keyboard.Colour;
 
 @SuppressWarnings("serial")
 public class KeyboardView extends Drawing {
@@ -28,23 +27,26 @@ public class KeyboardView extends Drawing {
 	private HashMap<Integer, PianoMenuData> menuData;
 	private Drawing parent;
 	private JFrame parentFrame;
-	private Keyboard keyboard;
 	private NotesToPlayData noteData;
 
 	private AtomicBoolean exitLoop = new AtomicBoolean();
-	private AtomicReference<String> keyPressed = new AtomicReference<String>();
+	private AtomicInteger keyPressed = new AtomicInteger(-1);
 
 	private ArrayList<KeyboardKey> keyList = new ArrayList<KeyboardKey>();
 	private ArrayList<KeyboardKey> blackKeyList = new ArrayList<KeyboardKey>();
 
+	private MockAdapterParser mock;
+  private KeyboardParserListener keyboardParserListener;
+
 	public KeyboardView(KeyPressedCallback practiceUI, Drawing parent,
 			HashMap<Integer, PianoMenuData> menuData, final JFrame parentFrame, NotesToPlayData noteData) throws IOException {
 		super();
+		keyboardParserListener = new KeyboardParserListener(practiceUI);
+
 		this.parent = parent;
 		this.menuData = menuData;
 		this.parentFrame = parentFrame;
 		this.noteData = noteData;
-		keyboard = new Keyboard(practiceUI);
 		NotePlayer.init();
 	}
 
@@ -52,7 +54,9 @@ public class KeyboardView extends Drawing {
 	public void switchToView(final JFrame parentFrame) {
 		parentFrame.getContentPane().add(KeyboardView.this, 1);
 		parentFrame.validate();
-		addKeyListener(keyboard);
+		mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
+		mock.addParserListener(keyboardParserListener);
+		//addKeyListener(keyboard);
 		setFocusable(true);
 		requestFocusInWindow();
 		exitLoop.set(false);
@@ -78,17 +82,17 @@ public class KeyboardView extends Drawing {
 						}
 						NotePlayer.play(noteString);
 						for (NoteToColourMap map : mapList) {
-							keyboard.clear();
-							keyboard.setKeyColour(map.note, map.colour);
+							keyboardParserListener.clear();
+							keyboardParserListener.setKeyColour(map.note, map.colour);
 							Thread.sleep(500);
 						}
-						keyboard.clear();
+						keyboardParserListener.clear();
 
 						int noteToPlay = mapList.get(mapList.size() - 1).note;
-						keyboard.setExpectedKey(noteToPlay);
+						keyboardParserListener.setExpectedKey(noteToPlay);
 
 						// Wait for user to press key
-						while(keyPressed.get() == null){
+						while(keyPressed.get() == -1){
 							if (exitLoop.get() == true) {
 								break;
 							}
@@ -99,14 +103,14 @@ public class KeyboardView extends Drawing {
 						}
 
 						// Key was played correctly,
-						if (keyboard.getKeyInt(keyPressed.get()) != null && keyboard.getKeyInt(keyPressed.get()) == noteToPlay) {
+						if (keyPressed.get() != -1 && keyPressed.get() == noteToPlay) {
 							mapList = computeNoteToPlay();
 						}
-						keyPressed.set(null);
+						keyPressed.set(-1);
 
 						// Clear keyboard colours after 1.5 seconds.
 						Thread.sleep(1500);
-						keyboard.clear();
+						keyboardParserListener.clear();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -116,7 +120,7 @@ public class KeyboardView extends Drawing {
 		thread.start();
 	}
 
-	public void informKeyPressed(final String keyPressed) {
+	public void informKeyPressed(final int keyPressed) {
 		this.keyPressed.set(keyPressed);
 	}
 
@@ -135,14 +139,14 @@ public class KeyboardView extends Drawing {
 
 	private void paintKeys(ArrayList<KeyboardKey> keySet, Graphics2D g2) {
 		for (KeyboardKey key : keySet) {
-			g2.setColor(keyboard.getKeyColor(key.getId()));
+			g2.setColor(keyboardParserListener.getKeyColor(key.getId()));
 			g2.setStroke(new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
 			int startX = parentWidth / 2 - 100;
 			int endX = parentWidth / 2 + 100;
-			if (keyboard.getKeyColor(key.getId()) == Color.RED) {
+			if (keyboardParserListener.getKeyColor(key.getId()) == Color.RED) {
 				g2.drawLine(startX, 80, endX, 280);
 				g2.drawLine(startX, 280, endX, 80);
-			} else if (keyboard.getKeyColor(key.getId()) == Color.GREEN) {
+			} else if (keyboardParserListener.getKeyColor(key.getId()) == Color.GREEN) {
 				g2.drawLine(startX + 50, 280, endX, 80);
 				g2.drawLine(startX, 210, startX + 50, 280);
 			}
@@ -173,7 +177,7 @@ public class KeyboardView extends Drawing {
 		int keyXVal = xVal;
 		int blackKeyXVal = keyXVal + (keyWidth - blackKeyWidth / 2);
 		for (int i = noteData.minKey; i < noteData.maxKey + 1; i++) {
-			if (keyboard.isSharp(i)) {
+			if (keyboardParserListener.isSharp(i)) {
 				blackKeyList.add(new KeyboardKey("", blackKeyXVal, yVal, blackKeyWidth, (int) (height * 0.6), true, i));
 				blackKeyXVal += keyWidth;
 			} else {
@@ -207,7 +211,7 @@ public class KeyboardView extends Drawing {
 		int keyYVal = yVal;
 		int blackKeyYVal = keyYVal + (keyWidth - blackKeyWidth / 2);
 		for (int i = noteData.minKey; i < noteData.maxKey + 1; i++) {
-			if (keyboard.isSharp(i)) {
+			if (keyboardParserListener.isSharp(i)) {
 				blackKeyList.add(new KeyboardKey("", xVal, blackKeyYVal, (int) (width * 0.6), blackKeyWidth, true, i));
 				blackKeyYVal += keyWidth;
 			} else {
@@ -244,10 +248,10 @@ public class KeyboardView extends Drawing {
 
 	public void informExitLoop() {
 		exitLoop.set(true);
-		removeKeyListener(keyboard);
+		//removeKeyListener(keyboard);
 	}
 
 	public boolean isSharp(int i) {
-		return keyboard.isSharp(i);
+		return keyboardParserListener.isSharp(i);
 	}
 }

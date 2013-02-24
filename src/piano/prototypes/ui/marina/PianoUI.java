@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import javax.swing.JFrame;
 
-import piano.prototypes.ui.marina.Keyboard.Colour;
+import piano.prototypes.ui.marina.KeyboardParserListener.Colour;
 
 public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
 	
@@ -70,7 +70,7 @@ public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteC
 	}
 
 	@Override
-	public void informKeyPressed(String keyPressed) {}
+	public void informKeyPressed(int keyPressed) {}
 
 	@Override
 	public void clearKeys() {}
