@@ -40,11 +40,9 @@ public class LilyPond {
 	
 	public static void invokeLilyPond(String name) {
 		String fileLocation = "data/out/" + name + ".ps";
-        File ScoreFile = new File(fileLocation);
-        if (!ScoreFile.exists()) {
-            exec("convert-ly -e data/ly/" + name + ".ly");
-            exec("lilypond --png -dresolution=72 --ps --output=data/out/" + name + " data/ly/" + name + ".ly");
-        }
+		File ScoreFile = new File(fileLocation);
+		exec("convert-ly -e data/ly/" + name + ".ly");
+		exec("lilypond --png -dresolution=72 --ps --output=data/out/" + name + " data/ly/" + name + ".ly");
 	}
 	
 	public static Score parseScore(String name) {
@@ -64,9 +62,9 @@ public class LilyPond {
 			BufferedReader PSIn = new BufferedReader(new FileReader("data/out/" + name + ".ps"));
 			//skip header
 			while (PSIn.ready()) {
-                String line = PSIn.readLine();
+				String line = PSIn.readLine();
 				if (line.contains("EndSetup")) {
-                    S.finishHeader();
+					S.finishHeader();
 					break;
 				} else {
 					S.parseHeader(line);
@@ -79,17 +77,24 @@ public class LilyPond {
 			S.finishPS();
 			
 			PSIn.close();
-			
+
+			//Allow for alternate file extensions of midi files.
+			File midiFile = new File("data/out/" + name + ".midi");
+			File altFile = new File("data/out/" + name + ".mid");
+
+			if (!midiFile.exists() && altFile.exists()) {
+				midiFile = altFile;
+			}
+
 			//parse midi
-	        Sequence sequence = MidiSystem.getSequence(new File("data/out/" + name + ".midi"));
+			Sequence sequence = MidiSystem.getSequence(midiFile);
 			S.parseMidi(sequence);
-            S.finishMidi();
+			S.finishMidi();
 		
+		} catch (Exception e) {
+			System.out.println("Parsing the score from Lilypond's output has failed. Error: ");
+			e.printStackTrace();
 		}
-		catch (java.io.FileNotFoundException e) {}
-		catch (java.io.IOException e) {}
-	    catch (InvalidMidiDataException e) {}
-    
 
 		return S;
 	}
