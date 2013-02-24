@@ -14,6 +14,7 @@
    \key c \major
    \time 4/4
    \tempo "Moderato" 4 = 91
+      \set Score.tempoHideNote = ##t
    \relative c' { 
      e2(\mp e4 d4 c2 c4) r4 d2( d4 f4 e4 d4 c4) r4
      g'2(\mf g4 f4 e2 e4 c4 d4 c4 d4 e4 c2.) r4 

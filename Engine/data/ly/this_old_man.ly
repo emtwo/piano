@@ -14,6 +14,7 @@
    \key c \major
    \time 4/4
    \tempo "Happily" 4 = 132
+      \set Score.tempoHideNote = ##t
    \relative c' { c4 r4 c2 c4 r4 c2 d4 c4 r2 r1 
    c4 r4 r2 r2 c2 c4( r4 r2 r4 e4 f2)
    }
