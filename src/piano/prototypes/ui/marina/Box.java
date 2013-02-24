@@ -5,24 +5,20 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import javax.swing.JFrame;
+
 import piano.prototypes.ui.buttons.marina.Button;
 
 public class Box extends Button {
 	int x, y, width, height;
 
-	public Box(int x, int y, int width, int height) {
-		super("", x, y, width, height);
+	public Box(int x, int y, int width, int height, Drawing parent, Drawing nextView, JFrame parentFrame) {
+		super("", x, y, width, height, parent, nextView, parentFrame);
 	}
 
 	@Override
-	public void hoverOver() {
-		// TODO Auto-generated method stub
-
-	}
+	public void hoverOver() {}
 
 	@Override
-	public void hoverOut() {
-		// TODO Auto-generated method stub
-
-	}
+	public void hoverOut() {}
 }

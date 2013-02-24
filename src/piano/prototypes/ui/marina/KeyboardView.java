@@ -59,6 +59,7 @@ public class KeyboardView extends Drawing {
 		mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
 		real = new PianoAdapterParser();
 		mock.addParserListener(keyboardParserListener);
+		real.addParserListener(keyboardParserListener);
 		//addKeyListener(keyboard);
 		setFocusable(true);
 		requestFocusInWindow();

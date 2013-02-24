@@ -2,7 +2,7 @@ package piano.engine;
 
 import javax.swing.*;
 
-public class ScoreWriter implements Runnable{
+public class ScoreWriter implements Runnable {
 
 	public void run() {
         JFrame f = new JFrame ("Score Viewer");
@@ -19,11 +19,12 @@ public class ScoreWriter implements Runnable{
         f.setVisible(true);
 
 	}
-
+/*
 	public static void main(String[] args) {
 
 		ScoreWriter score = new ScoreWriter();
 		SwingUtilities.invokeLater(score);
 
 	}
+	*/
 }

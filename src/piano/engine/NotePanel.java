@@ -2,13 +2,15 @@ package piano.engine;
 
 import org.jfugue.elements.Note;
 
+import piano.prototypes.ui.marina.Drawing;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Vector;
 
-public class NotePanel extends JPanel implements Comparable<NotePanel> {
+public class NotePanel extends Drawing implements Comparable<NotePanel> {
 
 	public int lyLine, lyNumber;
 	public double x, y;
@@ -87,7 +89,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
 
 
     public NotePanel() {
-		setOpaque(false);
+		setOpaque(true);
         setBounds(0, 0, 595, 842);
 	}
 
@@ -371,6 +373,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel> {
 	}
 
 	public void repaint() {
+		setOpaque(active);
         repaint(absoluteX(), absoluteY(y - halfNoteHeight), noteWidth, absoluteY(noteHeight));
         /*if (hasAccidental) {
             repaint(absoluteX(accidentalX), absoluteY(accidentalY), accidentalWidth, accidentalHeight);

@@ -2,6 +2,10 @@ package piano.engine;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import piano.prototypes.ui.marina.Drawing;
+import piano.prototypes.ui.marina.KeyboardView;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -12,7 +16,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class ScorePanel extends JPanel {
+public class ScorePanel extends Drawing {
 	private JFrame frame;
 	private String name;
 	private int page, npages;
@@ -22,6 +26,7 @@ public class ScorePanel extends JPanel {
     private Vector<ScheduledFuture> futures = new Vector<ScheduledFuture>();
 
     private MockAdapterParser mock;
+    private PianoAdapterParser piano;
     private PracticeParserListener practiceParserListener;
     private ExamParserListener examParserListener;
     private ExamTest examTest;
@@ -175,12 +180,14 @@ public class ScorePanel extends JPanel {
         scheduler = Executors.newScheduledThreadPool(1);
 
         mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
-        //practiceParserListener = new PracticeParserListener(S.combinedChords);
-        //mock.addParserListener(practiceParserListener);
+        piano = new PianoAdapterParser();
+        practiceParserListener = new PracticeParserListener(S.combinedChords);
+        mock.addParserListener(practiceParserListener);
+        piano.addParserListener(practiceParserListener);
 
         examParserListener = new ExamParserListener(this);
         examTest = new ExamTest(examParserListener);
-        mock.addParserListener(examParserListener);
+        // mock.addParserListener(examParserListener);
 
         this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "left");
         this.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "right");
@@ -344,6 +351,13 @@ public class ScorePanel extends JPanel {
                 }
             }
         }
+	}
+
+	@Override
+	public void switchToView(final JFrame parentFrame) {
+		super.switchToView(parentFrame);
+		setFocusable(true);
+		requestFocusInWindow();
 	}
 
     public void paintComponent(Graphics g) {

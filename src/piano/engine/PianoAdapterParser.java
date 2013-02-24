@@ -166,7 +166,7 @@ public class PianoAdapterParser extends Parser implements Receiver
     }
 
     public void tryAttachPiano() {
-        String pianoDeviceName = "2- UM-1G";
+        String pianoDeviceName = "UM-1G";
         MidiDevice.Info[] devices = MidiSystem.getMidiDeviceInfo();
         MidiDevice inputDevice = null;
         int index = -1;
