@@ -69,7 +69,7 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNex
 	}
 
 	@Override
-	public void informKeyPressed(String keyPressed) {}
+	public void informKeyPressed(int keyPressed) {}
 
 	@Override
 	public void clearKeys() {}

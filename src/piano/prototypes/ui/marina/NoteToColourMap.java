@@ -1,6 +1,6 @@
 package piano.prototypes.ui.marina;
 
-import piano.prototypes.ui.marina.Keyboard.Colour;
+import piano.prototypes.ui.marina.KeyboardParserListener.Colour;
 
 public class NoteToColourMap {
 	int note;

@@ -15,7 +15,11 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import piano.engine.ScorePanel;
+import piano.engine.ScoreWriter;
 import piano.prototypes.marina.Point;
 import piano.prototypes.marina.Utils;
 import piano.prototypes.repository.marina.Song;
@@ -36,14 +40,17 @@ public class SongView extends Drawing {
 	public boolean onLastPage = false;
 	public boolean onFirstPage = true;	
 	private boolean filledBoxes = false;
+	private JFrame parentFrame;
 
 	Box[] boxes = new Box[6];
 	
 	public int startIndex = 0, width = 800;
 	SubView parentView;
+	ScorePanel score;
 	
 	public SongView(JFrame parentFrame, SubView parentView) {
 		this.parentView = parentView;
+		this.parentFrame = parentFrame;
 		
 		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
 		try {
@@ -55,6 +62,7 @@ public class SongView extends Drawing {
 		nextButton = new NextButton("Next", width/5 * 4 + 70, width - 60, width/10, 25, this, null, parentFrame);
 		prevButton = new PrevButton("Previous", width/5 * 4 - 15, width - 60, width/10, 25, this, null, parentFrame);
 		backButton = new BackButton("< Back", width/5 - 70 - width/10, width - 60, width/10, 25, this, null, parentFrame);
+		score = new ScorePanel(parentFrame, "furelise");
 	}
 	
 	public void setSongs(List<Song> songs) {
@@ -90,6 +98,13 @@ public class SongView extends Drawing {
 		System.out.println("SongView mouse clicked.");
     nextButton.setMouseClicked(e.getX(), e.getY());
     prevButton.setMouseClicked(e.getX(), e.getY());
+
+    for (Box button : boxes) {
+			if (button == null) continue;
+			button.setMouseClicked(e.getX(), e.getY());
+			button.setMouseClicked(e.getX(), e.getY());
+		}
+
     if (parentView.hasBack)  {
     	backButton.setMouseClicked(e.getX(), e.getY());
     }
@@ -115,7 +130,13 @@ public class SongView extends Drawing {
 				}
 				g.drawRoundRect(currX - 10, currY - 10, 250, 255, 10, 10);
 				if (!filledBoxes) {
-					boxes[j] = new Box(currX - 10, currY - 10, 250, 255);
+					Drawing val;
+					if (i == 0) {
+						val = score;
+					} else {
+						val = null;
+					}
+					boxes[j] = new Box(currX - 10, currY - 10, 250, 255, this, val, parentFrame);
 				}
 				
 				// Draw music image.

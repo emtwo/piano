@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 import piano.prototypes.ui.buttons.marina.HelpButton;
 import piano.prototypes.ui.buttons.marina.MainMenuButton;
-import piano.prototypes.ui.marina.Keyboard.Colour;
+import piano.prototypes.ui.marina.KeyboardParserListener.Colour;
 
 public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
 
@@ -76,7 +76,7 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, G
 	}
 
 	@Override
-	public void informKeyPressed(String keyPressed) {
+	public void informKeyPressed(int keyPressed) {
 		repaint();
 		keyboard.informKeyPressed(keyPressed);
 	}
