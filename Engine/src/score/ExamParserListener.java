@@ -79,16 +79,18 @@ public class ExamParserListener extends AdapterParserListener {
     }
 
     public void noteEvent(Note note) {
-        //end metronome counting and start timing
-        if (state == counting) {
-            state = playing;
-            metronome.end();
-            metronome = null;
-            SP.play(true);
-            start = new Date().getTime();
-        }
+        if (note.getMillisDuration() > 0) {
+            //end metronome counting and start timing
+            if (state == counting) {
+                state = playing;
+                metronome.end();
+                metronome = null;
+                SP.play(true);
+                start = new Date().getTime();
+            }
 
-        noteEvent(note, new Date().getTime() - start);
+            noteEvent(note, new Date().getTime() - start);
+        }
     }
 
     private void attachNotes() {
