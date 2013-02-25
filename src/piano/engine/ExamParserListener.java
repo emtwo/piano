@@ -78,7 +78,7 @@ public class ExamParserListener extends AdapterParserListener {
         notes.add(ghost);
     }
 
-    public void noteEvent(Note note) {
+    public void pressNoteEvent(Note note) {
         if (note.getMillisDuration() > 0) {
             //end metronome counting and start timing
             if (state == counting) {
@@ -91,6 +91,11 @@ public class ExamParserListener extends AdapterParserListener {
 
             noteEvent(note, new Date().getTime() - start);
         }
+    }
+
+    @Override
+    void releaseNoteEvent(Note note) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private void attachNotes() {

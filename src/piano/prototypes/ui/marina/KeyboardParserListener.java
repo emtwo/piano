@@ -121,19 +121,24 @@ public class KeyboardParserListener extends AdapterParserListener/*extends KeyAd
 		callback.clearKeys();
 	}
 
-	@Override
-	public void noteEvent(Note note) {
-		//String noteString = note.getMusicString().replace("q", "").toLowerCase();
-    //System.out.println("key? " + noteString);
-    int keyInt = (int)note.getValue();
+    @Override
+	public void pressNoteEvent(Note note) {
+            //String noteString = note.getMusicString().replace("q", "").toLowerCase();
+        //System.out.println("key? " + noteString);
+        int keyInt = (int)note.getValue();
 
-    if (keyInt == expectedKey) {
-	keyToColorMap.put(keyInt, Colour.GREEN);
-    } else {
-	if (keyInt >= 48 && keyInt <= 83) {
-		keyToColorMap.put(keyInt, Colour.RED);
+        if (keyInt == expectedKey) {
+            keyToColorMap.put(keyInt, Colour.GREEN);
+        } else {
+            if (keyInt >= 48 && keyInt <= 83) {
+                keyToColorMap.put(keyInt, Colour.RED);
+            }
+        }
+        callback.informKeyPressed(keyInt);
 	}
+
+    @Override
+    public void releaseNoteEvent(Note note) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
-    callback.informKeyPressed(keyInt);
-	}
 }
