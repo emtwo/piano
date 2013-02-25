@@ -10,7 +10,17 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class AdapterParserListener implements ParserListener {
 
+    public abstract void pressNoteEvent(Note note);
 
+    public abstract void releaseNoteEvent(Note note);
+
+    public final void noteEvent(Note note) {
+        if (note.getAttackVelocity() > 0) {
+            pressNoteEvent(note);
+        } else {
+            releaseNoteEvent(note);
+        }
+    }
 
     // Usually never called
     public void voiceEvent(Voice voice) {

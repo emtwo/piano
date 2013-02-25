@@ -23,7 +23,7 @@ public abstract class ChordParserListener extends AdapterParserListener {
         currChord = new Vector<Note>();
     }
 
-    public final void noteEvent(Note note) {
+    public final void pressNoteEvent(Note note) {
         if (note.getMillisDuration() > 0) {
             for (Note n : currChord) {
                 if (note.getValue() == n.getValue()) {
