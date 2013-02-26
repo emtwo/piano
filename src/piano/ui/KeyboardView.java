@@ -49,7 +49,6 @@ public class KeyboardView extends Drawing {
 		this.menuData = menuData;
 		this.parentFrame = parentFrame;
 		this.noteData = noteData;
-		NotePlayer.init();
 	}
 
 	@Override
