@@ -3,8 +3,8 @@ package piano.engine;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import piano.prototypes.ui.marina.Drawing;
-import piano.prototypes.ui.marina.KeyboardView;
+import piano.ui.Drawing;
+import piano.ui.KeyboardView;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

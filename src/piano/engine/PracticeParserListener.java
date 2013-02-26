@@ -55,4 +55,6 @@ public class PracticeParserListener extends ChordParserListener {
         }
     }
 
+		@Override
+		public void releaseNoteEvent(Note note) {}
 }

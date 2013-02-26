@@ -3,7 +3,7 @@ package piano.engine;
 import org.jfugue.elements.Note;
 import org.jfugue.parsers.Parser;
 
-import piano.prototypes.ui.marina.KeyboardParserListener;
+import piano.ui.KeyboardParserListener;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

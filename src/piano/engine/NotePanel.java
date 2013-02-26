@@ -2,7 +2,7 @@ package piano.engine;
 
 import org.jfugue.elements.Note;
 
-import piano.prototypes.ui.marina.Drawing;
+import piano.ui.Drawing;
 
 import javax.swing.*;
 import java.awt.*;
