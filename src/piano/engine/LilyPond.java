@@ -80,18 +80,24 @@ public class LilyPond {
 
 			PSIn.close();
 
+            //Allow for alternate file extensions of midi files.
+            File midiFile = new File("data/out/" + name + ".midi");
+            File altFile = new File("data/out/" + name + ".mid");
+
+            if (!midiFile.exists() && altFile.exists()) {
+                midiFile = altFile;
+            }
+
 			//parse midi
-	        Sequence sequence = MidiSystem.getSequence(new File("data/out/" + name + ".midi"));
+	        Sequence sequence = MidiSystem.getSequence(midiFile);
 			S.parseMidi(sequence);
             S.finishMidi();
 
-		}
-		catch (java.io.FileNotFoundException e) {}
-		catch (java.io.IOException e) {}
-	    catch (InvalidMidiDataException e) {}
-
+		} catch (Exception e) {
+            System.out.println("Parsing the score from Lilypond's output has failed. Error: ");
+            e.printStackTrace();
+        }
 
 		return S;
 	}
-
 }
