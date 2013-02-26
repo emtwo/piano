@@ -5,11 +5,10 @@ import org.jfugue.Player;
 public class NotePlayer implements Runnable {
 
     private String musicString;
-    private Player player;
+    private Player player = new Player();
 
     private NotePlayer(String musicString) {
         this.musicString = musicString;
-        this.player = new Player();
     }
 
     public void run() {
