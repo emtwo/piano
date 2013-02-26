@@ -94,7 +94,7 @@ public class ExamParserListener extends AdapterParserListener {
     }
 
     @Override
-    void releaseNoteEvent(Note note) {
+    public void releaseNoteEvent(Note note) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
