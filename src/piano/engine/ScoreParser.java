@@ -96,8 +96,6 @@ public class ScoreParser implements ParserListener {
             System.err.println("Lilypond failed to produce any files");
         }
         pages = imageNames.size();
-
-        // TODO get image size instead of just leaving it at default value
     }
 
     private void parseLilyPond() {
