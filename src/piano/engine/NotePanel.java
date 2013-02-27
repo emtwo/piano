@@ -320,8 +320,10 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
 			    g.setColor(Color.RED);
             }
 
+            Font oldFont = g.getFont();
 			g.setFont(font);
 			g.drawString(noteString, absoluteX(), absoluteY());
+            g.setFont(oldFont);
 
             /*if (hasAccidental) {
                 System.out.p rintln("yay");
