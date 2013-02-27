@@ -16,7 +16,7 @@ public class Metronome {
     private int tempo;
 
     Metronome(Score S) {
-        tempo = S.chords[0].get(0).notes.get(0).getTempo();
+        tempo = S.allChords[0].get(0).notes.get(0).getTempo();
         firstChord = S.combinedChords.get(0);
     }
 
