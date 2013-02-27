@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class ScorePanel extends Drawing {
 	private JFrame frame;
 	private String name;
-	private int page, npages;
+	private int page;
 	private Vector<BufferedImage> images;
 	private BufferedImage currImage;
 	private int[] currChords;
@@ -58,30 +58,10 @@ public class ScorePanel extends Drawing {
 		//read in all the images
 		images = new Vector<BufferedImage>();
         try {
-            String fileLocation = "data/out/" + name + ".png";
-            File file = new File(fileLocation);
-            if (file.exists()) {
-                images.add(ImageIO.read(file));
-                npages = 1;
-            } else {
-                int p = 1;
-                fileLocation = "data/out/" + name + "-page" + p + ".png";
-                file = new File(fileLocation);
-                while (file.exists()) {
-                    images.add(ImageIO.read(file));
-                    ++p;
-                    fileLocation = "data/out/" + name + "-page" + p + ".png";
-                    file = new File(fileLocation);
-                }
-                npages = p - 1;
+            for (String imageName : S.imageNames) {
+                images.add(ImageIO.read(new File(imageName)));
             }
-            if (images.isEmpty()) {
-                System.err.println("Lilypond failed to produce any files");
-            }
-            currImage = images.get(0);
-
-        }
-        catch (java.io.IOException e) {
+        } catch (java.io.IOException e) {
 			System.out.println(e.getMessage());
 		}
 
@@ -207,7 +187,7 @@ public class ScorePanel extends Drawing {
 	}
 
     public void setPage(int newpage) {
-        if (newpage >= 1 && newpage <= npages) {
+        if (newpage >= 1 && newpage <= S.pages) {
             page = newpage;
         }
         currImage = images.get(page - 1);

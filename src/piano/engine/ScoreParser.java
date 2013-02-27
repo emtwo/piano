@@ -18,6 +18,7 @@ public class ScoreParser implements ParserListener {
     public int staves = 1;
     public int resolution;
     public int pages;
+    public Vector<String> imageNames = new Vector<String>();
 
     private Vector<NotePanel> notes[];
     private int staffLine;
@@ -34,6 +35,7 @@ public class ScoreParser implements ParserListener {
 
         //TODO put back
         //invokeLilyPond();
+        parseImages();
         parseLilyPond();
         parsePostScript();
         parseMidi();
@@ -70,6 +72,28 @@ public class ScoreParser implements ParserListener {
     private void invokeLilyPond() {
         exec("convert-ly -e data/ly/" + name + ".ly");
         exec("lilypond --png -dresolution=72 --ps --output=data/out/" + name + " data/ly/" + name + ".ly");
+    }
+
+    private void parseImages() {
+        String fileLocation = "data/out/" + name + ".png";
+        File file = new File(fileLocation);
+        if (file.exists()) {
+            imageNames.add(fileLocation);
+        } else {
+            int p = 1;
+            fileLocation = "data/out/" + name + "-page" + p + ".png";
+            file = new File(fileLocation);
+            while (file.exists()) {
+                imageNames.add(fileLocation);
+                ++p;
+                fileLocation = "data/out/" + name + "-page" + p + ".png";
+                file = new File(fileLocation);
+            }
+        }
+        if (imageNames.isEmpty()) {
+            System.err.println("Lilypond failed to produce any files");
+        }
+        pages = imageNames.size();
     }
 
     private void parseLilyPond() {
@@ -169,9 +193,6 @@ public class ScoreParser implements ParserListener {
                     //lastNote.setAccidentals(Double.parseDouble(T[0]), -Double.parseDouble(T[1]), T[4].substring(1), T[3]);
                 } else if (S.startsWith("%%Page:")) {
                     currPage = Integer.parseInt(S.split(" ")[1]);
-                    if (currPage > pages) {
-                        pages = currPage;
-                    }
                 }
 
                 if (S.contains(this.name + ".ly")) {

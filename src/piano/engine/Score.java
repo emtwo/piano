@@ -9,9 +9,10 @@ public class Score implements Serializable {
 	public double paperHeight = 169.00937007874;
 	public double paperWidth = 119.50157480315;
     public Vector<Chord> allChords[], chords[];
-    public Vector<Chord> combinedChords = new Vector<Chord>(), combinedAllChords = new Vector<Chord>();
-    public Vector<NotePanel> combinedNotes = new Vector<NotePanel>(), combinedAllNotes = new Vector<NotePanel>();
-    public int staves = 1;
+    public Vector<Chord> combinedChords, combinedAllChords;
+    public Vector<NotePanel> combinedNotes, combinedAllNotes;
+    public Vector<String> imageNames;
+    public int staves;
     public int pages;
     public int resolution;
 
@@ -26,6 +27,7 @@ public class Score implements Serializable {
         S.pages = P.pages;
         S.staves = P.staves;
         S.allChords = P.chords;
+        S.imageNames = P.imageNames;
         S.populateCombinedChords();
 
         S.save();
@@ -67,6 +69,10 @@ public class Score implements Serializable {
     private void populateCombinedChords() {
 
         chords = (Vector<Chord>[]) new Vector[staves];
+        combinedChords = new Vector<Chord>();
+        combinedAllChords = new Vector<Chord>();
+        combinedNotes = new Vector<NotePanel>();
+        combinedAllNotes = new Vector<NotePanel>();
 
         for (int layer = 0; layer < staves; ++layer) {
             for (Chord chord : allChords[layer]) {
