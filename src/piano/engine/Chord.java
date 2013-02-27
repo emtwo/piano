@@ -1,8 +1,9 @@
 package piano.engine;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class Chord {
+public class Chord implements Serializable {
 	public Vector<NotePanel> notes = new Vector<NotePanel>();
 	public boolean active = false;
 

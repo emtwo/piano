@@ -7,10 +7,11 @@ import piano.ui.Drawing;
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Vector;
 
-public class NotePanel extends Drawing implements Comparable<NotePanel> {
+public class NotePanel extends Drawing implements Comparable<NotePanel>, Serializable {
 
 	public int lyLine, lyNumber;
 	public double x, y;

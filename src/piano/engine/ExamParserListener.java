@@ -105,7 +105,7 @@ public class ExamParserListener extends AdapterParserListener {
 
             // move bounding chords up until the current ghost note is between them
             for (int layer = 0; layer < S.staves; ++layer) {
-                while (c[layer] < S.chords[layer].size() - 1 && S.chords[layer].get(c[layer] + 1).getMillisTime() < ghost.getMillisTime()) {
+                while (c[layer] < S.allChords[layer].size() - 1 && S.allChords[layer].get(c[layer] + 1).getMillisTime() < ghost.getMillisTime()) {
                     ++c[layer];
                 }
             }
@@ -118,10 +118,10 @@ public class ExamParserListener extends AdapterParserListener {
                 long matchOffset = 0L; // distance to nearest matching node
                 for (int layer = 0; layer < S.staves; ++layer) {
                     for (int i = 0; i <= 1; ++i) {
-                        if (c[layer] + i >= S.chords[layer].size()) {
+                        if (c[layer] + i >= S.allChords[layer].size()) {
                             break;
                         }
-                        Chord chord = S.chords[layer].get(c[layer] + i);
+                        Chord chord = S.allChords[layer].get(c[layer] + i);
                         if (chord.contains(ghost)) {
                             long offSet = Math.abs(chord.getMillisTime() - ghost.getMillisTime());
                             if (matchOffset == 0L || offSet < matchOffset) {
@@ -143,12 +143,12 @@ public class ExamParserListener extends AdapterParserListener {
             // pick which chord to attach the note to. this is based on the constant attachThres
             Chord attachedChord;
             NotePanel referenceNote;
-            if (c[attachedLayer] >= S.chords[attachedLayer].size() - 1) {
-                attachedChord = S.chords[attachedLayer].lastElement();
+            if (c[attachedLayer] >= S.allChords[attachedLayer].size() - 1) {
+                attachedChord = S.allChords[attachedLayer].lastElement();
                 referenceNote = null;
             } else {
-                Chord chord = S.chords[attachedLayer].get(c[attachedLayer]);
-                Chord nextChord = S.chords[attachedLayer].get(c[attachedLayer] + 1);
+                Chord chord = S.allChords[attachedLayer].get(c[attachedLayer]);
+                Chord nextChord = S.allChords[attachedLayer].get(c[attachedLayer] + 1);
                 if (ghost.getMillisTime() <= chord.getMillisTime() + attachThres * chord.getMillisDuration()) {
                     attachedChord = chord;
                     referenceNote = nextChord.notes.firstElement();

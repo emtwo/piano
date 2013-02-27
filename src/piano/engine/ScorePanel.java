@@ -49,10 +49,11 @@ public class ScorePanel extends Drawing {
 
         NotePanel.setFrame(frame);
 
-        NotePlayer.init(); // this takes some time, so initialize music players
+        NotePlayer.init(); // this takes some time, so initialize music players TODO move this
 
-        LilyPond.invokeLilyPond(this.name);
-        this.S = LilyPond.parseScore(this.name);
+        //this.S = Score.ParseScore(this.name);
+        Score.ParseScore(name);
+        S = Score.Load(name);
 
 		//read in all the images
 		images = new Vector<BufferedImage>();
@@ -87,7 +88,7 @@ public class ScorePanel extends Drawing {
         currChords = new int[S.staves];
 
         //add chords to frame
-        for (Vector<Chord> chords : S.chords) {
+        for (Vector<Chord> chords : S.allChords) {
             for (Chord chord : chords) {
                 for (NotePanel note : chord.notes) {
                     this.frame.add(note);
@@ -218,13 +219,13 @@ public class ScorePanel extends Drawing {
     public void nextNote(int layer) {
         // play and highlight the next right hand note
         if (currChords[layer] > 0) {
-            Chord lastChord = S.chords[layer].get(currChords[layer] - 1);
+            Chord lastChord = S.allChords[layer].get(currChords[layer] - 1);
             lastChord.setActive(false);
             lastChord.paint();
         }
 
-        if (currChords[layer] < S.chords[layer].size()) {
-            Chord chord = S.chords[layer].get(currChords[layer]);
+        if (currChords[layer] < S.allChords[layer].size()) {
+            Chord chord = S.allChords[layer].get(currChords[layer]);
             chord.setActive(true);
             chord.paint();
             if (!mute) {
@@ -237,23 +238,23 @@ public class ScorePanel extends Drawing {
     public void nextTogetherNote() {
         for (int layer = 0; layer < S.staves; ++layer) {
             if (currChords[layer] > 0) {
-                Chord lastChord = S.chords[layer].get(currChords[layer] - 1);
+                Chord lastChord = S.allChords[layer].get(currChords[layer] - 1);
                 lastChord.setActive(false);
                 lastChord.paint();
             }
 
-            if (currChords[layer] < S.chords[layer].size()) {
-                Chord chord = S.chords[layer].get(currChords[layer]);
+            if (currChords[layer] < S.allChords[layer].size()) {
+                Chord chord = S.allChords[layer].get(currChords[layer]);
                 chord.setActive(true);
                 chord.paint();
                 ++currChords[layer];
             }
         }
 
-        System.out.println(S.chords[0].get(currChords[0] - 1).musicString + ": " + S.chords[0].get(currChords[0] - 1).getMillisTime());
+        //System.out.println(S.allChords[0].get(currChords[0] - 1).musicString + ": " + S.allChords[0].get(currChords[0] - 1).getMillisTime());
 
         if (!mute) {
-            NotePlayer.play(S.chords[0].get(currChords[0] - 1).musicString + "+" + S.chords[1].get(currChords[1] - 1).musicString);
+            NotePlayer.play(S.allChords[0].get(currChords[0] - 1).musicString + "+" + S.allChords[1].get(currChords[1] - 1).musicString);
         }
     }
 
@@ -269,14 +270,14 @@ public class ScorePanel extends Drawing {
 
         // schedules all chords to be played
         if (S.staves > 1) {
-            while (cNote[0] < S.chords[0].size() && cNote[1] < S.chords[1].size()) {
+            while (cNote[0] < S.allChords[0].size() && cNote[1] < S.allChords[1].size()) {
                 for (int layer = 0; layer < S.staves; ++layer) {
-                    time[layer] = S.chords[layer].get(cNote[layer]).getMillisTime();
+                    time[layer] = S.allChords[layer].get(cNote[layer]).getMillisTime();
                 }
 
                 if (time[0] == time[1]) {
                     futures.add(scheduler.schedule(playNextTogetherNote, startTime + time[0], TimeUnit.MILLISECONDS));
-                    if (S.chords[0].get(cNote[0]).getPage() > cPage) {
+                    if (S.allChords[0].get(cNote[0]).getPage() > cPage) {
                         futures.add(scheduler.schedule(nextPage, startTime + time[0], TimeUnit.MILLISECONDS));
                         ++cPage;
                     }
@@ -295,8 +296,8 @@ public class ScorePanel extends Drawing {
 
         // schedule last notes if one hand finishes before the other or if there is only one hand
         for (int layer = 0; layer < S.staves; ++layer) {
-            while (cNote[layer] < S.chords[layer].size()) {
-                time[layer] = S.chords[layer].get(cNote[layer]).getMillisTime();
+            while (cNote[layer] < S.allChords[layer].size()) {
+                time[layer] = S.allChords[layer].get(cNote[layer]).getMillisTime();
                 Runnable r = (layer == 0) ? playNextRightNote : playNextLeftNote;
                 futures.add(scheduler.schedule(r, startTime + time[layer], TimeUnit.MILLISECONDS));
                 ++(cNote[layer]);
@@ -304,7 +305,7 @@ public class ScorePanel extends Drawing {
         }
 
         //set callback for when playback finishes
-        futures.add(scheduler.schedule(finishPlaying, startTime + S.chords[0].lastElement().getMillisTime() + S.chords[0].lastElement().getMillisDuration(), TimeUnit.MILLISECONDS));
+        futures.add(scheduler.schedule(finishPlaying, startTime + S.allChords[0].lastElement().getMillisTime() + S.allChords[0].lastElement().getMillisDuration(), TimeUnit.MILLISECONDS));
 	}
 
     public void refresh() {
@@ -321,7 +322,7 @@ public class ScorePanel extends Drawing {
         }
 
         //set all notes to inactive
-        for (Vector<Chord> chords : S.chords) {
+        for (Vector<Chord> chords : S.allChords) {
             for (Chord chord : chords) {
                 chord.setActive(false);
             }
@@ -344,7 +345,7 @@ public class ScorePanel extends Drawing {
     }
 
 	private void repaintActiveNotes() {
-        for (Vector<Chord> chords : S.chords) {
+        for (Vector<Chord> chords : S.allChords) {
             for (Chord chord : chords) {
                 if (chord.active) {
                     chord.paint();
