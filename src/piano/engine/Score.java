@@ -1,6 +1,6 @@
 package piano.engine;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 public class Score implements Serializable {
@@ -28,15 +28,41 @@ public class Score implements Serializable {
         S.allChords = P.chords;
         S.populateCombinedChords();
 
+        S.save();
+
         return S;
 
     }
 
+    public static Score Load(String name) {
+        try {
+            String filePath = "data/out/" + name + ".dat";
+            System.out.println("Loading score from " + filePath);
+            FileInputStream f = new FileInputStream(filePath);
+            ObjectInput s = new ObjectInputStream(f);
+            return (Score) s.readObject();
+        } catch (Exception e) {
+            System.err.println("Loading score has failed. Error: ");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private Score() {}
 
-	public Score(String name) {
-
-	}
+    private void save() {
+        try {
+            String filePath = "data/out/" + name + ".dat";
+            System.out.println("Saving score to " + filePath);
+            FileOutputStream f = new FileOutputStream(filePath);
+            ObjectOutput s = new ObjectOutputStream(f);
+            s.writeObject(this);
+            s.flush();
+        } catch (Exception e) {
+            System.err.println("Saving score has failed. Error: ");
+            e.printStackTrace();
+        }
+    }
 
     private void populateCombinedChords() {
 

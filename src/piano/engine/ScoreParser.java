@@ -98,7 +98,7 @@ public class ScoreParser implements ParserListener {
             }
             LYIn.close();
         } catch (Exception e) {
-            System.out.println("Parsing the score from Lilypond's output has failed. Error: ");
+            System.err.println("Parsing the score from Lilypond's output has failed. Error: ");
             e.printStackTrace();
         }
 
@@ -209,7 +209,7 @@ public class ScoreParser implements ParserListener {
 
             PSIn.close();
         } catch (Exception e) {
-            System.out.println("Parsing the score from Lilypond's output has failed. Error: ");
+            System.err.println("Parsing the score from Lilypond's output has failed. Error: ");
             e.printStackTrace();
         }
     }
@@ -259,7 +259,7 @@ public class ScoreParser implements ParserListener {
             }
 
         } catch (Exception e) {
-            System.out.println("Parsing the score from Lilypond's output has failed. Error: ");
+            System.err.println("Parsing the score from Lilypond's output has failed. Error: ");
             e.printStackTrace();
         }
     }

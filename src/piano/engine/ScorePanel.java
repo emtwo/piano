@@ -51,7 +51,9 @@ public class ScorePanel extends Drawing {
 
         NotePlayer.init(); // this takes some time, so initialize music players TODO move this
 
-        this.S = Score.ParseScore(this.name);
+        //this.S = Score.ParseScore(this.name);
+        Score.ParseScore(name);
+        S = Score.Load(name);
 
 		//read in all the images
 		images = new Vector<BufferedImage>();
