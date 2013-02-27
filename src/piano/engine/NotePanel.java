@@ -6,9 +6,7 @@ import piano.ui.Drawing;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileInputStream;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Vector;
 
 public class NotePanel extends Drawing implements Comparable<NotePanel>, Serializable {
@@ -23,6 +21,7 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
     public int restType;
     public int tempo;
     public boolean isTie = false;
+    public Score score;
 
    /* public boolean hasAccidental = false;
     public double accidentalX, accidentalY;
@@ -30,7 +29,6 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
     private int accidentalWidth, accidentalHeight;
     private String accidentalString;       */
 
-    private String fontName, glyphName;
 	private Font font;
 	private Note note = null;
     private String noteString;
@@ -39,65 +37,30 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
     private int noteWidth;
 
     private static JFrame frame;
-	private static double paperWidth, paperHeight;
-	private static int imageWidth, imageHeight;
-	private static HashMap<String, Font> fonts;
-    private static int resolution;
 
+    private static final int resolution = 384;
     private static final double noteHeight = 1.0, halfNoteHeight = 0.5;
-
-    public static void setPaper(double width, double height) {
-        paperWidth = width;
-        paperHeight = height;
-    }
-
-    public static void setImage(int width, int height) {
-        imageWidth = width;
-        imageHeight = height;
-    }
-
-    public static void setResolution(int resolution) {
-        NotePanel.resolution = resolution;
-    }
 
     public static void setFrame(JFrame frame) {
         NotePanel.frame = frame;
     }
 
-    public static void addFont(String fontKey, String fontName, float scale) {
-        try {
-            fontName = fontName.toLowerCase();
-            if (fonts == null) {
-                fonts = new HashMap<String, Font>();
-            }
-
-            FileInputStream stream = new FileInputStream("data/fonts/otf/" + fontName + ".otf");
-
-            Font f = Font.createFont(Font.TRUETYPE_FONT, stream);
-            f = f.deriveFont(scale);
-            fonts.put(fontKey, f);
-            stream.close();
-
-            GraphicsEnvironment ge = GraphicsEnvironment
-                    .getLocalGraphicsEnvironment();
-
-            ge.registerFont(f);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public NotePanel() {
-		setOpaque(true);
-        setBounds(0, 0, 595, 842);
 	}
 
 	public NotePanel(Note note) {
         this();
 		setNote(note);
 	}
+
+    public NotePanel setScore(Score score) {
+        this.score = score;
+        setBounds(0, 0, score.imageWidth, score.imageHeight);
+        if (score.resolution != resolution) {
+            System.err.println("Score is not using default resolution");
+        }
+        return this;
+    }
 
 	public NotePanel setNote(Note note) {
 		this.note = note;
@@ -122,15 +85,10 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
         return this;
     }
 
-	public NotePanel setFont(String fontName) {
-        this.fontName = fontName;
-		this.font = fonts.get(fontName);
-        if (font == null) {
-            System.err.println("Couldn't find font: " + fontName);
-        }
+	public NotePanel setGonville(Font font) {
+		this.font = font;
 
         FontMetrics fontMetrics = getFontMetrics(font);
-
         noteWidth = fontMetrics.stringWidth(noteString);
 
         return this;
@@ -156,7 +114,6 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
 	}
 
     public NotePanel setGlyph(String glyphName) {
-        this.glyphName = glyphName;
         int glyph = Glyph.getGlyph(glyphName);
         if (glyph == -1) {
             System.err.println("unknown glyph: \"" + glyphName + "\"");
@@ -273,7 +230,7 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
             ghostY = y - lineDifference * halfNoteHeight;
         }
 
-        ghost.setFont(fontName);
+        ghost.setGonville(font);
         ghost.setPage(page);
         ghost.setCoordinates(ghostX, ghostY);
         frame.add(ghost);
@@ -340,19 +297,19 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
     }
 
     private int absoluteX() {
-        return (int) Math.round(imageWidth / paperWidth * x);
+        return (int) Math.round(score.scaleWidth * x);
     }
 
     private int absoluteY() {
-        return (int) Math.round(imageHeight / paperHeight * y);
+        return (int) Math.round(score.scaleHeight * y);
     }
 
     private int absoluteX(double x) {
-        return (int) Math.round(imageWidth / paperWidth * x);
+        return (int) Math.round(score.scaleWidth * x);
     }
 
     private int absoluteY(double y) {
-        return (int) Math.round(imageHeight / paperHeight * y);
+        return (int) Math.round(score.scaleHeight * y);
     }
 
 	public void paintComponent(Graphics g) {
@@ -362,6 +319,7 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
             } else {
 			    g.setColor(Color.RED);
             }
+
 			g.setFont(font);
 			g.drawString(noteString, absoluteX(), absoluteY());
 
@@ -374,8 +332,10 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
 	}
 
 	public void repaint() {
-		setOpaque(active);
-        repaint(absoluteX(), absoluteY(y - halfNoteHeight), noteWidth, absoluteY(noteHeight));
+        if (score != null) {
+		    setOpaque(active);
+            repaint(absoluteX(), absoluteY(y - halfNoteHeight), noteWidth, absoluteY(noteHeight));
+        }
         /*if (hasAccidental) {
             repaint(absoluteX(accidentalX), absoluteY(accidentalY), accidentalWidth, accidentalHeight);
         } */

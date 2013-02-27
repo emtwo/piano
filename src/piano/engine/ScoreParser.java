@@ -6,24 +6,27 @@ import org.jfugue.parsers.MidiParser;
 
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 
 public class ScoreParser implements ParserListener {
 
     public String name;
-    public double paperHeight = 169.00937007874;
-    public double paperWidth = 119.50157480315;
+    public double paperHeight = 169.00937007874, paperWidth = 119.50157480315;
+    public int imageHeight = 842, imageWidth = 595;
     public Vector<Chord> chords[];
     public int staves = 1;
     public int resolution;
     public int pages;
+    public Vector<String> imageNames = new Vector<String>();
 
     private Vector<NotePanel> notes[];
     private int staffLine;
     private Vector<ArrayList<Integer>> ties = new Vector<ArrayList<Integer>>();
     private Iterator<NotePanel> currNotes[];
     private Vector<String> fontInfo = new Vector<String>();
+    private HashMap<String, Font> fonts = new HashMap<String, Font>();
     private int tempo;
     private int layer = 0;
     private long time = 0L;
@@ -34,6 +37,7 @@ public class ScoreParser implements ParserListener {
 
         //TODO put back
         //invokeLilyPond();
+        parseImages();
         parseLilyPond();
         parsePostScript();
         parseMidi();
@@ -70,6 +74,30 @@ public class ScoreParser implements ParserListener {
     private void invokeLilyPond() {
         exec("convert-ly -e data/ly/" + name + ".ly");
         exec("lilypond --png -dresolution=72 --ps --output=data/out/" + name + " data/ly/" + name + ".ly");
+    }
+
+    private void parseImages() {
+        String fileLocation = "data/out/" + name + ".png";
+        File file = new File(fileLocation);
+        if (file.exists()) {
+            imageNames.add(fileLocation);
+        } else {
+            int p = 1;
+            fileLocation = "data/out/" + name + "-page" + p + ".png";
+            file = new File(fileLocation);
+            while (file.exists()) {
+                imageNames.add(fileLocation);
+                ++p;
+                fileLocation = "data/out/" + name + "-page" + p + ".png";
+                file = new File(fileLocation);
+            }
+        }
+        if (imageNames.isEmpty()) {
+            System.err.println("Lilypond failed to produce any files");
+        }
+        pages = imageNames.size();
+
+        // TODO get image size instead of just leaving it at default value
     }
 
     private void parseLilyPond() {
@@ -120,8 +148,6 @@ public class ScoreParser implements ParserListener {
             while (PSIn.ready()) {
                 String S = PSIn.readLine();
                 if (S.contains("EndSetup")) {
-                    //TODO remove
-                    NotePanel.setPaper(paperWidth, paperHeight);
                     break;
                 } else {
                     if (S.startsWith("/page-height")) {
@@ -133,7 +159,7 @@ public class ScoreParser implements ParserListener {
                     } else if (S.startsWith("/lily-output-units")) {
                         float scale = Float.parseFloat(S.split(" ")[1]);
                         for (String T : fontInfo) {
-                            NotePanel.addFont(T.split(" ")[0].substring(1), T.split(" ")[2].substring(1), scale * Float.parseFloat(T.split(" ")[3]));
+                            addFont(T.split(" ")[0].substring(1), T.split(" ")[2].substring(1), scale * Float.parseFloat(T.split(" ")[3]));
                         }
                     }
                 }
@@ -149,7 +175,7 @@ public class ScoreParser implements ParserListener {
                     NotePanel N = new NotePanel();
                     N.setCoordinates(Double.parseDouble(T[0]), -Double.parseDouble(T[1]))
                             .setGlyph(T[4].substring(1))
-                            .setFont(T[3]);
+                            .setGonville(fonts.get(T[3]));
                     if (S.contains("rests")) {
                         T = S.substring(S.lastIndexOf("rests")).split("[. ]");
                         N.setRest(Integer.parseInt(T[1]));
@@ -169,9 +195,6 @@ public class ScoreParser implements ParserListener {
                     //lastNote.setAccidentals(Double.parseDouble(T[0]), -Double.parseDouble(T[1]), T[4].substring(1), T[3]);
                 } else if (S.startsWith("%%Page:")) {
                     currPage = Integer.parseInt(S.split(" ")[1]);
-                    if (currPage > pages) {
-                        pages = currPage;
-                    }
                 }
 
                 if (S.contains(this.name + ".ly")) {
@@ -214,6 +237,28 @@ public class ScoreParser implements ParserListener {
         }
     }
 
+    private void addFont(String fontKey, String fontName, float scale) {
+        try {
+            fontName = fontName.toLowerCase();
+
+            FileInputStream stream = new FileInputStream("data/fonts/otf/" + fontName + ".otf");
+
+            Font f = Font.createFont(Font.TRUETYPE_FONT, stream);
+            f = f.deriveFont(scale);
+
+            fonts.put(fontKey, f);
+            stream.close();
+
+            /*GraphicsEnvironment ge = GraphicsEnvironment
+                    .getLocalGraphicsEnvironment();
+
+            ge.registerFont(f);*/
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void parseMidi() {
         try {
             //Allow for alternate file extensions of midi files.
@@ -227,9 +272,6 @@ public class ScoreParser implements ParserListener {
             //parse midi
             Sequence sequence = MidiSystem.getSequence(midiFile);
             resolution = sequence.getResolution();
-
-            //TODO remove
-            NotePanel.setResolution(resolution);
 
             for (int i = 0; i < staves; ++i) {
                 currNotes[i] = notes[i].iterator();

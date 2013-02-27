@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class ScorePanel extends Drawing {
 	private JFrame frame;
 	private String name;
-	private int page, npages;
+	private int page;
 	private Vector<BufferedImage> images;
 	private BufferedImage currImage;
 	private int[] currChords;
@@ -51,39 +52,35 @@ public class ScorePanel extends Drawing {
 
         NotePlayer.init(); // this takes some time, so initialize music players TODO move this
 
-        //this.S = Score.ParseScore(this.name);
-        Score.ParseScore(name);
+        //load fonts TODO put somewhere else
+        try {
+            File fontFolder = new File("data/fonts/otf");
+            File[] fontFiles = fontFolder.listFiles();
+            for (File fontFile : fontFiles) {
+                Font f = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(fontFile));
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading fonts: ");
+            e.printStackTrace();
+        }
+
+        //Score.ParseScore(name);
         S = Score.Load(name);
 
 		//read in all the images
 		images = new Vector<BufferedImage>();
         try {
-            String fileLocation = "data/out/" + name + ".png";
-            File file = new File(fileLocation);
-            if (file.exists()) {
-                images.add(ImageIO.read(file));
-                npages = 1;
-            } else {
-                int p = 1;
-                fileLocation = "data/out/" + name + "-page" + p + ".png";
-                file = new File(fileLocation);
-                while (file.exists()) {
-                    images.add(ImageIO.read(file));
-                    ++p;
-                    fileLocation = "data/out/" + name + "-page" + p + ".png";
-                    file = new File(fileLocation);
+            for (String imageName : S.imageNames) {
+                BufferedImage image = ImageIO.read(new File(imageName));
+                images.add(image);
+                if (image.getWidth() != S.imageWidth || image.getHeight() != S.imageHeight) {
+                    System.err.println("Size of score images are not default.");
                 }
-                npages = p - 1;
             }
-            if (images.isEmpty()) {
-                System.err.println("Lilypond failed to produce any files");
-            }
-            currImage = images.get(0);
-
-        }
-        catch (java.io.IOException e) {
+        } catch (java.io.IOException e) {
 			System.out.println(e.getMessage());
 		}
+        setBounds(0, 0, S.imageWidth, S.imageHeight);
 
         currChords = new int[S.staves];
 
@@ -207,12 +204,10 @@ public class ScorePanel extends Drawing {
 	}
 
     public void setPage(int newpage) {
-        if (newpage >= 1 && newpage <= npages) {
+        if (newpage >= 1 && newpage <= S.pages) {
             page = newpage;
         }
         currImage = images.get(page - 1);
-        NotePanel.setImage(currImage.getWidth(), currImage.getHeight());
-        setBounds(0, 0, currImage.getWidth(), currImage.getHeight());
         repaint();
         repaintActiveNotes();
     }
