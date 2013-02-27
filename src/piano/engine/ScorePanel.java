@@ -54,7 +54,7 @@ public class ScorePanel extends Drawing {
 
         //load fonts TODO put somewhere else
         try {
-            File fontFolder = new File("data/fonts/otf");
+            File fontFolder = new File("data/fonts/ttf");
             File[] fontFiles = fontFolder.listFiles();
             for (File fontFile : fontFiles) {
                 Font f = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(fontFile));
@@ -64,7 +64,7 @@ public class ScorePanel extends Drawing {
             e.printStackTrace();
         }
 
-        //Score.ParseScore(name);
+        Score.ParseScore(name);
         S = Score.Load(name);
 
 		//read in all the images

@@ -239,7 +239,7 @@ public class ScoreParser implements ParserListener {
         try {
             fontName = fontName.toLowerCase();
 
-            FileInputStream stream = new FileInputStream("data/fonts/otf/" + fontName + ".otf");
+            FileInputStream stream = new FileInputStream("data/fonts/ttf/" + fontName + ".ttf");
 
             Font f = Font.createFont(Font.TRUETYPE_FONT, stream);
             f = f.deriveFont(scale);
