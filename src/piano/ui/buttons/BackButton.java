@@ -4,19 +4,14 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 
-import javax.swing.JFrame;
-
 import piano.ui.Drawing;
 import piano.ui.Fonts;
-import piano.ui.ListView;
 import piano.ui.SongView;
-import piano.ui.SubView;
 
 public class BackButton extends Button {
 
-	public BackButton(String text, int x, int y, int width, int height,
-			Drawing parent, Drawing nextView, JFrame parentFrame) {
-		super(text, x, y, width, height, parent, nextView, parentFrame);
+	public BackButton(String text, int x, int y, int width, int height, Drawing parent) {
+		super(text, x, y, width, height, parent, null);
 
 		super.setDiff(4);
 		super.setFont(Fonts.italic_small);
@@ -30,7 +25,8 @@ public class BackButton extends Button {
 	public void hoverOut() {
 	}
 
-	public boolean setMouseClicked(int x, int y) {
+	@Override
+	public boolean setMouseClicked(int x, int y, ButtonType type) {
 		if (!overButton) {
 			return false;
 		}

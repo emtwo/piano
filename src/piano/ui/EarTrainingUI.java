@@ -8,7 +8,9 @@ import java.util.HashMap;
 
 import javax.swing.JFrame;
 
-public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
+import piano.ui.buttons.ButtonType;
+
+public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback, ButtonClickCallback {
 
   final static float dash1[] = {10.0f};
 
@@ -16,20 +18,20 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNex
 
 	private KeyboardView keyboard;
 
-	public EarTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
+	public EarTrainingUI() {
 		super();
 		NotesToPlayData data = new NotesToPlayData(this);
 		data.minKey = 60;
 		data.maxKey = 71;
 		data.numOctaves = 1;
 
-		HashMap<Integer, PianoMenuData> menuData = new HashMap<Integer, PianoMenuData>();
-		menuData.put(62, new PianoMenuData("Interval Training", new IntervalTrainingUI(parentFrame, this)));
-		menuData.put(64, new PianoMenuData("Pitch Training", new PitchTrainingUI(parentFrame, this)));
-		menuData.put(65, new PianoMenuData("Advanced Pitch Training", new AdvancedPitchTrainingUI(parentFrame, this)));
-		menuData.put(67, new PianoMenuData("Chord Training", new PitchTrainingUI(parentFrame, this)));
-		menuData.put(69, new PianoMenuData("Main Menu", parent));
-		keyboard = new KeyboardView(this, this, menuData, parentFrame, data);
+		HashMap<Integer, String> menuData = new HashMap<Integer, String>();
+		menuData.put(62, "Interval Training");
+		menuData.put(64, "Pitch Training");
+		menuData.put(65, "Advanced Pitch Training");
+		menuData.put(67, "Chord Training");
+		menuData.put(69, "Main Menu");
+		keyboard = new KeyboardView(this, this, this, menuData, data);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -79,4 +81,28 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNex
 
 	@Override
 	public ArrayList<NoteToColourMap> getNextNotes() { return null; }
+
+	@Override
+	public void informButtonClicked(ButtonType buttonType, int buttonId) {
+		Drawing nextView = null;
+		switch(buttonId) {
+			case 62:
+				nextView = new IntervalTrainingUI();
+				break;
+			case 64:
+				nextView = new PitchTrainingUI();
+				break;
+			case 65:
+				nextView = new AdvancedPitchTrainingUI();
+				break;
+			case 67:
+				nextView = new PitchTrainingUI();
+				break;
+			case 69:
+				JFrameStack.popPanel();
+				return;
+		}
+		nextView.switchToView();
+		JFrameStack.pushPanel(nextView);
+	}
 }

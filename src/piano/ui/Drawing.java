@@ -30,6 +30,9 @@ public abstract class Drawing extends JPanel implements MouseMotionListener, Mou
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 	}
 
+	public void switchToView() {}
+
+	/*
 	public void switchToView(JFrame parentFrame) {
 		//Create and set up the content pane.
     JComponent newContentPane = this;
@@ -43,6 +46,7 @@ public abstract class Drawing extends JPanel implements MouseMotionListener, Mou
     parentFrame.setVisible(true);
     parentFrame.repaint();
 	}
+	*/
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

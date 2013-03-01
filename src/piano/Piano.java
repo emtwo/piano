@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 
 import piano.engine.*;
 import piano.repository.SongDatabaseAccessor;
+import piano.ui.JFrameStack;
 import piano.ui.PianoUI;
 
 public class Piano {
@@ -109,9 +110,10 @@ public class Piano {
     //Create and set up the window.
     JFrame frame = new JFrame("Piano Like a Pro");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    JFrameStack.setJFrameStack(frame);
 
-    PianoUI rootUI = new PianoUI(frame);
-    rootUI.switchToView(frame);
+    PianoUI rootUI = new PianoUI();
+    JFrameStack.pushPanel(rootUI);
   }
 
 	public static void main(String[] args) throws IOException {

@@ -30,13 +30,13 @@ import piano.ui.buttons.ListButton;
 import piano.ui.buttons.NextButton;
 import piano.ui.buttons.PrevButton;
 
-public class SongView extends Drawing {
+public class SongPreviewView extends Drawing {
 
 	public List<Song> songs;
 
-	NextButton nextButton;
-	PrevButton prevButton;
-	BackButton backButton;
+	//NextButton nextButton;
+	//PrevButton prevButton;
+	//BackButton backButton;
 
 	public boolean onLastPage = false;
 	public boolean onFirstPage = true;
@@ -48,8 +48,8 @@ public class SongView extends Drawing {
 	SubView parentView;
 	ScorePanel score;
 
-	public SongView(SubView parentView) {
-		this.parentView = parentView;
+	public SongPreviewView() {
+		/*this.parentView = parentView;
 
 		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
 		try {
@@ -62,19 +62,11 @@ public class SongView extends Drawing {
 		prevButton = new PrevButton("Previous", width/5 * 4 - 15, width - 60, width/10, 25, this);
 		backButton = new BackButton("< Back", width/5 - 70 - width/10, width - 60, width/10, 25, this);
 		score = new ScorePanel(JFrameStack.getFrame(), "furelise");
+		*/
 	}
 
-	public void setSongs(List<Song> songs) {
-		this.songs = songs;
-		if (songs.size() <= 6) {
-			onLastPage = true;
-		}
-	}
 
-	public void switchView() {
-		parentView.switchView();
-	}
-
+/*
 	public void mouseMoved(MouseEvent e) {
 		nextButton.computeMouseEntered(e.getX(), e.getY());
 		nextButton.computeMouseExited(e.getX(), e.getY());
@@ -106,10 +98,19 @@ public class SongView extends Drawing {
     if (parentView.hasBack)  {
 	backButton.setMouseClicked(e.getX(), e.getY(), ButtonType.BACK);
     }
-	}
+	}*/
 
 	public void paintComponent(Graphics g) {
-		int initialX = 18;
+		String text = "PREVIEW:";
+
+
+		g.setFont(Fonts.italic);
+		FontMetrics metrics = g.getFontMetrics(Fonts.italic);
+		int hgt = metrics.getHeight();
+		int adv = metrics.stringWidth(text);
+		g.drawString(text, ((800 / 3) * 2 - adv / 2), 62);
+
+		/*int initialX = 18;
 		int initialY = 200;
 
 		int currX = initialX;
@@ -170,19 +171,6 @@ public class SongView extends Drawing {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void truncateAndPrintText(String text, int width, int currX, int currY, int yVal, Graphics g) {
-		g.setFont(Fonts.italic_small);
-		FontMetrics metrics = g.getFontMetrics(Fonts.italic_small);
-		int stringWidth = metrics.stringWidth(text);
-		if (stringWidth > 240) {
-			int maxChars =  240 / metrics.stringWidth("a") - 3;
-			text = text.substring(0, maxChars) + "...";
-		}
-
-		Point centered = Utils.centerDrawing(stringWidth, 150, new Point(currX-10, currY-10), 250, 255);
-
-		g.drawString(text, centered.x, currY + yVal);
+		*/
 	}
 }

@@ -12,8 +12,8 @@ import piano.ui.buttons.Button;
 public class Box extends Button {
 	int x, y, width, height;
 
-	public Box(int x, int y, int width, int height, Drawing parent, Drawing nextView, JFrame parentFrame) {
-		super("", x, y, width, height, parent, nextView, parentFrame);
+	public Box(int x, int y, int width, int height) {
+		super("", x, y, width, height);
 	}
 
 	@Override

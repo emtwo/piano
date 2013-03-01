@@ -13,38 +13,25 @@ import piano.repository.SongDatabaseAccessor;
 import piano.ui.buttons.ButtonType;
 import piano.ui.buttons.ListButton;
 
-public class ListView extends Drawing {
-	public List<String> listTitles;
+public class SongListView extends Drawing {
+	public List<Song> listSongs;
 	ArrayList<ListButton> listButtons = new ArrayList<ListButton>();
 
-	SongView songView;
-	SubView parentView;
-	int width = 800;
+	int width = 800 / 3;
 
-	public ListView(String column, SongView songView, SubView parentView) {
-		this.songView = songView;
-		this.parentView = parentView;
-
+	public SongListView() {
 		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
 		try {
-			listTitles = accessor.getAllOfColumn(column);
+			listSongs = accessor.getAllSongs();
 
-			int y = 200;
-			for (String listTitle : listTitles) {
-				listButtons.add(new ListButton(listTitle, null, 0, y, width, 50));
+			int y = 73;
+			for (Song song : listSongs) {
+				listButtons.add(new ListButton(song.title, song.author, 0, y, width, 50));
 				y += 50;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void setSongs(List<Song> songs) {
-		songView.setSongs(songs);
-	}
-
-	public void switchView() {
-		parentView.switchView();
 	}
 
 	public void mouseMoved(MouseEvent e) {
@@ -61,6 +48,9 @@ public class ListView extends Drawing {
 	}
 
 	public void paintComponent(Graphics g) {
+		g.drawString("CHOOSE A SONG:", 10, 62);
+		g.drawLine(0, 72, 800, 72);
+		g.drawLine(800 / 3, 30, 800 / 3, 800);
 		for (ListButton button : listButtons) {
 			button.paintComponent(g);
 		}

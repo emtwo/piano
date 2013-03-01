@@ -4,22 +4,17 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 
-import javax.swing.JFrame;
-
 import piano.ui.Drawing;
 import piano.ui.Fonts;
-import piano.ui.PlayUI;
 import piano.ui.SongView;
-import piano.ui.SubView;
 
 public class PrevButton extends Button {
 
 	SongView parent;
 
-	public PrevButton(String text, int x, int y, int width, int height,
-			Drawing parent, Drawing nextView, JFrame parentFrame) {
+	public PrevButton(String text, int x, int y, int width, int height, Drawing parent) {
 
-		super(text, x, y, width, height, parent, nextView, parentFrame);
+		super(text, x, y, width, height, parent, null);
 		super.setDiff(4);
 		super.setFont(Fonts.italic_small);
 
@@ -35,7 +30,7 @@ public class PrevButton extends Button {
 	}
 
 	@Override
-	public boolean setMouseClicked(int x, int y) {
+	public boolean setMouseClicked(int x, int y, ButtonType type) {
 		if (!overButton) {
 			return false;
 		}

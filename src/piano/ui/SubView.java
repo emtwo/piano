@@ -12,12 +12,12 @@ public class SubView extends Drawing {
 	protected Drawing currentView;
 	public final boolean hasBack;
 
-	public SubView(String column, JFrame parentFrame, boolean hasBack) {
+	public SubView(String column, boolean hasBack) {
 		this.hasBack = hasBack;
 
-		songView = new SongView(parentFrame, this);
+		songView = new SongView(this);
 		if (column != null) {
-			listView = new ListView(column, parentFrame, songView, this);
+			listView = new ListView(column, songView, this);
 			currentView = listView;
 			return;
 		}

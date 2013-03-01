@@ -8,9 +8,13 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import piano.Point;
+import piano.Utils;
 import piano.repository.Song;
 import piano.repository.SongDatabaseAccessor;
+import piano.ui.ButtonClickCallback;
 import piano.ui.Drawing;
+import piano.ui.Fonts;
 import piano.ui.ListView;
 import piano.ui.PlayUI;
 import piano.ui.SubView;
@@ -20,18 +24,25 @@ public class ListButton extends Button {
 	String column;
 	List<Song> songs;
 
-	public ListButton(String text, int x, int y, int width, int height,
-			Drawing parent, Drawing nextView, JFrame parentFrame, String column) {
+	String title, author;
 
-		super(text, x, y, width, height, parent, nextView, parentFrame);
-		this.column = column;
-
+	public ListButton(String title, String author, int x, int y, int width, int height) {
+		/*
+	}
+		public ListButton(String text, int x, int y, int width, int height,
+				Drawing parent, String column) {
+*/
+		super(title, x, y, width, height);
+		this.title = title;
+		this.author = author;
+/*
 		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
 		try {
 			songs = accessor.getAllByCriterion(column, text);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		*/
 	}
 
 	@Override
@@ -41,9 +52,9 @@ public class ListButton extends Button {
 	@Override
 	public void hoverOut() {
 	}
-
+/*
 	@Override
-	public boolean setMouseClicked(int x, int y) {
+	public boolean setMouseClicked(int x, int y, ButtonType buttonType) {
 		System.out.println("ListButton clicked");
 		if (!overButton) {
 			return false;
@@ -57,20 +68,17 @@ public class ListButton extends Button {
 		((ListView)parent).setSongs(songs);
 		((ListView)parent).switchView();
 	}
+	*/
 
 	public void paintComponent(Graphics gc) {
-		gc.setFont(font);
-
-		FontMetrics metrics = gc.getFontMetrics(font);
-		int hgt = metrics.getHeight();
-		int adv = metrics.stringWidth(text);
-
 		if (overButton) {
 			gc.setColor(Color.LIGHT_GRAY);
 			gc.fillRect(x, y, width, height);
 
 			gc.setColor(Color.black);
-			gc.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
+			truncateAndPrintText(text, 800 / 3, x + 10, y, gc);
+			gc.setFont(Fonts.italic_small);
+			gc.drawString(author, x + 10, y + 43);
 			return;
 		}
 
@@ -78,6 +86,20 @@ public class ListButton extends Button {
 		gc.fillRect(x, y, width, height);
 
 		gc.setColor(Color.black);
-		gc.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
+		truncateAndPrintText(text, 800 / 3, x + 10, y, gc);
+		gc.setFont(Fonts.italic_small);
+		gc.drawString(author, x + 10, y + 43);
+	}
+
+	private void truncateAndPrintText(String text, int width, int currX, int currY, Graphics g) {
+		g.setFont(Fonts.italic);
+		FontMetrics metrics = g.getFontMetrics(Fonts.italic);
+		int stringWidth = metrics.stringWidth(text);
+		if (stringWidth > width) {
+			int maxChars =  width / metrics.stringWidth("a") - 3;
+			text = text.substring(0, maxChars) + "...";
+		}
+
+		g.drawString(text, currX, currY + 23);
 	}
 }

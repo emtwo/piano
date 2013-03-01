@@ -20,7 +20,6 @@ public class KeyboardParserListener extends AdapterParserListener/*extends KeyAd
 	public enum Colour {RED, GREEN, BLUE, WHITE, BLACK};
 
 	private HashMap<Integer, Colour> keyToColorMap = new HashMap<Integer, Colour>();
-	//private static HashMap<Integer, String> intToKeyMap = new HashMap<Integer, String>();
 	private static HashMap<String, Integer> keyToIntMap = new HashMap<String, Integer>();
 
 	private KeyPressedCallback callback;
@@ -121,7 +120,7 @@ public class KeyboardParserListener extends AdapterParserListener/*extends KeyAd
 		callback.clearKeys();
 	}
 
-    @Override
+	@Override
 	public void pressNoteEvent(Note note) {
             //String noteString = note.getMusicString().replace("q", "").toLowerCase();
         //System.out.println("key? " + noteString);
