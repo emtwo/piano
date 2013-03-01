@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JFrame;
 
-import piano.NotePlayer;
 import piano.engine.MockAdapterParser;
+import piano.engine.NotePlayer;
 import piano.engine.PianoAdapterParser;
 import piano.ui.buttons.KeyboardKey;
 

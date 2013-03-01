@@ -1,6 +1,5 @@
 package piano.engine;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import piano.ui.Drawing;
@@ -9,8 +8,6 @@ import piano.ui.KeyboardView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -50,21 +47,7 @@ public class ScorePanel extends Drawing {
 
         NotePanel.setFrame(frame);
 
-        NotePlayer.init(); // this takes some time, so initialize music players TODO move this
 
-        //load fonts TODO put somewhere else
-        try {
-            File fontFolder = new File("data/fonts/ttf");
-            File[] fontFiles = fontFolder.listFiles();
-            for (File fontFile : fontFiles) {
-                if (fontFile.getName().endsWith(".ttf")) {
-                    Font f = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(fontFile));
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error loading font: ");
-            e.printStackTrace();
-        }
 
         Score.ParseScore(name);
         S = Score.Load(name);

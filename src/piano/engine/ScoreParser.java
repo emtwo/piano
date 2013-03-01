@@ -20,6 +20,7 @@ public class ScoreParser implements ParserListener {
     public int resolution;
     public int pages;
     public Vector<String> imageNames = new Vector<String>();
+    public LilyHeader lilyHeader;
 
     private Vector<NotePanel> notes[];
     private int staffLine;
@@ -99,6 +100,7 @@ public class ScoreParser implements ParserListener {
     }
 
     private void parseLilyPond() {
+        lilyHeader = new LilyHeader(name);
         try {
             BufferedReader LYIn = new BufferedReader(new FileReader("data/ly/" + name + ".ly"));
             int line = 1;

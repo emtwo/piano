@@ -1,11 +1,15 @@
 package piano;
 
+import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import piano.engine.*;
 import piano.repository.SongDatabaseAccessor;
 import piano.ui.PianoUI;
 
@@ -14,21 +18,62 @@ public class Piano {
 	SongDatabaseAccessor accessor;
 
 	public Piano() throws IOException {
-		populateDatabase();		// Note: this is some pre-processing that should be done as an "install"
 
-    //Schedule a job for the event dispatch thread:
-    //creating and showing this application's GUI.
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-            try {
-							createAndShowGUI();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+        boolean install = true;
+
+        if (install) {
+            loadHeaders();
+		    populateDatabase();		// Note: this is some pre-processing that should be done as an "install"
         }
-    });
+
+        NotePlayer.init(); // this takes some time, so initialize music players
+        loadFonts();
+
+        //Schedule a job for the event dispatch thread:
+        //creating and showing this application's GUI.
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                                createAndShowGUI();
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+            }
+        });
 	}
+
+    private void loadFonts() {
+        try {
+            File fontFolder = new File("data/fonts/ttf");
+            File[] fontFiles = fontFolder.listFiles();
+            for (File fontFile : fontFiles) {
+                if (fontFile.getName().endsWith(".ttf")) {
+                    Font f = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(fontFile));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading font: ");
+            e.printStackTrace();
+        }
+    }
+
+    private void loadHeaders() {
+        ArrayList<LilyHeader> headers = new ArrayList<LilyHeader>();
+        try {
+            File lilyFolder = new File("data/ly");
+            File[] lilyFiles = lilyFolder.listFiles();
+            for (File lilyFile : lilyFiles) {
+                if (lilyFile.getName().endsWith(".ly")) {
+                    String lilyName = lilyFile.getName().split(".")[0];
+                    headers.add(new LilyHeader(lilyName));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading font: ");
+            e.printStackTrace();
+        }
+    }
 
 	private void populateDatabase() {
 		File file = new File("../../music");

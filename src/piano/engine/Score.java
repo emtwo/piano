@@ -18,6 +18,7 @@ public class Score implements Serializable {
     public int staves;
     public int pages;
     public int resolution;
+    public LilyHeader lilyHeader;
 
     public static Score ParseScore(String name) {
         Score S = new Score();
@@ -33,6 +34,7 @@ public class Score implements Serializable {
         S.staves = P.staves;
         S.allChords = P.chords;
         S.imageNames = P.imageNames;
+        S.lilyHeader = P.lilyHeader;
         S.init();
 
         S.save();
