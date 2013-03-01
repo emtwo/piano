@@ -57,10 +57,12 @@ public class ScorePanel extends Drawing {
             File fontFolder = new File("data/fonts/ttf");
             File[] fontFiles = fontFolder.listFiles();
             for (File fontFile : fontFiles) {
-                Font f = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(fontFile));
+                if (fontFile.getName().endsWith(".ttf")) {
+                    Font f = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(fontFile));
+                }
             }
         } catch (Exception e) {
-            System.err.println("Error loading fonts: ");
+            System.err.println("Error loading font: ");
             e.printStackTrace();
         }
 
@@ -69,17 +71,9 @@ public class ScorePanel extends Drawing {
 
 		//read in all the images
 		images = new Vector<BufferedImage>();
-        try {
-            for (String imageName : S.imageNames) {
-                BufferedImage image = ImageIO.read(new File(imageName));
-                images.add(image);
-                if (image.getWidth() != S.imageWidth || image.getHeight() != S.imageHeight) {
-                    System.err.println("Size of score images are not default.");
-                }
-            }
-        } catch (java.io.IOException e) {
-			System.out.println(e.getMessage());
-		}
+        for (int i = 0; i < S.pages; ++i) {
+            images.add(S.getImage(i));
+        }
         setBounds(0, 0, S.imageWidth, S.imageHeight);
 
         currChords = new int[S.staves];

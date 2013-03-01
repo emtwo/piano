@@ -1,5 +1,7 @@
 package piano.engine;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
 
@@ -48,6 +50,25 @@ public class Score implements Serializable {
             return (Score) s.readObject();
         } catch (Exception e) {
             System.err.println("Loading score has failed. Error: ");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public BufferedImage getImage(int n) {
+        if (n >= pages) {
+            System.err.println("Attempted to get image number " + n + " when there are only " + pages);
+            return null;
+        }
+        String imageName = imageNames.get(n);
+        try {
+            BufferedImage image = ImageIO.read(new File(imageName));
+            if (image.getWidth() != imageWidth || image.getHeight() != imageHeight) {
+                System.err.println("Size of score images imageName is not default.");
+            }
+            return image;
+        } catch (IOException e) {
+            System.err.println("Could not read file " + imageName);
             e.printStackTrace();
         }
         return null;
