@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import piano.ui.ButtonClickCallback;
 import piano.ui.Drawing;
 import piano.ui.Fonts;
-import piano.ui.SubView;
 
 public abstract class Button extends JPanel {
 

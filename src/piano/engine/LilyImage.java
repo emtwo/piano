@@ -40,7 +40,9 @@ public class LilyImage {
     }
 
     public BufferedImage get(int n) {
+      if (images.size() > n) {
         return images.get(n);
+      }
+      return null;
     }
-
 }

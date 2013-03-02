@@ -11,11 +11,8 @@ import apple.awt.CColor;
 
 import piano.ui.Drawing;
 import piano.ui.Fonts;
-import piano.ui.SongView;
 
 public class StartButton extends Button {
-
-	SongView parent;
 
 	public StartButton(String text, int x, int y, int width, int height) {
 		super(text, x, y, width, height);

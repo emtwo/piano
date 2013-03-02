@@ -128,6 +128,7 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 		return list;
 	}
 
+	@Override
 	public void switchToView() {
 		keyboard.switchToView();
 		stopPainting = false;

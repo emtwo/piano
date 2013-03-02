@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import piano.ui.ButtonClickCallback;
 import piano.ui.Drawing;
 import piano.ui.Fonts;
-import piano.ui.SubView;
 
 public class SimpleButton extends Button {
 

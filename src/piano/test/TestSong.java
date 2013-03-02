@@ -8,7 +8,7 @@ import piano.repository.Song;
 
 public class TestSong {
 	final String midiPath  = "music/midi/Sometimes.mid";
-
+/*
 	@Test
 	public void testGetFileName() {
 		String file = Song.getFileName(midiPath);
@@ -21,4 +21,5 @@ public class TestSong {
 		String title = Song.getSongTitle(midiPath);
 		assertEquals("Sometimes", title);
 	}
+*/
 }

@@ -3,13 +3,17 @@ package piano.ui;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
+import piano.ui.buttons.ButtonType;
+import piano.ui.buttons.ListButton;
 import piano.ui.buttons.StartButton;
 
 public class PlayChoicesView extends Drawing {
 
 	StartButton view, demo, practice, exam, practicel, practicer;
 
-	public PlayChoicesView() {
+	private ButtonClickCallback callback;
+
+	public PlayChoicesView(ButtonClickCallback callback) {
 		super();
 		int x = 800 / 3 + 1;
 		int width1 = 133;
@@ -21,23 +25,8 @@ public class PlayChoicesView extends Drawing {
 		exam = new StartButton("Exam", x + width1*3, y, width1, 50);
 		practicel = new StartButton("Practice (Left)", x, y + 50, width2, 50);
 		practicer = new StartButton("Practice (Right)", x + width2, y + 50, width2, 50);
-		/*this.parentView = parentView;
-
-		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
-		try {
-			songs = accessor.getAllSongs();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		nextButton = new NextButton("Next", width/5 * 4 + 70, width - 60, width/10, 25, this);
-		prevButton = new PrevButton("Previous", width/5 * 4 - 15, width - 60, width/10, 25, this);
-		backButton = new BackButton("< Back", width/5 - 70 - width/10, width - 60, width/10, 25, this);
-		score = new ScorePanel(JFrameStack.getFrame(), "furelise");
-		*/
+		this.callback = callback;
 	}
-
-
 
 	public void mouseMoved(MouseEvent e) {
 		view.computeMouseEntered(e.getX(), e.getY());
@@ -58,21 +47,22 @@ public class PlayChoicesView extends Drawing {
 		practicer.computeMouseEntered(e.getX(), e.getY());
 		practicer.computeMouseExited(e.getX(), e.getY());
 	}
-/*
+
 	public void mouseClicked(MouseEvent e) {
-		System.out.println("SongView mouse clicked.");
-    nextButton.setMouseClicked(e.getX(), e.getY(), ButtonType.NEXT_BUTTON);
-    prevButton.setMouseClicked(e.getX(), e.getY(), ButtonType.PREVIOUS_BUTTON);
-
-    for (Box button : boxes) {
-			if (button == null) continue;
-			button.setMouseClicked(e.getX(), e.getY(), ButtonType.BOX_BUTTON);
-		}
-
-    if (parentView.hasBack)  {
-	backButton.setMouseClicked(e.getX(), e.getY(), ButtonType.BACK);
+	  if(view.setMouseClicked(e.getX(), e.getY())) {
+	    callback.informButtonClicked(ButtonType.VIEW_BUTTON, 0);
+	  } else if (demo.setMouseClicked(e.getX(), e.getY())) {
+	    callback.informButtonClicked(ButtonType.DEMO_BUTTON, 0);
+	  } else if (practice.setMouseClicked(e.getX(), e.getY())) {
+	    callback.informButtonClicked(ButtonType.PRACTICE_BUTTON, 0);
+    } else if (exam.setMouseClicked(e.getX(), e.getY())) {
+      callback.informButtonClicked(ButtonType.EXAM_BUTTON, 0);
+    } else if (practicel.setMouseClicked(e.getX(), e.getY())) {
+      callback.informButtonClicked(ButtonType.PRACTICE_LEFT_BUTTON, 0);
+    } else if (practicer.setMouseClicked(e.getX(), e.getY())) {
+      callback.informButtonClicked(ButtonType.PRACTICE_RIGHT_BUTTON, 0);
     }
-	}*/
+	}
 
 	public void paintComponent(Graphics g) {
 		view.paintComponent(g);

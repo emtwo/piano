@@ -3,29 +3,21 @@ package piano.repository;
 public class Song {
 	private static final String FILE_EXTENSION = ".mid";
 
-	public final String midiPath;
-	public final String imagePath;
 	public final String title;
-	public final String author;
-	public final String category;
+	public final String subtitle;
+	public final String composer;
+	public final String style;
+	public final String date;
+	public final String copyright;
+	public final String name;
 
-	public Song(String midi, String image, String title, String author, String category) {
-		this.midiPath  = midi;
-		this.imagePath = image;
-		this.title     = title;
-		this.author    = author;
-		this.category  = category;
-	}
-
-	public static String getFileName(String midiPath) {
-		int slashIndex = midiPath.lastIndexOf("/");
-		String file = midiPath.substring(slashIndex + 1);
-		return file;
-	}
-
-	public static String getSongTitle(String midiPath) {
-		String fileName = getFileName(midiPath);
-		String choppedExtension = fileName.replaceAll(FILE_EXTENSION, "");
-		return choppedExtension.replaceAll("_", " ");
+	public Song(String title, String subtitle, String composer, String style, String date, String copyright, String name) {
+		this.title  = title;
+		this.subtitle = subtitle;
+		this.composer = composer;
+		this.style = style;
+		this.date = date;
+		this.copyright = copyright;
+		this.name = name;
 	}
 }

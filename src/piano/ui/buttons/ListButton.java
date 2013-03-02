@@ -3,38 +3,26 @@ package piano.ui.buttons;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.sql.SQLException;
 import java.util.List;
 
-import javax.swing.JFrame;
-
-import piano.Point;
-import piano.Utils;
 import piano.repository.Song;
-import piano.repository.SongDatabaseAccessor;
-import piano.ui.ButtonClickCallback;
-import piano.ui.Drawing;
 import piano.ui.Fonts;
-import piano.ui.ListView;
-import piano.ui.PlayUI;
-import piano.ui.SubView;
 
 public class ListButton extends Button {
 
-	String column;
+  private boolean selected;
 	List<Song> songs;
 
-	String title, author;
+	Song song;
 
-	public ListButton(String title, String author, int x, int y, int width, int height) {
+	public ListButton(Song song, int x, int y, int width, int height) {
 		/*
 	}
 		public ListButton(String text, int x, int y, int width, int height,
 				Drawing parent, String column) {
 */
-		super(title, x, y, width, height);
-		this.title = title;
-		this.author = author;
+		super(song.title, x, y, width, height);
+		this.song = song;
 /*
 		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
 		try {
@@ -52,18 +40,16 @@ public class ListButton extends Button {
 	@Override
 	public void hoverOut() {
 	}
-/*
+
 	@Override
-	public boolean setMouseClicked(int x, int y, ButtonType buttonType) {
-		System.out.println("ListButton clicked");
+	public boolean setMouseClicked(int x, int y) {
 		if (!overButton) {
 			return false;
 		}
 
-		switchView();
 		return true;
 	}
-
+/*
 	public void switchView() {
 		((ListView)parent).setSongs(songs);
 		((ListView)parent).switchView();
@@ -71,15 +57,19 @@ public class ListButton extends Button {
 	*/
 
 	public void paintComponent(Graphics gc) {
-		if (overButton) {
-			gc.setColor(Color.LIGHT_GRAY);
+		if (selected) {
+		  gc.setColor(new Color(34, 139, 34));
 			gc.fillRect(x, y, width, height);
-
-			gc.setColor(Color.black);
-			truncateAndPrintText(text, 800 / 3, x + 10, y, gc);
-			gc.setFont(Fonts.italic_small);
-			gc.drawString(author, x + 10, y + 43);
-			return;
+		} else if (overButton) {
+		  gc.setColor(Color.LIGHT_GRAY);
+		  gc.fillRect(x, y, width, height);
+		}
+		if (overButton || selected) {
+		  gc.setColor(Color.black);
+      truncateAndPrintText(text, 800 / 3, x + 10, y, gc);
+      gc.setFont(Fonts.italic_small);
+      gc.drawString(song.composer, x + 10, y + 43);
+      return;
 		}
 
 		gc.setColor(Color.white);
@@ -88,7 +78,7 @@ public class ListButton extends Button {
 		gc.setColor(Color.black);
 		truncateAndPrintText(text, 800 / 3, x + 10, y, gc);
 		gc.setFont(Fonts.italic_small);
-		gc.drawString(author, x + 10, y + 43);
+		gc.drawString(song.composer, x + 10, y + 43);
 	}
 
 	private void truncateAndPrintText(String text, int width, int currX, int currY, Graphics g) {
@@ -101,5 +91,13 @@ public class ListButton extends Button {
 		}
 
 		g.drawString(text, currX, currY + 23);
+	}
+
+	public void setSelected(boolean selected) {
+	  this.selected = selected;
+	}
+
+	public Song getSong() {
+	  return song;
 	}
 }

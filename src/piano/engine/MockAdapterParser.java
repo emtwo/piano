@@ -31,7 +31,7 @@ public class MockAdapterParser extends Parser {
         inputMap.put(KeyStroke.getKeyStroke('#'), "b");
 
         actionMap.put("b", new AbstractAction() {
-		public void actionPerformed(ActionEvent actionEvent) {
+          public void actionPerformed(ActionEvent actionEvent) {
 						String keyboardInput = actionEvent.getActionCommand();
 						System.out.println("keyboard input " + keyboardInput);
 						if (!keyboardInput.equals(".")) {
@@ -43,7 +43,7 @@ public class MockAdapterParser extends Parser {
 
             Integer keyToInt = KeyboardParserListener.getKeyInt(key);
             if (keyToInt != null) {
-		fireNoteEvent(new Note((byte) (int)keyToInt));
+              fireNoteEvent(new Note((byte) (int)keyToInt));
             }
             key = "";
 
