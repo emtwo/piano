@@ -7,8 +7,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import apple.awt.CColor;
-
 import piano.ui.Drawing;
 import piano.ui.Fonts;
 

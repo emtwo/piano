@@ -49,7 +49,7 @@ public class KeyboardView extends Drawing {
 		super();
 		keyboardParserListener = new KeyboardParserListener(practiceUI);
 		mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
-		real = new PianoAdapterParser();
+		real = PianoAdapterParser.instance();
 
 		this.callback = callback;
 		this.menuData = menuData;
