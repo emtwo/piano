@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import piano.engine.LilyImage;
-import piano.engine.ScorePanel;
 import piano.repository.Song;
 
 public class SongPreviewView extends Drawing {
@@ -15,7 +14,6 @@ public class SongPreviewView extends Drawing {
 	public List<Song> songs;
 
 	public int startIndex = 0, width = 800;
-	ScorePanel score;
 
 	private LilyImage image;
 
@@ -30,7 +28,6 @@ public class SongPreviewView extends Drawing {
 		g.drawString(text, ((800 / 3) * 2 - adv / 2), 62);
 
 		if (image != null) {
-		  System.out.println("Attempting to print image");
 		  BufferedImage bImage = image.get(0);
 		  if (bImage == null) {
 		    return;

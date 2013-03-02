@@ -31,7 +31,7 @@ public class ExamTest {
     }
 
     void fireNoteEvent(String note, long time) {
-        listener.noteEvent(new Note(noteHash.get(note)), time);
+        //listener.noteEvent(new Note(noteHash.get(note)), time);
     }
 
     void basicPerfect() {
@@ -43,6 +43,6 @@ public class ExamTest {
         fireNoteEvent("E5", 5625);
         fireNoteEvent("G5", 5625);
         fireNoteEvent("C5", 5625);
-        listener.finish();
+        //listener.finish();
     }
 }

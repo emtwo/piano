@@ -3,6 +3,7 @@ package piano.engine;
 import org.jfugue.elements.Note;
 
 import piano.ui.Drawing;
+import piano.ui.JFrameStack;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,16 +37,11 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
     private NotePanel matchedGhost = null;
     private int noteWidth;
 
-    private static JFrame frame;
-
     private static final int resolution = 384;
     private static final double noteHeight = 1.0, halfNoteHeight = 0.5;
 
-    public static void setFrame(JFrame frame) {
-        NotePanel.frame = frame;
-    }
-
     public NotePanel() {
+        JFrameStack.getFrame().add(this);
 	}
 
 	public NotePanel(Note note) {
@@ -233,14 +229,14 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
         ghost.setGonville(font);
         ghost.setPage(page);
         ghost.setCoordinates(ghostX, ghostY);
-        frame.add(ghost);
+        JFrameStack.getFrame().add(ghost);
         this.ghostNotes.add(ghost);
         return this;
     }
 
     public void clearGhostNotes() {
         for (NotePanel ghost : ghostNotes) {
-            frame.remove(ghost);
+            JFrameStack.getFrame().remove(ghost);
         }
         this.matchedGhost = null;
         this.ghostNotes.clear();

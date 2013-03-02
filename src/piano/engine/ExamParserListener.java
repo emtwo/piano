@@ -4,9 +4,9 @@ import org.jfugue.elements.*;
 
 import java.util.*;
 
-public class ExamParserListener extends AdapterParserListener {
+public abstract class ExamParserListener extends AdapterParserListener {
 
-    private static final int initialized = 0;
+    /*private static final int initialized = 0;
     private static final int counting = 1;
     private static final int playing = 2;
     private static final int finished = 3;
@@ -169,6 +169,6 @@ public class ExamParserListener extends AdapterParserListener {
             attachedNote.addGhostNote(ghost, referenceNote);
         }
     }
-
+                  */
 
 }

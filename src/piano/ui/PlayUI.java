@@ -7,8 +7,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
+import piano.engine.BaseScorePanel;
 import piano.engine.LilyImage;
-import piano.engine.ScorePanel;
+import piano.engine.ViewScorePanel;
 import piano.repository.Song;
 import piano.ui.buttons.ButtonType;
 import piano.ui.buttons.HelpButton;
@@ -85,6 +86,7 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
   @Override
   public void informButtonClicked(ButtonType buttonType, int buttonId) {
     Song song = listView.getCurrentSelection();
+    if (song != null) {
     switch(buttonType) {
       case SONG_SELECTION:
         LilyImage image = new LilyImage(song.name);
@@ -96,10 +98,11 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
       case EXAM_BUTTON:
       case PRACTICE_LEFT_BUTTON:
       case PRACTICE_RIGHT_BUTTON:
-        ScorePanel score = new ScorePanel(JFrameStack.getFrame(), song.name);
+        BaseScorePanel score = new ViewScorePanel(song.name);
         JFrameStack.pushPanel(score);
         score.switchToView();
     }
 
+    }
   }
 }
