@@ -1,4 +1,4 @@
-\version "2.10.33"
+\version "2.15.40"
 
 \header {
  title = "The Entertainer"
@@ -19,17 +19,17 @@
  maintainerWeb = "http://www.whitewillow.co.uk/"
  
  footer = "Mutopia-2008/12/21-263"
- tagline = \markup { \override #'(box-padding . 1.0) \override #'(baseline-skip . 2.7) \box \center-align { \small \line { Sheet music from \with-url #"http://www.MutopiaProject.org" \line { \teeny www. \hspace #-1.0 MutopiaProject \hspace #-1.0 \teeny .org \hspace #0.5 } • \hspace #0.5 \italic Free to download, with the \italic freedom to distribute, modify and perform. } \line { \small \line { Typeset using \with-url #"http://www.LilyPond.org" \line { \teeny www. \hspace #-1.0 LilyPond \hspace #-1.0 \teeny .org } by \maintainer \hspace #-1.0 . \hspace #0.5 Reference: \footer } } \line { \teeny \line { This sheet music has been placed in the public domain by the typesetter, for details see: \hspace #-0.5 \with-url #"http://creativecommons.org/licenses/publicdomain" http://creativecommons.org/licenses/publicdomain } } } }
+ tagline = \markup { \override #'(box-padding . 1.0) \override #'(baseline-skip . 2.7) \box \center-column { \small \line { Sheet music from \with-url #"http://www.MutopiaProject.org" \line { \teeny www. \hspace #-1.0 MutopiaProject \hspace #-1.0 \teeny .org \hspace #0.5 } • \hspace #0.5 \italic Free to download, with the \italic freedom to distribute, modify and perform. } \line { \small \line { Typeset using \with-url #"http://www.LilyPond.org" \line { \teeny www. \hspace #-1.0 LilyPond \hspace #-1.0 \teeny .org } by \maintainer \hspace #-1.0 . \hspace #0.5 Reference: \footer } } \line { \teeny \line { This sheet music has been placed in the public domain by the typesetter, for details see: \hspace #-0.5 \with-url #"http://creativecommons.org/licenses/publicdomain" http://creativecommons.org/licenses/publicdomain } } } }
 }
 
 blanknotes = { \override NoteHead
                  #'transparent  = ##t
-               \override Stem
-                 #'transparent = ##t }
+               \override Stem #'transparent = ##t
+               \override Flag #'transparent = ##t }
 unblanknotes = { \revert NoteHead
  #'transparent
-                 \revert Stem
- #'transparent }
+                 \revert Stem #'transparent
+                 \revert Flag #'transparent }
 
 top =  \relative c' {
  \override TextScript   #'padding = #2
@@ -95,7 +95,7 @@ top =  \relative c' {
   g-\< c e g ~ g e c-\! g |
   <a fis>8 <c fis,> <e f,>16 <d f,>8 <c e,>16 ~ |
  } \alternative {
-  { <c e,>4 ~ <c e,>16 #(set-octavation 1) <e' c e,> <f d f,> <fis dis fis,> #(set-octavation 0) } %37
+  { <c e,>4 ~ <c e,>16 \ottava #1 <e' c e,> <f d f,> <fis dis fis,> \ottava #0 } %37
   { <c, e,>4 ~ <c e,>8-\> d,16 dis-\! }
  }
  

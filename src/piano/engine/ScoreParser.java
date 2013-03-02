@@ -33,11 +33,9 @@ public class ScoreParser implements ParserListener {
     private long time = 0L;
 
     public ScoreParser(String name) {
-        //TODO remove static NotePanel calls
         this.name = name;
 
-        //TODO put back
-        //invokeLilyPond();
+        invokeLilyPond();
         parseImages();
         parseLilyPond();
         parsePostScript();

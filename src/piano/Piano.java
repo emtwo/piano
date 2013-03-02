@@ -24,7 +24,8 @@ public class Piano {
 
 	  if (install) {
 	    populateDatabase();		// Note: this is some pre-processing that should be done as an "install"
-    }
+        renderScores();
+      }
 
     NotePlayer.init(); // this takes some time, so initialize music players
     loadFonts();
@@ -74,6 +75,13 @@ public class Piano {
             e.printStackTrace();
         }
         return headers;
+    }
+
+    private void renderScores() {
+        ArrayList<LilyHeader> songInfo = loadHeaders();
+        for (LilyHeader header : songInfo) {
+            Score.ParseScore(header.name);
+        }
     }
 
 	private void populateDatabase() {
