@@ -47,9 +47,6 @@ public class ScorePanel extends Drawing {
 
         NotePanel.setFrame(frame);
 
-
-
-        Score.ParseScore(name);
         S = Score.Load(name);
 
 		//read in all the images
