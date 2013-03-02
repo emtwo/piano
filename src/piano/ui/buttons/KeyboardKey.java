@@ -7,12 +7,13 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import piano.ui.ButtonClickCallback;
 import piano.ui.Drawing;
 
 public class KeyboardKey extends Button {
 
 	private boolean isBlack;
-	private int id;
+	public int id;
 
 	public KeyboardKey(String text, int x, int y, int width, int height, boolean isBlack, int id) {
 		super(text, x, y, width, height);
@@ -20,8 +21,9 @@ public class KeyboardKey extends Button {
 		this.id = id;
 	}
 
-	public KeyboardKey(String text, int x, int y, int width, int height, boolean isBlack, Drawing parent, Drawing nextView, JFrame parentFrame, int id) {
-		super(text, x, y, width, height, parent, nextView, parentFrame);
+	public KeyboardKey(String text, int x, int y, int width, int height,
+			boolean isBlack, Drawing parent, ButtonClickCallback callback, int id) {
+		super(text, x, y, width, height, parent, callback);
 		this.isBlack = isBlack;
 		this.id = id;
 	}

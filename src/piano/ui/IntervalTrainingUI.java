@@ -6,11 +6,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import piano.ui.KeyboardParserListener.Colour;
 import piano.ui.buttons.HelpButton;
@@ -28,7 +24,7 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, G
 	private boolean stopPainting = false;
 	private NotesToPlayData data;
 
-	public IntervalTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
+	public IntervalTrainingUI() {
 		super(WIDTH, 800);
 		data = new NotesToPlayData(this);
 		data.minKey = 48;
@@ -36,16 +32,9 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, G
 		data.numOctaves = 3;
 		data.useBlackKeys = true;
 
-		keyboard = new KeyboardView(this, this, null, parentFrame, data);
-		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20, this, parent, parentFrame);
+		keyboard = new KeyboardView(this, this, data);
+		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20);
 		helpButton = new HelpButton("?", HELP_TEXT, WIDTH - 25, 5, 20, 20);
-	}
-
-	@Override
-	public void switchToView(JFrame parentFrame) {
-		super.switchToView(parentFrame);
-		keyboard.switchToView(parentFrame);
-		stopPainting = false;
 	}
 
 	public void paintComponent(Graphics g) {
@@ -83,6 +72,7 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, G
 
 	public void mouseClicked(MouseEvent e) {
 		if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
+			JFrameStack.popPanel();
 			informExitLoop();
 			return;
 		}
@@ -127,5 +117,10 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, G
 		list.add(map1);
 		list.add(map2);
 		return list;
+	}
+
+	public void switchToView() {
+		stopPainting = false;
+		keyboard.switchToView();
 	}
 }

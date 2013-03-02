@@ -22,7 +22,7 @@ public class SongDatabaseAccessor {
 	}
 
 	public void addSong(Song song) {
-		db.store(song.title, song.author, song.midiPath, song.imagePath, song.category);
+		db.store(song.title, song.subtitle, song.composer, song.style, song.date, song.copyright, song.name);
 	}
 
 	public List<Song> getAllSongs() throws SQLException {
@@ -30,13 +30,15 @@ public class SongDatabaseAccessor {
 		ResultSet rs = db.fetchAllSongs();
 		try {
 			while (rs.next()) {
-				String midiPath  = rs.getString(SongDatabase.COL_MIDI_PATH);
-				String imagePath = rs.getString(SongDatabase.COL_IMAGE_PATH);
 				String title     = rs.getString(SongDatabase.COL_TITLE);
-				String author		 = rs.getString(SongDatabase.COL_AUTHOR);
-				String category  = rs.getString(SongDatabase.COL_CATEGORY);
+				String subtitle  = rs.getString(SongDatabase.COL_SUBTITLE);
+				String composer  = rs.getString(SongDatabase.COL_COMPOSER);
+				String style		 = rs.getString(SongDatabase.COL_STYLE);
+				String date      = rs.getString(SongDatabase.COL_DATE);
+				String copyright = rs.getString(SongDatabase.COL_COPYRIGHT);
+				String name      = rs.getString(SongDatabase.COL_NAME);
 
-				Song song = new Song(midiPath, imagePath, title, author, category);
+				Song song = new Song(title, subtitle, composer, style, date, copyright, name);
 				songs.add(song);
 			}
 		} catch (SQLException e) {
@@ -68,13 +70,15 @@ public class SongDatabaseAccessor {
 		ResultSet rs = db.fetchByCriterion(column, criterion);
 		try {
 			while (rs.next()) {
-				String midiPath  = rs.getString(SongDatabase.COL_MIDI_PATH);
-				String imagePath = rs.getString(SongDatabase.COL_IMAGE_PATH);
 				String title     = rs.getString(SongDatabase.COL_TITLE);
-				String author		 = rs.getString(SongDatabase.COL_AUTHOR);
-				String category  = rs.getString(SongDatabase.COL_CATEGORY);
+				String subtitle  = rs.getString(SongDatabase.COL_SUBTITLE);
+				String composer  = rs.getString(SongDatabase.COL_COMPOSER);
+				String style		 = rs.getString(SongDatabase.COL_STYLE);
+				String date      = rs.getString(SongDatabase.COL_DATE);
+				String copyright = rs.getString(SongDatabase.COL_COPYRIGHT);
+				String name      = rs.getString(SongDatabase.COL_NAME);
 
-				Song song = new Song(midiPath, imagePath, title, author, category);
+				Song song = new Song(title, subtitle, composer, style, date, copyright, name);
 				songs.add(song);
 			}
 		} catch (SQLException e) {

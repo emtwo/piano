@@ -1,43 +1,38 @@
 package piano.ui;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import javax.swing.JFrame;
 
-import piano.repository.SongDatabase;
+import piano.engine.LilyImage;
+import piano.engine.ScorePanel;
+import piano.repository.Song;
+import piano.ui.buttons.ButtonType;
+import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
-import piano.ui.buttons.SimpleButton;
 
 @SuppressWarnings("serial")
-public class PlayUI extends Drawing {
+public class PlayUI extends Drawing implements ButtonClickCallback {
+	private MainMenuButton mainMenu;
+	private HelpButton helpButton;
+	private SongListView listView;
+	private PlayChoicesView playView;
+	private SongPreviewView previewView;
 
-	ArrayList<SimpleButton> buttons = new ArrayList<SimpleButton>();
+	private static final String HELP_TEXT = "Choose a song. Preview it in the preview panel. Choose view the song, see a demo of it, test yourself on it, or practice playing it with one or both hands.";
+	private static final String TITLE = "Play";
 
-	SubView currentSubView, allView, genreView, composerView;
-	Drawing menuView;
-	MainMenuButton mainMenu;
-	int width = 800;
-
-	public PlayUI(JFrame parentFrame, Drawing mainMenuView) throws IOException {
+	public PlayUI() {
 		super();
 
-		buttons.add(new SimpleButton("All", 0, 100, width/3, 60, this, null, parentFrame));
-		buttons.add(new SimpleButton("Genre", width/3, 100, width/3, 60, this, null, parentFrame));
-		buttons.add(new SimpleButton("Composer", width/3 * 2, 100, width/3, 60, this, null, parentFrame));
-		buttons.get(0).setChosen(true);
-
-		menuView = mainMenuView;
-		mainMenu = new MainMenuButton("Main Menu", width/2 - width/12, width - 60, width/6, 25, this, menuView, parentFrame);
-
-		allView = new SubView(null, parentFrame, false);
-		genreView = new SubView(SongDatabase.COL_CATEGORY, parentFrame, true);
-		composerView = new SubView(SongDatabase.COL_AUTHOR, parentFrame, true);
-
-		currentSubView = allView;
+		mainMenu = new MainMenuButton("< Main Menu", 5, 5, 150, 20);
+		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20);
+    listView = new SongListView(this);
+    playView = new PlayChoicesView(this);
+    previewView = new SongPreviewView();
 	}
 
 	public void paintComponent(Graphics g) {
@@ -49,79 +44,62 @@ public class PlayUI extends Drawing {
 
 		// Set font and colour
 		g.setColor(Color.BLACK);
-		g.setFont(Fonts.big);
+		g.setFont(Fonts.italic);
+		((Graphics2D) g).setStroke(new BasicStroke(1));
 
-		// Write "Choose a Song".
-		String text = "Choose a Song!";
-		FontMetrics metrics = g.getFontMetrics(Fonts.big);
-		int adv = metrics.stringWidth(text);
-		g.drawString(text, getWidth()/2 - adv/2, 65);
+		// Write title.
+		FontMetrics metrics = g.getFontMetrics(Fonts.italic);
+		int adv = metrics.stringWidth(TITLE);
+		g.drawString(TITLE, getWidth()/2 - adv/2, 23);
+		g.drawLine(0, 30, getWidth(), 30);
 
-		g.drawLine(0, 85, getWidth(), 85);
-		g.drawLine(0, 10, getWidth(), 10);
-
-		for (SimpleButton button : buttons) {
-			button.paintComponent(g);
-		}
+		listView.paintComponent(g);
+		playView.paintComponent(g);
+		previewView.paintComponent(g);
 
 		mainMenu.paintComponent(g);
-
-		// Choose based on tab what to display.
-		currentSubView.paintComponent(g);
+		helpButton.paintComponent(g);
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		currentSubView.mouseClicked(e);
-		this.repaint();
-
+	  listView.mouseClicked(e);
+	  playView.mouseClicked(e);
 		if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
-			return;
+			JFrameStack.popPanel();
 		}
-
-		SimpleButton chosenButton = null;
-
-		// Find the chosen button.
-    for (SimpleButton button : buttons) {
-	if (button.setMouseClicked(e.getX(), e.getY())) {
-		chosenButton = button;
-	}
-    }
-
-    if (chosenButton == null) {
-	return;
-    }
-
-    // Make all buttons not chosen.
-    for (SimpleButton button : buttons) {
-	button.setChosen(false);
-    }
-
-    // Set our chosen button to chosen.
-    chosenButton.setChosen(true);
-    setSubView(chosenButton);
-    this.repaint();
-	}
-
-	public void setSubView(SimpleButton chosenButton) {
-		if (chosenButton.text.equals("All")) {
-			currentSubView = allView;
-		} else if (chosenButton.text.equals("Genre")) {
-			currentSubView = genreView;
-		} else {
-			currentSubView = composerView;
-		}
+		repaint();
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		for (SimpleButton button : buttons) {
-			button.computeMouseEntered(e.getX(), e.getY());
-			button.computeMouseExited(e.getX(), e.getY());
-		}
+		listView.mouseMoved(e);
+		playView.mouseMoved(e);
 		mainMenu.computeMouseEntered(e.getX(), e.getY());
 		mainMenu.computeMouseExited(e.getX(), e.getY());
 
-		currentSubView.mouseMoved(e);
-		this.repaint();
+		helpButton.computeMouseEntered(e.getX(), e.getY());
+		helpButton.computeMouseExited(e.getX(), e.getY());
+		repaint();
 	}
+
+  @Override
+  public void informButtonClicked(ButtonType buttonType, int buttonId) {
+    Song song = listView.getCurrentSelection();
+    switch(buttonType) {
+      case SONG_SELECTION:
+        LilyImage image = new LilyImage(song.name);
+        previewView.setImage(image);
+        break;
+      case VIEW_BUTTON:
+      case DEMO_BUTTON:
+      case PRACTICE_BUTTON:
+      case EXAM_BUTTON:
+      case PRACTICE_LEFT_BUTTON:
+      case PRACTICE_RIGHT_BUTTON:
+        ScorePanel score = new ScorePanel(JFrameStack.getFrame(), song.name);
+        JFrameStack.pushPanel(score);
+        score.switchToView();
+    }
+
+  }
 }

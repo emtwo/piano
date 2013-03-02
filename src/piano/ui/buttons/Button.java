@@ -10,19 +10,18 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import piano.ui.ButtonClickCallback;
 import piano.ui.Drawing;
 import piano.ui.Fonts;
-import piano.ui.SubView;
 
 public abstract class Button extends JPanel {
 
 	public String text;
 	protected Drawing parent;
+	protected ButtonClickCallback callback;
 	protected boolean bold = false;
 	protected int x, y, width, height;
 
-	protected Drawing nextView;
-	protected JFrame parentFrame;
 	public boolean overButton = false;
 
 	protected Font font = Fonts.italic_big;
@@ -47,8 +46,7 @@ public abstract class Button extends JPanel {
 		this.text = text;
 	}
 
-	public Button(String text, int x, int y, int width, int height,
-			Drawing parent, Drawing nextView, JFrame parentFrame) {
+	public Button(String text, int x, int y, int width, int height, Drawing parent, ButtonClickCallback buttonCallback) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -56,8 +54,7 @@ public abstract class Button extends JPanel {
 		this.height = height;
 		this.text = text;
 		this.parent = parent;
-		this.nextView = nextView;
-		this.parentFrame = parentFrame;
+		this.callback = buttonCallback;
 
 		this.addMouseMotionListener(parent);
 		addMouseListener(parent);
@@ -100,13 +97,23 @@ public abstract class Button extends JPanel {
 	}
 
 	public boolean setMouseClicked(int x, int y) {
-		if (!overButton || nextView == null) {
+		if (!overButton) {
 			return false;
 		}
 
 		hoverOut();
 		outButton();
-		nextView.switchToView(parentFrame);
+		return true;
+	}
+
+	public boolean setMouseClicked(int x, int y, ButtonType buttonType) {
+		if (!overButton) {
+			return false;
+		}
+
+		hoverOut();
+		outButton();
+		callback.informButtonClicked(buttonType, 0);
 		return true;
 	}
 

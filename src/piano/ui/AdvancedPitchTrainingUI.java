@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import piano.ui.KeyboardParserListener.Colour;
+import piano.ui.buttons.ButtonType;
 import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
 
@@ -28,7 +29,7 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 	private HelpButton helpButton;
 	private boolean stopPainting = false;
 
-	public AdvancedPitchTrainingUI(JFrame parentFrame, Drawing parent) throws IOException {
+	public AdvancedPitchTrainingUI() {
 		super(WIDTH, 800);
 		data = new NotesToPlayData(this);
 		data.minKey = 48;
@@ -36,17 +37,19 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 		data.numOctaves = 3;
 		data.useBlackKeys = true;
 
-		keyboard = new KeyboardView(this, this, null, parentFrame, data);
-		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20, this, parent, parentFrame);
+		keyboard = new KeyboardView(this, this, data);
+		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20);
 		helpButton = new HelpButton("?", HELP_TEXT, WIDTH - 25, 5, 20, 20);
 	}
 
+	/*
 	@Override
 	public void switchToView(JFrame parentFrame) {
 		super.switchToView(parentFrame);
 		keyboard.switchToView(parentFrame);
 		stopPainting = false;
 	}
+	*/
 
 	public void paintComponent(Graphics g) {
 		if (stopPainting) {
@@ -89,6 +92,7 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 
 	public void mouseClicked(MouseEvent e) {
 		if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
+			JFrameStack.popPanel();
 			informExitLoop();
 			return;
 		}
@@ -122,5 +126,11 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 		NoteToColourMap map1 = new NoteToColourMap(noteToPlay, colour);
 		list.add(map1);
 		return list;
+	}
+
+	@Override
+	public void switchToView() {
+		keyboard.switchToView();
+		stopPainting = false;
 	}
 }

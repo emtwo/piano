@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import piano.engine.MockAdapterParser;
 import piano.engine.NotePlayer;
 import piano.engine.PianoAdapterParser;
+import piano.ui.buttons.ButtonType;
 import piano.ui.buttons.KeyboardKey;
 
 @SuppressWarnings("serial")
@@ -25,9 +26,7 @@ public class KeyboardView extends Drawing {
 	private int width, height, parentWidth, xVal, yVal, keyWidth, blackKeyWidth;
 	private boolean pianoExists;
 
-	private HashMap<Integer, PianoMenuData> menuData;
-	private Drawing parent;
-	private JFrame parentFrame;
+	private HashMap<Integer, String> menuData;
 	private NotesToPlayData noteData;
 
 	private AtomicBoolean exitLoop = new AtomicBoolean();
@@ -39,29 +38,33 @@ public class KeyboardView extends Drawing {
 	private MockAdapterParser mock;
 	private PianoAdapterParser real;
   private KeyboardParserListener keyboardParserListener;
+  private ButtonClickCallback callback;
 
-	public KeyboardView(KeyPressedCallback practiceUI, Drawing parent,
-			HashMap<Integer, PianoMenuData> menuData, final JFrame parentFrame, NotesToPlayData noteData) throws IOException {
+  public KeyboardView(KeyPressedCallback practiceUI, Drawing parent, NotesToPlayData noteData) {
+	this(practiceUI, parent, null, null, noteData);
+  }
+
+	public KeyboardView(KeyPressedCallback practiceUI, Drawing parent, ButtonClickCallback callback,
+			HashMap<Integer, String> menuData, NotesToPlayData noteData) {
 		super();
 		keyboardParserListener = new KeyboardParserListener(practiceUI);
+		mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
+		real = new PianoAdapterParser();
 
-		this.parent = parent;
+		this.callback = callback;
 		this.menuData = menuData;
-		this.parentFrame = parentFrame;
 		this.noteData = noteData;
 	}
 
-	@Override
-	public void switchToView(final JFrame parentFrame) {
-		parentFrame.getContentPane().add(KeyboardView.this, 1);
-		parentFrame.validate();
-		mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
-		real = new PianoAdapterParser();
+	public void switchToView() {
+		JFrameStack.getFrame().getContentPane().add(this, 1);
+		JFrameStack.getFrame().validate();
+
 		mock.addParserListener(keyboardParserListener);
 		real.addParserListener(keyboardParserListener);
-		//addKeyListener(keyboard);
 		setFocusable(true);
 		requestFocusInWindow();
+		JFrameStack.getFrame().validate();
 		exitLoop.set(false);
 		startPlayThread();
 	}
@@ -218,10 +221,9 @@ public class KeyboardView extends Drawing {
 				blackKeyList.add(new KeyboardKey("", xVal, blackKeyYVal, (int) (width * 0.6), blackKeyWidth, true, i));
 				blackKeyYVal += keyWidth;
 			} else {
-				PianoMenuData data = menuData.get(i);
+				String data = menuData.get(i);
 				if (data != null) {
-					keyList.add(new KeyboardKey(data.menuText, xVal, keyYVal, width, keyWidth,
-							false, parent, data.nextView, parentFrame, i));
+					keyList.add(new KeyboardKey(data, xVal, keyYVal, width, keyWidth, false, i));
 				} else {
 					keyList.add(new KeyboardKey("", xVal, keyYVal, width, keyWidth, false, i));
 				}
@@ -245,13 +247,16 @@ public class KeyboardView extends Drawing {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		for (KeyboardKey button : keyList) {
-			button.setMouseClicked(e.getX(), e.getY());
+			if(button.setMouseClicked(e.getX(), e.getY()) && button.text != null && !button.text.equals("")) {
+				callback.informButtonClicked(ButtonType.KEYBOARD_KEY, button.id);
+			}
 		}
 	}
 
 	public void informExitLoop() {
 		exitLoop.set(true);
-		//removeKeyListener(keyboard);
+		mock.removeParserListener(keyboardParserListener);
+		real.removeParserListener(keyboardParserListener);
 	}
 
 	public boolean isSharp(int i) {

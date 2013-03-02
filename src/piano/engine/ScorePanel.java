@@ -3,7 +3,7 @@ package piano.engine;
 import javax.swing.*;
 
 import piano.ui.Drawing;
-import piano.ui.KeyboardView;
+import piano.ui.JFrameStack;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -326,17 +326,14 @@ public class ScorePanel extends Drawing {
         }
 	}
 
-	@Override
-	public void switchToView(final JFrame parentFrame) {
-		super.switchToView(parentFrame);
-		setFocusable(true);
-		requestFocusInWindow();
-	}
-
     public void paintComponent(Graphics g) {
         frame.setSize(currImage.getWidth(), currImage.getHeight());
         g.drawImage(currImage, 0, 0, null);
     }
 
-
+    @Override
+    public void switchToView() {
+      setFocusable(true);
+      requestFocusInWindow();
+    }
 }

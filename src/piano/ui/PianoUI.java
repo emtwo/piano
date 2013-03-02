@@ -9,8 +9,9 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 
 import piano.ui.KeyboardParserListener.Colour;
+import piano.ui.buttons.ButtonType;
 
-public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
+public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback, ButtonClickCallback{
 
   final static float dash1[] = {10.0f};
 
@@ -19,17 +20,17 @@ public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteC
 	private NotesToPlayData data;
 	private KeyboardView keyboard;
 
-	public PianoUI(JFrame parentFrame) throws IOException {
+	public PianoUI() throws IOException {
 		super();
 		NotesToPlayData data = new NotesToPlayData(this);
 		data.minKey = 60;
 		data.maxKey = 71;
 		data.numOctaves = 1;
 
-		HashMap<Integer, PianoMenuData> menuData = new HashMap<Integer, PianoMenuData>();
-		menuData.put(64, new PianoMenuData("Play", new PlayUI(parentFrame, this)));
-		menuData.put(67, new PianoMenuData("Ear Training", new EarTrainingUI(parentFrame, this)));
-		keyboard = new KeyboardView(this, this, menuData, parentFrame, data);
+		HashMap<Integer, String> menuData = new HashMap<Integer, String>();
+		menuData.put(64, "Play");
+		menuData.put(67, "Ear Training");
+		keyboard = new KeyboardView(this, this, this, menuData, data);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -80,4 +81,13 @@ public class PianoUI extends Drawing implements KeyPressedCallback, GetNextNoteC
 
 	@Override
 	public ArrayList<NoteToColourMap> getNextNotes() { return null; }
+
+	@Override
+	public void informButtonClicked(ButtonType buttonType, int buttonId) {
+		if (buttonId == 64) {
+			JFrameStack.pushPanel(new PlayUI());
+		} else {
+			JFrameStack.pushPanel(new EarTrainingUI());
+		}
+	}
 }
