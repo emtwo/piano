@@ -9,13 +9,10 @@ import java.util.List;
 import piano.engine.LilyImage;
 import piano.engine.ScorePanel;
 import piano.repository.Song;
-import piano.ui.buttons.Box;
 
 public class SongPreviewView extends Drawing {
 
 	public List<Song> songs;
-
-	Box[] boxes = new Box[6];
 
 	public int startIndex = 0, width = 800;
 	ScorePanel score;
