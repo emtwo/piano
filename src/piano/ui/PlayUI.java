@@ -7,9 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
-import piano.engine.BaseScorePanel;
-import piano.engine.LilyImage;
-import piano.engine.ViewScorePanel;
+import piano.engine.*;
 import piano.repository.Song;
 import piano.ui.buttons.ButtonType;
 import piano.ui.buttons.HelpButton;
@@ -87,20 +85,33 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
   public void informButtonClicked(ButtonType buttonType, int buttonId) {
     Song song = listView.getCurrentSelection();
     if (song != null) {
-    switch(buttonType) {
-      case SONG_SELECTION:
-        LilyImage image = new LilyImage(song.name);
-        previewView.setImage(image);
-        break;
-      case VIEW_BUTTON:
-      case DEMO_BUTTON:
-      case PRACTICE_BUTTON:
-      case EXAM_BUTTON:
-      case PRACTICE_LEFT_BUTTON:
-      case PRACTICE_RIGHT_BUTTON:
-        BaseScorePanel score = new ViewScorePanel(song.name);
-        JFrameStack.pushPanel(score);
-        score.switchToView();
+        if (buttonType == buttonType.SONG_SELECTION) {
+            LilyImage image = new LilyImage(song.name);
+            previewView.setImage(image);
+        } else {
+            BaseScorePanel score;
+            switch (buttonType) {
+              case VIEW_BUTTON:
+                  score = new ViewScorePanel(song.name);
+                  break;
+              case DEMO_BUTTON:
+                  score = new DemoScorePanel(song.name);
+                  break;
+              case PRACTICE_BUTTON:
+                  score = new PracticeScorePanel(song.name, PracticeScorePanel.BOTH_HANDS);
+                  break;
+              case EXAM_BUTTON:
+              case PRACTICE_LEFT_BUTTON:
+                  score = new PracticeScorePanel(song.name, PracticeScorePanel.LEFT_HAND);
+                  break;
+              case PRACTICE_RIGHT_BUTTON:
+                  score = new PracticeScorePanel(song.name, PracticeScorePanel.RIGHT_HAND);
+                  break;
+              default:
+                  score = new ViewScorePanel(song.name);
+            }
+            //score.switchToView();
+            JFrameStack.pushPanel(score);
     }
 
     }

@@ -25,7 +25,16 @@ public class JFrameStack {
 		return frameStack;
 	}
 
+    private static void removeLastPanel() {
+        if (!stack.empty()) {
+            JPanel lastPanel = stack.peek();
+            frame.remove(lastPanel);
+        }
+    }
+
 	public static void pushPanel(JPanel nextPanel) {
+        removeLastPanel();
+
 		stack.push(nextPanel);
 		nextPanel.setFocusable(true);
 		nextPanel.requestFocusInWindow();
@@ -36,6 +45,8 @@ public class JFrameStack {
 	}
 
 	public static JPanel popPanel() {
+        removeLastPanel();
+
 		JPanel returnPanel = stack.pop();
 		JPanel nextPanel = stack.peek();
 		nextPanel.setFocusable(true);

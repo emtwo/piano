@@ -20,7 +20,8 @@ public abstract class Drawing extends JPanel implements MouseMotionListener, Mou
   }
 
 	public Drawing(int width, int height) {
-		super(new GridLayout(15,15));
+		//super(new GridLayout(15,15));
+        super(null);
 
 		//Register for mouse events on blankArea and the panel.
     addMouseMotionListener(this);
@@ -64,16 +65,12 @@ public abstract class Drawing extends JPanel implements MouseMotionListener, Mou
 	public void mouseExited(MouseEvent e) {
 	}
 
-	public void mouseClicked(MouseEvent e) {
-		this.repaint();
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
-		this.repaint();
-	}
+	public void mouseMoved(MouseEvent e) {}
 }

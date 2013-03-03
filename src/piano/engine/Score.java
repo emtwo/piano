@@ -40,7 +40,20 @@ public class Score implements Serializable {
         S.save();
 
         return S;
+    }
 
+    private void save() {
+        try {
+            String filePath = "data/out/" + name + ".dat";
+            System.out.println("Saving score to " + filePath);
+            FileOutputStream f = new FileOutputStream(filePath);
+            ObjectOutput s = new ObjectOutputStream(f);
+            s.writeObject(this);
+            s.flush();
+        } catch (Exception e) {
+            System.err.println("Saving score has failed. Error: ");
+            e.printStackTrace();
+        }
     }
 
     public static Score Load(String name) {
@@ -48,7 +61,7 @@ public class Score implements Serializable {
             String filePath = "data/out/" + name + ".dat";
             System.out.println("Loading score from " + filePath);
             FileInputStream f = new FileInputStream(filePath);
-            ObjectInput s = new ObjectInputStream(f);
+            ObjectInputStream s = new ObjectInputStream(f);
             return (Score) s.readObject();
         } catch (Exception e) {
             System.err.println("Loading score has failed. Error: ");
@@ -78,20 +91,6 @@ public class Score implements Serializable {
 
     private Score() {}
 
-    private void save() {
-        try {
-            String filePath = "data/out/" + name + ".dat";
-            System.out.println("Saving score to " + filePath);
-            FileOutputStream f = new FileOutputStream(filePath);
-            ObjectOutput s = new ObjectOutputStream(f);
-            s.writeObject(this);
-            s.flush();
-        } catch (Exception e) {
-            System.err.println("Saving score has failed. Error: ");
-            e.printStackTrace();
-        }
-    }
-
     private void init() {
 
         scaleHeight = (double) imageHeight / paperHeight;
@@ -104,9 +103,9 @@ public class Score implements Serializable {
         combinedAllNotes = new Vector<NotePanel>();
 
         for (int layer = 0; layer < staves; ++layer) {
+            chords[layer] = new Vector<Chord>();
             for (Chord chord : allChords[layer]) {
                 if (!chord.isRest()) {
-                    chords[layer] = new Vector<Chord>();
                     chords[layer].add(chord);
                 }
             }

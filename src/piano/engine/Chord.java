@@ -49,7 +49,7 @@ public class Chord implements Serializable {
 
 	public Chord setActive(boolean active) {
         for (NotePanel note : notes) {
-            note.active = active;
+            note.setActive(active);
         }
         return this;
 	}

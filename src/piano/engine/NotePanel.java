@@ -10,12 +10,11 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.Vector;
 
-public class NotePanel extends Drawing implements Comparable<NotePanel>, Serializable {
+public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializable {
 
 	public int lyLine, lyNumber;
 	public double x, y;
 	public int page;
-	public boolean active = false;
 	public long time, millisTime, millisDuration;
     public boolean isRest = false;
     public boolean isGhost = false, correct;
@@ -30,6 +29,7 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
     private int accidentalWidth, accidentalHeight;
     private String accidentalString;       */
 
+    private boolean active = false;
 	private Font font;
 	private Note note = null;
     private String noteString;
@@ -40,9 +40,7 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
     private static final int resolution = 384;
     private static final double noteHeight = 1.0, halfNoteHeight = 0.5;
 
-    public NotePanel() {
-        JFrameStack.getFrame().add(this);
-	}
+    public NotePanel() {}
 
 	public NotePanel(Note note) {
         this();
@@ -51,7 +49,7 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
 
     public NotePanel setScore(Score score) {
         this.score = score;
-        setBounds(0, 0, score.imageWidth, score.imageHeight);
+        this.setBounds(0, 0, score.imageWidth, score.imageHeight);
         if (score.resolution != resolution) {
             System.err.println("Score is not using default resolution");
         }
@@ -136,6 +134,11 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
         this.isTie = true;
         note = new Note((byte) 0);
         note.setAttackVelocity((byte) 0);
+        return this;
+    }
+
+    public NotePanel setActive(boolean active) {
+        this.active = active;
         return this;
     }
 
@@ -309,6 +312,7 @@ public class NotePanel extends Drawing implements Comparable<NotePanel>, Seriali
     }
 
 	public void paintComponent(Graphics g) {
+        this.setBounds(0, 0, score.imageWidth, score.imageHeight); // hack to make repaint() think the notepanel has changed
 		if (active) {
             if (isGhost && correct) {
                 g.setColor(Color.GREEN);
