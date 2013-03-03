@@ -105,7 +105,7 @@ public class Score implements Serializable {
         for (int layer = 0; layer < staves; ++layer) {
             chords[layer] = new Vector<Chord>();
             for (Chord chord : allChords[layer]) {
-                if (!chord.isRest()) {
+                if (!chord.isRestOrTie()) {
                     chords[layer].add(chord);
                 }
             }
@@ -124,20 +124,20 @@ public class Score implements Serializable {
 
                 if (time[0] == time[1]) {
                     for (int layer = 0; layer < staves; ++layer) {
-                        if (!allChords[layer].get(cChord[layer]).isRest()) {
+                        if (!allChords[layer].get(cChord[layer]).isRestOrTie()) {
                             chord.addChord(allChords[layer].get(cChord[layer]));
                         }
                         allChord.addChord(allChords[layer].get(cChord[layer]));
                         ++(cChord[layer]);
                     }
                 } else if (time[0] < time[1]) {
-                    if (!allChords[0].get(cChord[0]).isRest()) {
+                    if (!allChords[0].get(cChord[0]).isRestOrTie()) {
                         chord.addChord(allChords[0].get(cChord[0]));
                     }
                     allChord.addChord(allChords[0].get(cChord[0]));
                     ++(cChord[0]);
                 } else {
-                    if (!allChords[1].get(cChord[1]).isRest()) {
+                    if (!allChords[1].get(cChord[1]).isRestOrTie()) {
                         chord.addChord(allChords[1].get(cChord[1]));
                     }
                     allChord.addChord(allChords[0].get(cChord[0]));
@@ -154,7 +154,7 @@ public class Score implements Serializable {
         for (int layer = 0; layer < staves; ++layer) {
             while (cChord[layer] < allChords[layer].size()) {
                 time[layer] = allChords[layer].get(cChord[layer]).getMillisTime();
-                if (!allChords[layer].get(cChord[layer]).isRest()) {
+                if (!allChords[layer].get(cChord[layer]).isRestOrTie()) {
                     combinedChords.add(new Chord(allChords[layer].get(cChord[layer])));
                 }
                 combinedAllChords.add(new Chord(allChords[layer].get(cChord[layer])));

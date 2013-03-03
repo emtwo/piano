@@ -2,9 +2,6 @@ package piano.engine;
 
 import org.jfugue.elements.Note;
 
-import piano.ui.Drawing;
-import piano.ui.JFrameStack;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;

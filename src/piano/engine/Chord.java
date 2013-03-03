@@ -103,6 +103,14 @@ public class Chord implements Serializable {
         return (notes.size() == 1 && notes.get(0).isRest);
     }
 
+    public boolean isTie() {
+        return notes.get(0).isTie;
+    }
+
+    public boolean isRestOrTie() {
+        return isRest() || isTie();
+    }
+
 	public void play() {
         NotePlayer.play(musicString);
 	}

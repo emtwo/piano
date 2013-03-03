@@ -122,6 +122,7 @@ public class ScoreParser implements ParserListener {
 
                 ++line;
             }
+
             LYIn.close();
         } catch (Exception e) {
             System.err.println("Parsing the score from Lilypond's output has failed. Error: ");
@@ -283,8 +284,13 @@ public class ScoreParser implements ParserListener {
             for (int i = 0; i < staves; ++i) {
                 Vector<Chord> currChords = chords[i];
                 Iterator<NotePanel> currNote = currNotes[i];
-                long tempTime = currChords.isEmpty() ? 0 : currChords.lastElement().getTime() + currChords.lastElement().getDuration();
-
+                long tempTime = 0;
+                for (int j = currChords.size() - 1; j >=0; --j) {
+                    if (!currChords.get(j).isTie()) {
+                        tempTime = currChords.get(j).getTime() + currChords.get(j).getDuration();
+                        break;
+                    }
+                }
                 while (currNote.hasNext()) {
                     NotePanel notePanel = currNote.next();
                     if (notePanel.getNote() != null) {
@@ -321,8 +327,29 @@ public class ScoreParser implements ParserListener {
         if (note.getMillisDuration() > 0) {
             NotePanel notePanel = currNote.next();
             // time the last chord ended
-            long tempTime = currChords.isEmpty() ? 0 : currChords.lastElement().getTime() + currChords.lastElement().getDuration();
-            while (notePanel.isRest || notePanel.isTie) {
+            long tempTime = 0;
+            for (int i = currChords.size() - 1; i >=0; --i) {
+                if (!currChords.get(i).isTie()) {
+                    tempTime = currChords.get(i).getTime() + currChords.get(i).getDuration();
+                    break;
+                }
+            }
+
+            if (notePanel.isTie) {
+                Chord chord = new Chord();
+                //for each note in the last chord, set the next note as a tied note
+                for (int i = 0; i < currChords.lastElement().size(); ++i) {
+                    notePanel.setTie(true)
+                             .setTime(Math.min(tempTime, time - 1))
+                             .setTempo(tempo);
+                    chord.addNote(notePanel);
+                    notePanel = currNote.next();
+                }
+                currChords.add(chord);
+            }
+
+
+            while (notePanel.isRest) {
                 notePanel.setTime(Math.min(tempTime, time - 1)) //hack, in case the rest should be trimmed
                         .setTempo(tempo);
                 tempTime += notePanel.getDuration();
@@ -331,6 +358,7 @@ public class ScoreParser implements ParserListener {
                 //System.out.println("REST: " + notePanel.getMusicString() + " " + notePanel.getDuration());
                 notePanel = currNote.next();
             }
+
             notePanel.setNote(note)
                     .setTime(time)
                     .setTempo(tempo);
