@@ -36,15 +36,21 @@ public class ExamTest {
         listener.noteEvent(new Note(noteHash.get(note)), time);
     }
 
+    void fireNoteEvent(String note, long time, int attackVelocity) {
+        Note n = new Note(noteHash.get(note));
+        n.setAttackVelocity((byte) attackVelocity);
+        listener.noteEvent(n, time);
+    }
+
     void basicPerfect() {
-        fireNoteEvent("E5", 0);
-        fireNoteEvent("D5", 937);
-        fireNoteEvent("C5", 1875);
-        fireNoteEvent("D5", 2812);
-        fireNoteEvent("E5", 4687);
-        fireNoteEvent("E5", 5625);
-        fireNoteEvent("G5", 5625);
-        fireNoteEvent("C5", 5625);
+        fireNoteEvent("E5", 0, 0);
+        fireNoteEvent("D5", 937, 15);
+        fireNoteEvent("C5", 1875, 30);
+        fireNoteEvent("D5", 2812, 45);
+        fireNoteEvent("E5", 4687, 60);
+        fireNoteEvent("E5", 5625, 75);
+        fireNoteEvent("G5", 5625, 90);
+        fireNoteEvent("C5", 5625, 115);
         if (panel != null) {
             panel.finish();
         }

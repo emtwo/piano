@@ -1,7 +1,6 @@
 package piano.engine;
 
 import org.jfugue.elements.Note;
-import piano.ui.JFrameStack;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +36,12 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
 
     private static final int resolution = 384;
     private static final double noteHeight = 1.0, halfNoteHeight = 0.5;
+    private static final int velocity_minimum = 10, velocity_maximum = 120;
+    private static final float[] HSBmin = {0.8f, 0.9f, 0.6f};
+    private static final float[] HSBmax = {1.6f, 1.0f, 1.0f};
+    private static final Color startingColor = Color.green;
+
+
 
     public NotePanel() {
         setOpaque(false);
@@ -321,7 +326,18 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
         super.paintComponent(g);
 		if (active) {
             if (isGhost && correct) {
-                g.setColor(Color.GREEN);
+                //set the a certain colour, and give a brightness in scale with the attack velocity
+                float scale = ((float) (note.getAttackVelocity() - velocity_minimum)) / (velocity_maximum - velocity_minimum);
+                scale = Math.min(Math.max(scale, 0.0f), 1.0f);
+
+                float hsb[] = Color.RGBtoHSB(startingColor.getRed(), startingColor.getGreen(), startingColor.getBlue(), null);
+                float hue = hsb[0] * (HSBmin[0] + (HSBmax[0] - HSBmin[0]) * scale);
+                float saturation = HSBmin[1] + (HSBmax[1] - HSBmin[1]) * scale;
+                float brightness = HSBmin[2] + (HSBmax[2] - HSBmin[2]) * scale;
+
+                Color c = Color.getHSBColor(hue, saturation, brightness);
+                g.setColor(c);
+
             } else {
 			    g.setColor(Color.RED);
             }

@@ -45,8 +45,8 @@ public class ExamScorePanel extends BaseScorePanel {
         piano.addParserListener(examParserListener);
         examTest = new ExamTest(this, examParserListener);
 
-        examParserListener.start();
-        //examTest.basicPerfect();
+        //examParserListener.start();
+        examTest.basicPerfect();
     }
 
     public void finish() {
