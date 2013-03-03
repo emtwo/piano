@@ -21,6 +21,8 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
     public int restType;
     public int tempo;
     public boolean isTie = false;
+    public Vector<NotePanel> ghostNotes = new Vector<NotePanel>();
+
     public Score score;
 
    /* public boolean hasAccidental = false;
@@ -28,12 +30,10 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
     private Font accidentalFont;
     private int accidentalWidth, accidentalHeight;
     private String accidentalString;       */
-
     private boolean active = false;
-	private Font font;
-	private Note note = null;
+    private Font font;
+    private Note note = null;
     private String noteString;
-    private Vector<NotePanel> ghostNotes = new Vector<NotePanel>();
     private NotePanel matchedGhost = null;
     private int noteWidth;
 
@@ -232,15 +232,11 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
         ghost.setGonville(font);
         ghost.setPage(page);
         ghost.setCoordinates(ghostX, ghostY);
-        JFrameStack.getFrame().add(ghost);
         this.ghostNotes.add(ghost);
         return this;
     }
 
     public void clearGhostNotes() {
-        for (NotePanel ghost : ghostNotes) {
-            JFrameStack.getFrame().remove(ghost);
-        }
         this.matchedGhost = null;
         this.ghostNotes.clear();
     }

@@ -101,6 +101,8 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
                   score = new PracticeScorePanel(song.name, PracticeScorePanel.BOTH_HANDS);
                   break;
               case EXAM_BUTTON:
+                  score = new ExamScorePanel(song.name);
+                  break;
               case PRACTICE_LEFT_BUTTON:
                   score = new PracticeScorePanel(song.name, PracticeScorePanel.LEFT_HAND);
                   break;

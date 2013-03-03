@@ -1,6 +1,5 @@
 package piano.engine;
 
-import piano.ui.Drawing;
 import piano.ui.JFrameStack;
 
 import javax.swing.*;
@@ -74,6 +73,12 @@ public abstract class BaseScorePanel extends JPanel {
             }
         };
 
+        finishPlaying = new Runnable() {
+            public void run() {
+                finish();
+            }
+        };
+
         setPage(page);
 
     }
@@ -85,6 +90,8 @@ public abstract class BaseScorePanel extends JPanel {
         currImage = images.get(page - 1);
         repaint();
     }
+
+    protected void finish() {}
 
     public void nextNote(int layer) {
         // play and highlight the next right hand note

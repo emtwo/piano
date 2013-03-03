@@ -12,7 +12,6 @@ public class DemoScorePanel extends BaseScorePanel {
         super(name);
         mute = false;
 
-
         startPlayAction = new AbstractAction() {
             public void actionPerformed(ActionEvent arg0) {
                 play(false);
@@ -21,5 +20,10 @@ public class DemoScorePanel extends BaseScorePanel {
 
         this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "space");
         this.getActionMap().put("space", startPlayAction);
+    }
+
+    protected void finish() {
+        super.finish();
+        refresh();
     }
 }

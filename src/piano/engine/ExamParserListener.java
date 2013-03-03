@@ -4,9 +4,9 @@ import org.jfugue.elements.*;
 
 import java.util.*;
 
-public abstract class ExamParserListener extends AdapterParserListener {
+public class ExamParserListener extends AdapterParserListener {
 
-    /*private static final int initialized = 0;
+    private static final int initialized = 0;
     private static final int counting = 1;
     private static final int playing = 2;
     private static final int finished = 3;
@@ -17,10 +17,10 @@ public abstract class ExamParserListener extends AdapterParserListener {
     private long start;
     private LinkedList<NotePanel> notes = new LinkedList<NotePanel>();
     private Metronome metronome;
-    private ScorePanel SP;
+    private ExamScorePanel SP;
     private Score S;
 
-    ExamParserListener(ScorePanel SP) {
+    ExamParserListener(ExamScorePanel SP) {
         this.SP = SP;
         this.S = SP.S;
         state = initialized;
@@ -67,13 +67,14 @@ public abstract class ExamParserListener extends AdapterParserListener {
             attachNotes();
         }
 
-        SP.finishExam();
     }
 
     public void noteEvent(Note note, long time) {
         NotePanel ghost = new NotePanel(note);
         ghost.setGhost(true)
-             .setMillisTime(time);
+             .setMillisTime(time)
+             .setScore(S);
+
 
         notes.add(ghost);
     }
@@ -169,6 +170,6 @@ public abstract class ExamParserListener extends AdapterParserListener {
             attachedNote.addGhostNote(ghost, referenceNote);
         }
     }
-                  */
+
 
 }

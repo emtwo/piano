@@ -6,8 +6,10 @@ import java.util.HashMap;
 
 public class ExamTest {
     ExamParserListener listener;
+    ExamScorePanel panel;
     HashMap<String, Byte> noteHash = new HashMap<String, Byte>();
-    ExamTest (ExamParserListener listener) {
+    ExamTest (ExamScorePanel panel, ExamParserListener listener) {
+        this.panel = panel;
         this.listener = listener;
         for (int i = 0; i <= 10; ++i) {
             noteHash.put("C" + i, (byte) (i * 12));
@@ -31,7 +33,7 @@ public class ExamTest {
     }
 
     void fireNoteEvent(String note, long time) {
-        //listener.noteEvent(new Note(noteHash.get(note)), time);
+        listener.noteEvent(new Note(noteHash.get(note)), time);
     }
 
     void basicPerfect() {
@@ -43,6 +45,8 @@ public class ExamTest {
         fireNoteEvent("E5", 5625);
         fireNoteEvent("G5", 5625);
         fireNoteEvent("C5", 5625);
-        //listener.finish();
+        if (panel != null) {
+            panel.finish();
+        }
     }
 }
