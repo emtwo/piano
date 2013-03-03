@@ -307,19 +307,19 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
     }
 
     private int absoluteX() {
-        return (int) Math.round(score.scaleWidth * x);
+        return (int) Math.round(score.scale * x);
     }
 
     private int absoluteY() {
-        return (int) Math.round(score.scaleHeight * y);
+        return (int) Math.round(score.scale * y);
     }
 
     private int absoluteX(double x) {
-        return (int) Math.round(score.scaleWidth * x);
+        return (int) Math.round(score.scale * x);
     }
 
     private int absoluteY(double y) {
-        return (int) Math.round(score.scaleHeight * y);
+        return (int) Math.round(score.scale * y);
     }
 
 	public void paintComponent(Graphics g) {
@@ -358,7 +358,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
 	public void repaint() {
 
         if (score != null) {
-            repaint(absoluteX(), absoluteY(y - halfNoteHeight), noteWidth, absoluteY(noteHeight));
+            repaint(absoluteX(), absoluteY(y - 4 * noteHeight), noteWidth, absoluteY(8 * noteHeight));
         }
         /*if (hasAccidental) {
             repaint(absoluteX(accidentalX), absoluteY(accidentalY), accidentalWidth, accidentalHeight);

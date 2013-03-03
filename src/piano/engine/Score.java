@@ -8,9 +8,8 @@ import java.util.*;
 public class Score implements Serializable {
 
     public String name;
-	public double paperHeight, paperWidth;
     public int imageHeight, imageWidth;
-    public double scaleHeight = 1.0, scaleWidth = 1.0;
+    public double scale = 1.0;
     public Vector<Chord> allChords[], chords[];
     public Vector<Chord> combinedChords, combinedAllChords;
     public Vector<NotePanel> combinedNotes, combinedAllNotes;
@@ -25,8 +24,6 @@ public class Score implements Serializable {
         ScoreParser P = new ScoreParser(name);
 
         S.name = P.name;
-        S.paperWidth = P.paperWidth;
-        S.paperHeight = P.paperHeight;
         S.imageWidth = P.imageWidth;
         S.imageHeight = P.imageHeight;
         S.resolution = P.resolution;
@@ -35,6 +32,7 @@ public class Score implements Serializable {
         S.allChords = P.chords;
         S.imageNames = P.imageNames;
         S.lilyHeader = P.lilyHeader;
+        S.scale = P.scale;
         S.init();
 
         S.save();
@@ -95,9 +93,6 @@ public class Score implements Serializable {
     private Score() {}
 
     private void init() {
-
-        scaleHeight = (double) imageHeight / paperHeight;
-        scaleWidth = (double) imageWidth / paperWidth;
 
         chords = (Vector<Chord>[]) new Vector[staves];
         combinedChords = new Vector<Chord>();

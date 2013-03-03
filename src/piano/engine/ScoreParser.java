@@ -13,7 +13,7 @@ import java.util.*;
 public class ScoreParser implements ParserListener {
 
     public String name;
-    public double paperHeight = 169.00937007874, paperWidth = 119.50157480315;
+    public double scale;
     public int imageHeight = 842, imageWidth = 595;
     public Vector<Chord> chords[];
     public int staves = 1;
@@ -31,6 +31,7 @@ public class ScoreParser implements ParserListener {
     private int tempo;
     private int layer = 0;
     private long time = 0L;
+    public double outputUnits, outputScale;
 
     public static boolean hardInstall = false;
 
@@ -153,20 +154,19 @@ public class ScoreParser implements ParserListener {
                 if (S.contains("EndSetup")) {
                     break;
                 } else {
-                    if (S.startsWith("/page-height")) {
-                        this.paperHeight = Double.parseDouble(S.split(" ")[1]);
-                    } else if (S.startsWith("/page-width")) {
-                        this.paperWidth = Double.parseDouble(S.split(" ")[1]);
-                    } else if (S.startsWith("/magfont")) {
+                    if (S.startsWith("/magfont")) {
                         fontInfo.add(S);
                     } else if (S.startsWith("/lily-output-units")) {
-                        float scale = Float.parseFloat(S.split(" ")[1]);
+                        outputUnits = Float.parseFloat(S.split(" ")[1]);
                         for (String T : fontInfo) {
-                            addFont(T.split(" ")[0].substring(1), T.split(" ")[2].substring(1), scale * Float.parseFloat(T.split(" ")[3]));
+                            addFont(T.split(" ")[0].substring(1), T.split(" ")[2].substring(1), (float) outputUnits * Float.parseFloat(T.split(" ")[3]));
                         }
+                    } else if (S.startsWith("/output-scale")) {
+                        outputScale = Float.parseFloat(S.split(" ")[1]);
                     }
                 }
             }
+            scale = outputUnits * outputScale;
 
             String prevLine = "";
             int currPage = 1;
