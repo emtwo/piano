@@ -32,10 +32,14 @@ public class ScoreParser implements ParserListener {
     private int layer = 0;
     private long time = 0L;
 
+    public static boolean hardInstall = false;
+
     public ScoreParser(String name) {
         this.name = name;
 
-        invokeLilyPond();
+        if (hardInstall) {
+            invokeLilyPond();
+        }
         parseImages();
         parseLilyPond();
         parsePostScript();

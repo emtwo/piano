@@ -20,13 +20,21 @@ public class Piano {
 	SongDatabaseAccessor accessor;
 
 	public Piano() throws IOException {
-	  boolean install = false;
+	  boolean softInstall = false;
+      boolean hardInstall = false;
 
-	  if (install) {
+	  if (hardInstall) {
 	    populateDatabase();		// Note: this is some pre-processing that should be done as an "install"
+        ScoreParser.hardInstall = true;
         renderScores();
       }
 
+      if (softInstall) {
+          ScoreParser.hardInstall = false;
+          renderScores();
+      }
+
+    PianoAdapterParser.instance();
     NotePlayer.init(); // this takes some time, so initialize music players
     loadFonts();
 

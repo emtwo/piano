@@ -1,6 +1,7 @@
 package piano.engine;
 
 import org.jfugue.elements.Note;
+import piano.ui.JFrameStack;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +38,9 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
     private static final int resolution = 384;
     private static final double noteHeight = 1.0, halfNoteHeight = 0.5;
 
-    public NotePanel() {}
+    public NotePanel() {
+        setOpaque(false);
+    }
 
 	public NotePanel(Note note) {
         this();
@@ -247,11 +250,21 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
             ghost.active = true;
             ghost.repaint();
         }
-        if (matchedGhost == null) {
+        if (!isTie && !isRest && matchedGhost == null) {
             active = true;
-            repaint();
+        } else {
+            active = false;
         }
-        //TODO most ghost note painting logic
+        repaint();
+    }
+
+    public void disableGhosts() {
+        for (NotePanel ghost : ghostNotes) {
+            ghost.active = false;
+            ghost.repaint();
+        }
+        this.active = false;
+        repaint();
     }
 
 
@@ -305,7 +318,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
     }
 
 	public void paintComponent(Graphics g) {
-        this.setBounds(0, 0, score.imageWidth, score.imageHeight); // hack to make repaint() think the notepanel has changed
+        super.paintComponent(g);
 		if (active) {
             if (isGhost && correct) {
                 g.setColor(Color.GREEN);
@@ -322,13 +335,13 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
                 System.out.p rintln("yay");
                 g.setFont(accidentalFont);
                 g.drawString(accidentalString, absoluteX(accidentalX), absoluteY(accidentalY));
-            } */
+            }      */
 		}
 	}
 
 	public void repaint() {
+
         if (score != null) {
-		    setOpaque(active);
             repaint(absoluteX(), absoluteY(y - halfNoteHeight), noteWidth, absoluteY(noteHeight));
         }
         /*if (hasAccidental) {

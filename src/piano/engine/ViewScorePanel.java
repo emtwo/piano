@@ -15,12 +15,14 @@ public class ViewScorePanel extends BaseScorePanel {
         leftAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent arg0) {
                 setPage(page - 1);
+                repaint();
 			}
         };
 
         rightAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent arg0) {
                 setPage(page + 1);
+                repaint();
 			}
         };
 

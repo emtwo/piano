@@ -63,6 +63,9 @@ public class Score implements Serializable {
             FileInputStream f = new FileInputStream(filePath);
             ObjectInputStream s = new ObjectInputStream(f);
             return (Score) s.readObject();
+        } catch (InvalidClassException e) {
+            System.err.println("Loading score has failed, run again with install = true");
+            e.printStackTrace();
         } catch (Exception e) {
             System.err.println("Loading score has failed. Error: ");
             e.printStackTrace();
@@ -140,7 +143,7 @@ public class Score implements Serializable {
                     if (!allChords[1].get(cChord[1]).isRestOrTie()) {
                         chord.addChord(allChords[1].get(cChord[1]));
                     }
-                    allChord.addChord(allChords[0].get(cChord[0]));
+                    allChord.addChord(allChords[1].get(cChord[1]));
                     ++(cChord[1]);
                 }
                 if (!chord.notes.isEmpty()) {

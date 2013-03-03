@@ -5,7 +5,6 @@ import java.util.Vector;
 
 public class Chord implements Serializable {
 	public Vector<NotePanel> notes = new Vector<NotePanel>();
-	public boolean active = false;
 
     //private NotePlayer player = new NotePlayer();
     public String musicString = "";

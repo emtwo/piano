@@ -37,7 +37,12 @@ public class ExamParserListener extends AdapterParserListener {
         if (state == finished) {
             return;
         }
+        if (state == counting) {
+            metronome.end();
+        }
+
         state = finished;
+
 
         // calculate total offset of notes with their matched notes
         long totalOffset = 0L;

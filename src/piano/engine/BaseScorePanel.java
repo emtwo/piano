@@ -19,7 +19,7 @@ public abstract class BaseScorePanel extends JPanel {
     protected PianoAdapterParser piano = PianoAdapterParser.instance();
     protected boolean mute = true;
     protected Runnable playNextTogetherNote, playNextRightNote, playNextLeftNote, nextPage, finishPlaying;
-    protected ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);;
+    protected ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     protected int[] currChords;
     protected Vector<ScheduledFuture> futures = new Vector<ScheduledFuture>();
 
@@ -27,11 +27,15 @@ public abstract class BaseScorePanel extends JPanel {
     public Score S;
 
     public BaseScorePanel(String name) {
+        super(null);
 
         this.setOpaque(true);
         this.name = name;
 
         S = Score.Load(name);
+
+        setBounds(0, 0, S.imageWidth, S.imageHeight);
+        setPreferredSize(new Dimension(S.imageWidth, S.imageHeight));
 
         JFrameStack.getFrame().getContentPane().add(this, 1);
         for (NotePanel note : S.combinedAllNotes) {
@@ -44,8 +48,6 @@ public abstract class BaseScorePanel extends JPanel {
         for (int i = 0; i < S.pages; ++i) {
             images.add(S.getImage(i));
         }
-        setBounds(0, 0, S.imageWidth, S.imageHeight);
-        setPreferredSize(new Dimension(S.imageWidth, S.imageHeight));
 
         currChords = new int[S.staves];
 
@@ -70,6 +72,7 @@ public abstract class BaseScorePanel extends JPanel {
         nextPage = new Runnable() {
             public void run() {
                 setPage(page + 1);
+                repaint();
             }
         };
 
@@ -80,15 +83,15 @@ public abstract class BaseScorePanel extends JPanel {
         };
 
         setPage(page);
+        repaint();
 
     }
 
-    protected void setPage(int newpage) {
-        if (newpage >= 1 && newpage <= S.pages) {
-            page = newpage;
+    protected void setPage(int newPage) {
+        if (newPage >= 1 && newPage <= S.pages) {
+            page = newPage;
         }
         currImage = images.get(page - 1);
-        repaint();
     }
 
     protected void finish() {}
@@ -215,10 +218,13 @@ public abstract class BaseScorePanel extends JPanel {
 
         //reset page
         setPage(1);
+        repaint();
     }
 
 
     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
         g.drawImage(currImage, 0, 0, null);
     }
 
