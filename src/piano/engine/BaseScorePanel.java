@@ -146,10 +146,8 @@ public abstract class BaseScorePanel extends JPanel {
         }
     }
 
-    public void play(boolean mute) {
+    public void play() {
         refresh();
-
-        this.mute = mute;
 
         long startTime = 100L;
         long[] time = {0L, 0L};

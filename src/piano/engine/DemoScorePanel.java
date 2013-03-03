@@ -8,13 +8,21 @@ public class DemoScorePanel extends BaseScorePanel {
 
     private Action startPlayAction;
 
+    private boolean playing = false;
+
     public DemoScorePanel(String name) {
         super(name);
         mute = false;
 
         startPlayAction = new AbstractAction() {
             public void actionPerformed(ActionEvent arg0) {
-                play(false);
+                if (!playing) {
+                    playing = true;
+                    play();
+                } else {
+                    refresh();
+                    playing = false;
+                }
             }
         };
 
