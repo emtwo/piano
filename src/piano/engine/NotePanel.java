@@ -19,6 +19,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
     public int tempo;
     public boolean isTie = false;
     public Vector<NotePanel> ghostNotes = new Vector<NotePanel>();
+    public double staffLine;
 
     public Score score;
 
@@ -35,7 +36,6 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
     private int noteWidth;
 
     private static final int resolution = 384;
-    private static final double noteHeight = 1.0, halfNoteHeight = 0.5;
     private static final int velocity_minimum = 10, velocity_maximum = 120;
     private static final float[] HSBmin = {0.8f, 0.9f, 0.6f};
     private static final float[] HSBmax = {1.6f, 1.0f, 1.0f};
@@ -135,6 +135,11 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
         return this;
     }
 
+    public NotePanel setStaffLine(double staffLine) {
+        this.staffLine = staffLine;
+        return this;
+    }
+
     public NotePanel setTie(boolean isTie) {
         this.isTie = true;
         note = new Note((byte) 0);
@@ -194,17 +199,16 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
 
     public NotePanel addGhostNote(NotePanel ghost, NotePanel referenceNote) {
         double ghostX, ghostY;
-        if (referenceNote == null) {
+        if (referenceNote == null || referenceNote.staffLine != staffLine) {
             //note is played after the last note on a layer
-            //TODO calculate this better
-            ghostX = x + (double) (ghost.getMillisTime() - getMillisTime()) / getMillisDuration() * 100;
+            ghostX = x + (double) (ghost.getMillisTime() - getMillisTime()) / getMillisDuration() * (113.621 - x);
         } else if (this.getMillisTime() <= ghost.getMillisTime()) {
             ghostX = x + (double) (ghost.getMillisTime() - getMillisTime()) / getMillisDuration() * (referenceNote.x - x);
         } else {
             ghostX = x - (double) (getMillisTime() - ghost.getMillisTime()) / referenceNote.getMillisDuration() * (x - referenceNote.x);
         }
 
-        if (getValue().equals(ghost.getValue())) {
+        if (!isRest && !isTie && getValue().equals(ghost.getValue())) {
             ghostY = y;
             // if there is another matched note, then only match the closest one
             if (matchedGhost == null) {
@@ -223,15 +227,16 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
             ghost.setCorrect(false);
             // difference in line of the two notes
             int lineDifference = 0;
-            int step = ghost.getValue() > getValue() ? 1 : -1;
-            for (int v = getValue() + step; v != ghost.getValue() + step; v += step) {
+            byte referenceValue = 60; // measure all notes from middle C
+            int step = ghost.getValue() > referenceValue ? 1 : -1;
+            for (int v = referenceValue + step; v != ghost.getValue() + step; v += step) {
                 int t = v % 12;
                 // skip black keys
                 if (t != 1 && t != 3 && t != 6 && t != 8 && t != 10) {
                     lineDifference += step;
                 }
             }
-            ghostY = y - lineDifference * halfNoteHeight;
+            ghostY = staffLine - lineDifference * score.staffLineHeight / 2;
         }
 
         ghost.setGonville(font);
@@ -358,7 +363,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
 	public void repaint() {
 
         if (score != null) {
-            repaint(absoluteX(), absoluteY(y - 4 * noteHeight), noteWidth, absoluteY(8 * noteHeight));
+            repaint(absoluteX(), absoluteY(y - 4 * score.staffLineHeight), noteWidth, absoluteY(8 * score.staffLineHeight));
         }
         /*if (hasAccidental) {
             repaint(absoluteX(accidentalX), absoluteY(accidentalY), accidentalWidth, accidentalHeight);

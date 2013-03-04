@@ -61,6 +61,7 @@ public class ExamScorePanel extends BaseScorePanel {
         validate();
         finished = true;
         repaintGhostNotes();
+
     }
 
     public void clearGhostNotes() {

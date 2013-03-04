@@ -21,6 +21,8 @@ public class ScoreParser implements ParserListener {
     public int pages;
     public Vector<String> imageNames = new Vector<String>();
     public LilyHeader lilyHeader;
+    public double outputUnits, outputScale;
+    public double staffLineHeight;
 
     private Vector<NotePanel> notes[];
     private int staffLine;
@@ -31,7 +33,7 @@ public class ScoreParser implements ParserListener {
     private int tempo;
     private int layer = 0;
     private long time = 0L;
-    public double outputUnits, outputScale;
+    private Vector<Vector<Vector<Double>>> staffLines = new Vector<Vector<Vector<Double>>>(); //get(x).get(y) are the stafflines for staff x on page y
 
     public static boolean hardInstall = false;
 
@@ -150,7 +152,7 @@ public class ScoreParser implements ParserListener {
 
             //parse header
             while (PSIn.ready()) {
-                String S = PSIn.readLine();
+                String S = PSIn.readLine().trim();
                 if (S.contains("EndSetup")) {
                     break;
                 } else {
@@ -163,15 +165,28 @@ public class ScoreParser implements ParserListener {
                         }
                     } else if (S.startsWith("/output-scale")) {
                         outputScale = Float.parseFloat(S.split(" ")[1]);
+                    } else if (S.startsWith("/staff-height")) {
+                        staffLineHeight = Float.parseFloat(S.split(" ")[1]) / 4;
                     }
                 }
             }
             scale = outputUnits * outputScale;
 
+            for (int layer = 0; layer < staves; ++layer) {
+                Vector<Vector<Double>> staff = new Vector<Vector<Double>>();
+                for (int page = 0; page < pages; ++page) {
+                    staff.add(new Vector<Double>());
+                }
+                staffLines.add(staff);
+            }
+            Vector<Double> cStaffs = new Vector<Double>();
+
             String prevLine = "";
             int currPage = 1;
+
+            //parse the rest of the file
             while (PSIn.ready()) {
-                String S = PSIn.readLine();
+                String S = PSIn.readLine().trim();
                 if (S.contains("noteheads") || S.contains("rests")) {
                     // extract coordinate, glyph, and font information
                     String T[] = S.split(" ");
@@ -198,6 +213,21 @@ public class ScoreParser implements ParserListener {
                     //lastNote.setAccidentals(Double.parseDouble(T[0]), -Double.parseDouble(T[1]), T[4].substring(1), T[3]);
                 } else if (S.startsWith("%%Page:")) {
                     currPage = Integer.parseInt(S.split(" ")[1]);
+                }
+
+                if (S.contains("draw_line")) {
+                    cStaffs.add(-Double.parseDouble(S.split(" ")[1]));
+                    if (cStaffs.size() >= 5 * staves) {
+                        //found a full staff
+                        Collections.sort(cStaffs);
+                        staffLines.get(0).get(currPage - 1).add(cStaffs.get(4) + staffLineHeight);
+                        if (staves > 1) {
+                            staffLines.get(1).get(currPage - 1).add(cStaffs.get(5) - staffLineHeight);
+                        }
+                        cStaffs.clear();
+                    }
+                } else if (!S.contains("draw_round_box")) {
+                    cStaffs.clear();
                 }
 
                 if (S.contains(this.name + ".ly")) {
@@ -304,6 +334,21 @@ public class ScoreParser implements ParserListener {
                         tempTime += notePanel.getDuration();
                         Chord chord = new Chord(notePanel);
                         currChords.add(chord);
+                    }
+                }
+            }
+
+            //attach staff lines
+            for (int layer = 0; layer < staves; ++layer) {
+                for (Chord chord : chords[layer]) {
+                    for (NotePanel note : chord.notes) {
+                        double staffLine = 0.0;
+                        for (double line : staffLines.get(layer).get(note.page - 1)) {
+                            if (staffLine < 0.0001 || Math.abs(staffLine - note.y) > Math.abs(line - note.y)) {
+                                staffLine = line;
+                            }
+                        }
+                        note.setStaffLine(staffLine);
                     }
                 }
             }

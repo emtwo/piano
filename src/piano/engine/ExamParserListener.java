@@ -121,7 +121,7 @@ public class ExamParserListener extends AdapterParserListener {
             if (S.staves == 1) {
                 attachedLayer = 0;
             } else {
-                long matchOffset = 0L; // distance to nearest matching node
+                long matchOffset = -1L; // distance to nearest matching node
                 for (int layer = 0; layer < S.staves; ++layer) {
                     for (int i = 0; i <= 1; ++i) {
                         if (c[layer] + i >= S.allChords[layer].size()) {
@@ -130,7 +130,7 @@ public class ExamParserListener extends AdapterParserListener {
                         Chord chord = S.allChords[layer].get(c[layer] + i);
                         if (chord.contains(ghost)) {
                             long offSet = Math.abs(chord.getMillisTime() - ghost.getMillisTime());
-                            if (matchOffset == 0L || offSet < matchOffset) {
+                            if (matchOffset == -1L || offSet < matchOffset) {
                                 attachedLayer = layer;
                                 matchOffset = offSet;
                             }

@@ -18,6 +18,7 @@ public class Score implements Serializable {
     public int pages;
     public int resolution;
     public LilyHeader lilyHeader;
+    public double staffLineHeight;
 
     public static Score ParseScore(String name) {
         Score S = new Score();
@@ -33,6 +34,7 @@ public class Score implements Serializable {
         S.imageNames = P.imageNames;
         S.lilyHeader = P.lilyHeader;
         S.scale = P.scale;
+        S.staffLineHeight = P.staffLineHeight;
         S.init();
 
         S.save();
