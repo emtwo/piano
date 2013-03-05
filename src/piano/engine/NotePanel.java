@@ -226,7 +226,7 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
         } else {
             ghost.setCorrect(false);
             // difference in line of the two notes
-            int lineDifference = 0;
+            double lineDifference = 0.0;
             byte referenceValue = 60; // measure all notes from middle C
             int step = ghost.getValue() > referenceValue ? 1 : -1;
             for (int v = referenceValue + step; v != ghost.getValue() + step; v += step) {
@@ -234,6 +234,8 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
                 // skip black keys
                 if (t != 1 && t != 3 && t != 6 && t != 8 && t != 10) {
                     lineDifference += step;
+                } else if (v == ghost.getValue()) {
+                    lineDifference += (double) step / 2;
                 }
             }
             ghostY = staffLine - lineDifference * score.staffLineHeight / 2;
