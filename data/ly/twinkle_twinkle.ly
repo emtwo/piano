@@ -14,6 +14,7 @@
    \key c \major
    \time 2/4
    \tempo 4 = 100
+   \set Score.tempoHideNote = ##t
    \relative c {
   c'4 c g' g 
   | % 2

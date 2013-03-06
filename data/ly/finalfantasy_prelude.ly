@@ -11,6 +11,7 @@
    \key c \major
    \time 4/4
    \tempo "Andante" 4 = 80
+   \set Score.tempoHideNote = ##t
    \relative c {
   r4 c'16 d e g c d e g c d e g 
   | % 2
