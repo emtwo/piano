@@ -15,7 +15,7 @@ public abstract class ChordParserListener extends AdapterParserListener {
     private Vector<Note> currChord = new Vector<Note>();
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    abstract void chordEvent(Vector<Note> chord);
+    public abstract void chordEvent(Vector<Note> chord);
 
     private void finishChord() {
         inChord = false;

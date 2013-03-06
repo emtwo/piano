@@ -2,12 +2,10 @@ package piano.ui.buttons;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import piano.ui.Drawing;
 import piano.ui.Fonts;
 
 public class StartButton extends Button {

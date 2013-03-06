@@ -5,16 +5,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.swing.JFrame;
+import java.util.concurrent.atomic.AtomicReference;
 
+import org.jfugue.elements.Note;
+
+import piano.Utils;
 import piano.engine.MockAdapterParser;
 import piano.engine.NotePlayer;
 import piano.engine.PianoAdapterParser;
+import piano.ui.KeyboardParserListener.Colour;
 import piano.ui.buttons.ButtonType;
 import piano.ui.buttons.KeyboardKey;
 
@@ -30,38 +33,47 @@ public class KeyboardView extends Drawing {
 	private NotesToPlayData noteData;
 
 	private AtomicBoolean exitLoop = new AtomicBoolean();
-	private AtomicInteger keyPressed = new AtomicInteger(-1);
+	private AtomicInteger keyReleasedCount = new AtomicInteger(0);
+	private AtomicReference<ArrayList<Note>> chordPressed = new AtomicReference<ArrayList<Note>>(null);
 
 	private ArrayList<KeyboardKey> keyList = new ArrayList<KeyboardKey>();
 	private ArrayList<KeyboardKey> blackKeyList = new ArrayList<KeyboardKey>();
 
 	private MockAdapterParser mock;
-	private PianoAdapterParser real;
+	private static PianoAdapterParser real;
   private KeyboardParserListener keyboardParserListener;
-  private ButtonClickCallback callback;
+  private ButtonClickCallback buttonClickCallback;
+  private KeyPressedCallback keyPressedCallback;
 
-  public KeyboardView(KeyPressedCallback practiceUI, Drawing parent, NotesToPlayData noteData) {
-	this(practiceUI, parent, null, null, noteData);
+  private boolean showKeyboardInput, waitForRelease;
+
+  public KeyboardView(KeyPressedCallback practiceUI, NotesToPlayData noteData) {
+    this(practiceUI, null, null, noteData);
   }
 
-	public KeyboardView(KeyPressedCallback practiceUI, Drawing parent, ButtonClickCallback callback,
-			HashMap<Integer, String> menuData, NotesToPlayData noteData) {
-		super();
-		keyboardParserListener = new KeyboardParserListener(practiceUI);
-		mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
-		real = PianoAdapterParser.instance();
+  public KeyboardView(ButtonClickCallback callback,
+      HashMap<Integer, String> menuData, NotesToPlayData noteData) {
+    this(null, callback, menuData, noteData);
+  }
 
-		this.callback = callback;
-		this.menuData = menuData;
-		this.noteData = noteData;
+	public KeyboardView(KeyPressedCallback keyPressedCallback, ButtonClickCallback buttonClickCallback,
+			HashMap<Integer, String> menuData, NotesToPlayData noteData) {
+	  super();
+    mock = new MockAdapterParser(this.getInputMap(), this.getActionMap());
+    real = PianoAdapterParser.instance();
+
+    this.buttonClickCallback = buttonClickCallback;
+    this.menuData = menuData;
+    this.noteData = noteData;
+    this.keyPressedCallback = keyPressedCallback;
+    keyboardParserListener = new KeyboardParserListener(keyPressedCallback);
 	}
 
 	public void switchToView() {
 		JFrameStack.getFrame().getContentPane().add(this, 1);
 		JFrameStack.getFrame().validate();
 
-		mock.addParserListener(keyboardParserListener);
-		real.addParserListener(keyboardParserListener);
+		addListeners();
 		setFocusable(true);
 		requestFocusInWindow();
 		JFrameStack.getFrame().validate();
@@ -69,65 +81,121 @@ public class KeyboardView extends Drawing {
 		startPlayThread();
 	}
 
+  private void setExpectedColours(Colour colour) throws InterruptedException {
+    // Iterate through map and store each colour.
+    ArrayList<ChordToColourMap> colours = keyPressedCallback.getNextNotes();
+    for (ChordToColourMap map : colours) {
+      keyboardParserListener.clear();
+      for (Note noteInChord : map.chord) {
+        if (colour != null) {
+          keyboardParserListener.putColor(noteInChord.getValue(), colour);
+        } else {
+          if (map.colour != null) {
+            keyboardParserListener.putColor(noteInChord.getValue(), map.colour);
+          }
+        }
+      }
+      Thread.sleep(500);
+      keyboardParserListener.clear();
+    }
+  }
+
+  private void waitForInput() throws InterruptedException {
+    showKeyboardInput = true;
+    // Wait for user to press key
+    while (chordPressed.get() == null) {
+      if (exitLoop.get() == true) {
+        break;
+      }
+      Thread.sleep(100); // Reduce CPU throttling.
+    }
+    showKeyboardInput = false;
+  }
+
+  private void waitForRelease() throws InterruptedException {
+    if (!PianoAdapterParser.attached) {
+      keyReleasedCount.set(0);
+      return;
+    }
+    waitForRelease = true;
+    while (keyReleasedCount.get() < chordPressed.get().size()) {
+      System.out.println("WAITING FOR RELEASE " + keyReleasedCount.get() + " blee " + chordPressed.get().size());
+      if (exitLoop.get() == true) {
+        break;
+      }
+      Thread.sleep(100); // Reduce CPU throttling.
+    }
+    keyReleasedCount.set(0);
+    waitForRelease = false;
+  }
+
+  // Although we already checked if the chord was played correctly in order to colour it
+  // we check here once keys are released because now the correct keys can be shown.
+  private void validateNote() throws InterruptedException {
+    Thread.sleep(600);
+    keyboardParserListener.clear();
+    if (!Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getExpectedChord())) {
+      Thread.sleep(800);
+      //play correct input
+      NotePlayer.play(keyPressedCallback.getPlayString());
+      setExpectedColours(Colour.GREEN);
+    }
+    chordPressed.set(null);
+    Thread.sleep(500);
+    keyboardParserListener.clear();
+  }
+
 	private void startPlayThread() {
 		Thread thread = new Thread(new Runnable() {
 
-			public ArrayList<NoteToColourMap> computeNoteToPlay() {
-				return noteData.getNotesToPlay();
-			}
-
 			public void run() {
-				ArrayList<NoteToColourMap> mapList = computeNoteToPlay();
+			  System.out.println("A NEW THREAD");
 				while (!exitLoop.get()) {
-					try {
-						Thread.sleep(1000);
-						String noteString = "";
-						for (NoteToColourMap map : mapList) {
-							System.out.println("Note being added: " + map.note);
-							noteString += ("[" + map.note + "] ");
-						}
-						NotePlayer.play(noteString);
-						for (NoteToColourMap map : mapList) {
-							keyboardParserListener.clear();
-							keyboardParserListener.setKeyColour(map.note, map.colour);
-							Thread.sleep(500);
-						}
-						keyboardParserListener.clear();
-
-						int noteToPlay = mapList.get(mapList.size() - 1).note;
-						keyboardParserListener.setExpectedKey(noteToPlay);
-
-						// Wait for user to press key
-						while(keyPressed.get() == -1){
-							if (exitLoop.get() == true) {
-								break;
-							}
-							Thread.sleep(100); // Reduce CPU throttling.
-						}
-						if (exitLoop.get() == true) {
-							break;
-						}
-
-						// Key was played correctly,
-						if (keyPressed.get() != -1 && keyPressed.get() == noteToPlay) {
-							mapList = computeNoteToPlay();
-						}
-						keyPressed.set(-1);
-
-						// Clear keyboard colours after 1.5 seconds.
-						Thread.sleep(1500);
-						keyboardParserListener.clear();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+				  try {
+				    Thread.sleep(1000); // Wait for a bit before starting
+				    NotePlayer.play(keyPressedCallback.getNewPlayString());
+	          setExpectedColours(null);
+	          waitForInput();
+	          if (exitLoop.get() == true) {
+              break;
+            }
+	          waitForRelease();
+	          validateNote();
+				  } catch (InterruptedException e) {
+				    e.printStackTrace();
+				  }
 				}
 			}
 		});
 		thread.start();
 	}
 
-	public void informKeyPressed(final int keyPressed) {
-		this.keyPressed.set(keyPressed);
+	public void informChordPressed(final ArrayList<Note> chordPressed) {
+	  if (!showKeyboardInput) {
+	    return;
+	  }
+
+	  this.chordPressed.set(chordPressed);
+	  Colour colour;
+	  if (Utils.chordsEqual(chordPressed, keyPressedCallback.getExpectedChord())) {
+	    colour = Colour.GREEN;
+    } else {
+      colour = Colour.RED;
+    }
+	  for (Note note : chordPressed) {
+	    byte noteVal = note.getValue();
+	    if (noteVal >= 48 && noteVal <= 83) {
+
+	    }
+      keyboardParserListener.putColor(noteVal, colour);
+	  }
+	}
+
+	public void informKeyReleased() {
+	  if (!waitForRelease) {
+      return;
+    }
+	  keyReleasedCount.getAndIncrement();
 	}
 
 	@Override
@@ -183,7 +251,7 @@ public class KeyboardView extends Drawing {
 		int keyXVal = xVal;
 		int blackKeyXVal = keyXVal + (keyWidth - blackKeyWidth / 2);
 		for (int i = noteData.minKey; i < noteData.maxKey + 1; i++) {
-			if (keyboardParserListener.isSharp(i)) {
+			if (KeyboardParserListener.isSharp(i)) {
 				blackKeyList.add(new KeyboardKey("", blackKeyXVal, yVal, blackKeyWidth, (int) (height * 0.6), true, i));
 				blackKeyXVal += keyWidth;
 			} else {
@@ -217,7 +285,7 @@ public class KeyboardView extends Drawing {
 		int keyYVal = yVal;
 		int blackKeyYVal = keyYVal + (keyWidth - blackKeyWidth / 2);
 		for (int i = noteData.minKey; i < noteData.maxKey + 1; i++) {
-			if (keyboardParserListener.isSharp(i)) {
+			if (KeyboardParserListener.isSharp(i)) {
 				blackKeyList.add(new KeyboardKey("", xVal, blackKeyYVal, (int) (width * 0.6), blackKeyWidth, true, i));
 				blackKeyYVal += keyWidth;
 			} else {
@@ -248,18 +316,27 @@ public class KeyboardView extends Drawing {
 	public void mouseClicked(MouseEvent e) {
 		for (KeyboardKey button : keyList) {
 			if(button.setMouseClicked(e.getX(), e.getY()) && button.text != null && !button.text.equals("")) {
-				callback.informButtonClicked(ButtonType.KEYBOARD_KEY, button.id);
+				buttonClickCallback.informButtonClicked(ButtonType.KEYBOARD_KEY, button.id);
 			}
 		}
 	}
 
+	private void addListeners() {
+	  mock.addParserListener(keyboardParserListener);
+    real.addParserListener(keyboardParserListener);
+	}
+
+	private void removeListeners() {
+	  mock.removeParserListener(keyboardParserListener);
+    real.removeParserListener(keyboardParserListener);
+	}
+
 	public void informExitLoop() {
 		exitLoop.set(true);
-		mock.removeParserListener(keyboardParserListener);
-		real.removeParserListener(keyboardParserListener);
+		removeListeners();
 	}
 
 	public boolean isSharp(int i) {
-		return keyboardParserListener.isSharp(i);
+		return KeyboardParserListener.isSharp(i);
 	}
 }
