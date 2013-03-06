@@ -1,8 +1,6 @@
 package piano.ui.buttons;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.*;
 
 import piano.ui.Fonts;
 
@@ -19,14 +17,12 @@ public class HelpButton extends Button {
 
 	@Override
 	public void paintComponent(Graphics g) {
+        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setFont(font);
 
 		FontMetrics metrics = g.getFontMetrics(font);
 		int hgt = metrics.getHeight();
 		int adv = metrics.stringWidth(text);
-
-		g.setColor(Color.BLACK);
-		g.drawRoundRect(x, y, width, height, 8, 8);
 
 		if (overButton) {
 			g.setColor(Color.CYAN);
@@ -39,6 +35,9 @@ public class HelpButton extends Button {
 		}
 		g.setColor(Color.BLUE);
 		g.fillRoundRect(x, y, width, height, 8, 8);
+
+        g.setColor(Color.BLACK);
+        g.drawRoundRect(x, y, width, height, 8, 8);
 
 		g.setColor(Color.WHITE);
 		g.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);

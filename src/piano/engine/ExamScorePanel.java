@@ -49,6 +49,16 @@ public class ExamScorePanel extends BaseScorePanel {
         //examTest.basicPerfect();
     }
 
+    @Override
+    String getHelpText() {
+        return "Play the song as if you were performing for an exam. Follow along with the red notes and see how you did when the song is finished";
+    }
+
+    public void refresh() {
+        clearGhostNotes();
+        super.refresh();
+    }
+
     public void finish() {
         super.finish();
         examParserListener.finish();

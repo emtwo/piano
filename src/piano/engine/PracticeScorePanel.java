@@ -26,4 +26,8 @@ public class PracticeScorePanel extends BaseScorePanel {
         piano.addParserListener(practiceParserListener);
     }
 
+    @Override
+    String getHelpText() {
+        return "Play at your own pace. The red notes indicate where you are in the music.";
+    }
 }
