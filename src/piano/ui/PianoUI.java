@@ -26,7 +26,11 @@ public class PianoUI extends Drawing implements ButtonClickCallback {
 		HashMap<Integer, String> menuData = new HashMap<Integer, String>();
 		menuData.put(64, "Play");
 		menuData.put(67, "Ear Training");
+        HashMap<Integer, Color> colorData = new HashMap<Integer, Color>();
+        colorData.put(64, Color.RED);
+        colorData.put(67, Color.BLUE);
 		keyboard = new KeyboardView(this, menuData, data);
+        keyboard.addColorData(colorData);
 	}
 
 	public void paintComponent(Graphics g) {

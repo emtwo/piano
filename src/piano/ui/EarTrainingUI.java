@@ -27,7 +27,14 @@ public class EarTrainingUI extends Drawing implements ButtonClickCallback {
 		menuData.put(65, "Advanced Pitch Training");
 		menuData.put(67, "Chord Training");
 		menuData.put(69, "Main Menu");
+        HashMap<Integer, Color> colorData = new HashMap<Integer, Color>();
+        colorData.put(62, Color.RED);
+        colorData.put(64, Color.YELLOW);
+        colorData.put(65, Color.GREEN);
+        colorData.put(67, Color.BLUE);
+        colorData.put(69, Color.MAGENTA);
 		keyboard = new KeyboardView(this, menuData, data);
+        keyboard.addColorData(colorData);
 	}
 
 	public void paintComponent(Graphics g) {

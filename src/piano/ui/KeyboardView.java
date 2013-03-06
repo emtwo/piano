@@ -30,6 +30,7 @@ public class KeyboardView extends Drawing {
 	private boolean pianoExists;
 
 	private HashMap<Integer, String> menuData;
+    private HashMap<Integer, Color> colorData = null;
 	private NotesToPlayData noteData;
 
 	private AtomicBoolean exitLoop = new AtomicBoolean();
@@ -291,7 +292,12 @@ public class KeyboardView extends Drawing {
 			} else {
 				String data = menuData.get(i);
 				if (data != null) {
-					keyList.add(new KeyboardKey(data, xVal, keyYVal, width, keyWidth, false, i));
+                    KeyboardKey k = new KeyboardKey(data, xVal, keyYVal, width, keyWidth, false, i);
+
+                    if (colorData != null && colorData.get(i) != null)
+                        k.setHoverColor(colorData.get(i));
+
+					keyList.add(k);
 				} else {
 					keyList.add(new KeyboardKey("", xVal, keyYVal, width, keyWidth, false, i));
 				}
@@ -339,4 +345,8 @@ public class KeyboardView extends Drawing {
 	public boolean isSharp(int i) {
 		return KeyboardParserListener.isSharp(i);
 	}
+
+    public void addColorData(HashMap<Integer, Color> ls) {
+        this.colorData = ls;
+    }
 }

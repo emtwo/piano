@@ -13,6 +13,7 @@ import piano.ui.Drawing;
 public class KeyboardKey extends Button {
 
 	private boolean isBlack;
+    private Color hoverColor = Color.LIGHT_GRAY;
 	public int id;
 
 	public KeyboardKey(String text, int x, int y, int width, int height, boolean isBlack, int id) {
@@ -37,13 +38,13 @@ public class KeyboardKey extends Button {
 
 		if (isBlack) {
 			if (overButton) {
-				g2.setColor(Color.LIGHT_GRAY);
+				g2.setColor(hoverColor);
 			}
 			g2.fillRoundRect(x, y, width, height, 5, 5);
 			return;
 		}
 		if (overButton) {
-			g2.setColor(Color.LIGHT_GRAY);
+			g2.setColor(hoverColor);
 		}
 		g2.fillRoundRect(x, y, width, height, 5, 5);
 
@@ -55,6 +56,10 @@ public class KeyboardKey extends Button {
 	public int getId() {
 		return id;
 	}
+
+    public void setHoverColor(Color c) {
+        hoverColor = c;
+    }
 
 	@Override
 	public void hoverOver() {
