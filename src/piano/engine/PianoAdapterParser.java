@@ -8,12 +8,6 @@ import org.jfugue.elements.Note;
 import org.jfugue.parsers.Parser;
 
 import javax.sound.midi.*;
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-
-
-import java.io.IOException;
-import	java.io.PrintStream;
 import java.util.HashMap;
 
 
@@ -27,10 +21,13 @@ public class PianoAdapterParser extends Parser implements Receiver
     HashMap<String, Byte> noteHash = new HashMap<String, Byte>();
     private MidiDevice inputDevice = null;
     private static PianoAdapterParser _instance = null;
+    public static boolean attached = true;
 
     protected PianoAdapterParser()
     {
-        tryAttachPiano();
+        if (tryAttachPiano() == null) {
+          attached = false;
+        }
 
         // dictionary for note byte values
         for (int i = 0; i <= 10; ++i) {
@@ -103,7 +100,7 @@ public class PianoAdapterParser extends Parser implements Receiver
         fireNoteEvent(n);
     }
 
-    public void tryAttachPiano() {
+    public MidiDevice tryAttachPiano() {
         String pianoDeviceName = "UM-1G";
         MidiDevice.Info[] devices = MidiSystem.getMidiDeviceInfo();
 
@@ -134,7 +131,7 @@ public class PianoAdapterParser extends Parser implements Receiver
         if (inputDevice == null) {
             System.out.println("No device to attach.");
         }
-
+        return inputDevice;
     }
 
 
