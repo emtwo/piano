@@ -1,21 +1,15 @@
 package piano.ui;
 
 import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.swing.JPanel;
+import java.util.Vector;
 
 import org.jfugue.elements.Note;
 
-import piano.engine.AdapterParserListener;
-import piano.engine.ExamParserListener;
-import piano.engine.MockAdapterParser;
-import piano.engine.PracticeParserListener;
+import piano.engine.ChordParserListener;
 
-public class KeyboardParserListener extends AdapterParserListener/*extends KeyAdapter implements KeyListener*/ {
+public class KeyboardParserListener extends ChordParserListener {
 
 	public enum Colour {RED, GREEN, BLUE, WHITE, BLACK};
 
@@ -23,8 +17,6 @@ public class KeyboardParserListener extends AdapterParserListener/*extends KeyAd
 	private static HashMap<String, Integer> keyToIntMap = new HashMap<String, Integer>();
 
 	private KeyPressedCallback callback;
-
-	private int expectedKey;
 
 	public KeyboardParserListener(KeyPressedCallback callback) {
 		keyToIntMap.put("c4", 48);
@@ -80,16 +72,8 @@ public class KeyboardParserListener extends AdapterParserListener/*extends KeyAd
 		}
 	}
 
-	public void setExpectedKey(int expectedKey) {
-		this.expectedKey = expectedKey;
-	}
-
 	public static Integer getKeyInt(String key) {
 		return keyToIntMap.get(key);
-	}
-
-	public void setKeyColour(int key, Colour colour) {
-		keyToColorMap.put(key, colour);
 	}
 
 	public Color getKeyColor(int i) {
@@ -107,7 +91,7 @@ public class KeyboardParserListener extends AdapterParserListener/*extends KeyAd
 		}
 	}
 
-	public boolean isSharp(int i) {
+	public static boolean isSharp(int i) {
 		int mod = i % 12;
 		if (mod == 1 || mod == 3 || mod == 6 || mod == 8 || mod == 10) {
 			return true;
@@ -120,24 +104,19 @@ public class KeyboardParserListener extends AdapterParserListener/*extends KeyAd
 		callback.clearKeys();
 	}
 
-	@Override
-	public void pressNoteEvent(Note note) {
-            //String noteString = note.getMusicString().replace("q", "").toLowerCase();
-        //System.out.println("key? " + noteString);
-        int keyInt = (int)note.getValue();
+  @Override
+  public void chordEvent(Vector<Note> chord) {
+    callback.informChordPressed(new ArrayList<Note>(chord));
+  }
 
-        if (keyInt == expectedKey) {
-            keyToColorMap.put(keyInt, Colour.GREEN);
-        } else {
-            if (keyInt >= 48 && keyInt <= 83) {
-                keyToColorMap.put(keyInt, Colour.RED);
-            }
-        }
-        callback.informKeyPressed(keyInt);
+	@Override
+	public void releaseNoteEvent(Note note) {
+	  int keyInt = (int)note.getValue();
+	  resetKeyColours();
+	  callback.informKeyReleased(keyInt);
 	}
 
-    @Override
-    public void releaseNoteEvent(Note note) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+  public void putColor(int keyPressed, Colour colour) {
+    keyToColorMap.put(keyPressed, colour);
+  }
 }

@@ -7,12 +7,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.jfugue.elements.Note;
 
 import piano.ui.KeyboardParserListener.Colour;
 import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
 
-public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
+public class IntervalTrainingUI extends Drawing implements KeyPressedCallback {
 
 	private static final String HELP_TEXT = "Observe the first note and listen to the second note. Play the note you think the second one is. Green means correct, red means incorrect.";
 	private static final String TITLE = "Interval Training";
@@ -24,15 +27,19 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, G
 	private boolean stopPainting = false;
 	private NotesToPlayData data;
 
+	private ArrayList<ChordToColourMap> nextNotesList;
+  private ArrayList<Note> chord;
+  private String playString;
+
 	public IntervalTrainingUI() {
 		super(WIDTH, 800);
-		data = new NotesToPlayData(this);
+		data = new NotesToPlayData();
 		data.minKey = 48;
 		data.maxKey = 83;
 		data.numOctaves = 3;
 		data.useBlackKeys = true;
 
-		keyboard = new KeyboardView(this, this, data);
+		keyboard = new KeyboardView(this, data);
 		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20);
 		helpButton = new HelpButton("?", HELP_TEXT, WIDTH - 25, 5, 20, 20);
 	}
@@ -65,10 +72,15 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, G
 	}
 
 	@Override
-	public void informKeyPressed(int keyPressed) {
+	public void informChordPressed(ArrayList<Note> chord) {
 		repaint();
-		keyboard.informKeyPressed(keyPressed);
+		keyboard.informChordPressed(chord);
 	}
+
+	@Override
+  public void informKeyReleased(int keyReleased) {
+    keyboard.informKeyReleased();
+  }
 
 	public void mouseClicked(MouseEvent e) {
 		if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
@@ -99,28 +111,48 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback, G
 		keyboard.informExitLoop();
 	}
 
+	 public void switchToView() {
+	    stopPainting = false;
+	    keyboard.switchToView();
+	  }
+
 	@Override
-	public ArrayList<NoteToColourMap> getNextNotes() {
-		ArrayList<NoteToColourMap> list = new ArrayList<NoteToColourMap>();
-		int interval = (0 + (int)(Math.random() * 17)) - 8;
-		int noteToPlay = (60 + (int)(Math.random() * ((71 - 60) + 1)));
-		Colour colour;
-		if (keyboard.isSharp(noteToPlay + interval)) {
-			colour = Colour.BLACK;
-		} else {
-			colour = Colour.WHITE;
-		}
-
-		NoteToColourMap map1 = new NoteToColourMap(noteToPlay, Colour.BLUE);
-		NoteToColourMap map2 = new NoteToColourMap(noteToPlay + interval, colour);
-
-		list.add(map1);
-		list.add(map2);
-		return list;
+	public ArrayList<ChordToColourMap> getNextNotes() {
+	  return nextNotesList;
 	}
 
-	public void switchToView() {
-		stopPainting = false;
-		keyboard.switchToView();
-	}
+  @Override
+  public String getNewPlayString() {
+    nextNotesList = new ArrayList<ChordToColourMap>();
+    int interval = (0 + (int)(Math.random() * 17)) - 8;
+    int noteToPlay = (60 + (int)(Math.random() * ((71 - 60) + 1)));
+    Colour colour;
+    if (keyboard.isSharp(noteToPlay + interval)) {
+      colour = Colour.BLACK;
+    } else {
+      colour = Colour.WHITE;
+    }
+
+    Note note1 = new Note((byte) noteToPlay);
+    Note note2 = new Note((byte) (noteToPlay + interval));
+    ChordToColourMap map1 = new ChordToColourMap(new ArrayList<Note>(Arrays.asList(note1)), Colour.BLUE);
+    ChordToColourMap map2 = new ChordToColourMap(new ArrayList<Note>(Arrays.asList(note2)), colour);
+
+    nextNotesList.add(map1);
+    nextNotesList.add(map2);
+    chord = new ArrayList<Note>();
+    chord.add(note2);
+    playString = "[" + String.valueOf(noteToPlay) + "] [" + String.valueOf(noteToPlay + interval) + "]";
+    return playString;
+  }
+
+  @Override
+  public String getPlayString() {
+    return playString;
+  }
+
+  @Override
+  public ArrayList<Note> getExpectedChord() {
+    return chord;
+  }
 }

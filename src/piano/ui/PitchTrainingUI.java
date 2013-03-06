@@ -6,17 +6,16 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import javax.swing.JFrame;
+import org.jfugue.elements.Note;
 
 import piano.ui.KeyboardParserListener.Colour;
-import piano.ui.buttons.ButtonType;
 import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
 
-public class PitchTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback {
+public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 
 	private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
 	private static final String TITLE = "Pitch Training";
@@ -27,15 +26,19 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback, GetN
 	private HelpButton helpButton;
 	private boolean stopPainting = false;
 
+	private ArrayList<ChordToColourMap> nextNotesList;
+  private ArrayList<Note> chord;
+  private String playString;
+
 	public PitchTrainingUI() {
 		super();
-		data = new NotesToPlayData(this);
+		data = new NotesToPlayData();
 		data.minKey = 60;
 		data.maxKey = 71;
 		data.numOctaves = 1;
 		data.useBlackKeys = true;
 
-		keyboard = new KeyboardView(this, this, data);
+		keyboard = new KeyboardView(this, data);
 		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20);
 		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20);
 	}
@@ -68,10 +71,16 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback, GetN
 	}
 
 	@Override
-	public void informKeyPressed(int keyPressed) {
+	public void informChordPressed(ArrayList<Note> chord) {
 		repaint();
-		keyboard.informKeyPressed(keyPressed);
+		keyboard.informChordPressed(chord);
 	}
+
+  @Override
+  public void informKeyReleased(int keyReleased) {
+    repaint();
+    keyboard.informKeyReleased();
+  }
 
 	public void mouseClicked(MouseEvent e) {
 		if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
@@ -102,19 +111,38 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback, GetN
 	}
 
 	@Override
-	public ArrayList<NoteToColourMap> getNextNotes() {
-		ArrayList<NoteToColourMap> list = new ArrayList<NoteToColourMap>();
-		int noteToPlay = (data.minKey + (int)(Math.random() * ((data.maxKey - data.minKey) + 1)));
-		if (keyboard.isSharp(noteToPlay)) {
-			noteToPlay++;
-		}
-		NoteToColourMap map1 = new NoteToColourMap(noteToPlay, Colour.WHITE);
-		list.add(map1);
-		return list;
+	public ArrayList<ChordToColourMap> getNextNotes() {
+		return nextNotesList;
 	}
 
 	public void switchToView() {
 		keyboard.switchToView();
 		stopPainting = false;
 	}
+
+  @Override
+  public String getNewPlayString() {
+    nextNotesList = new ArrayList<ChordToColourMap>();
+    int noteToPlay = (data.minKey + (int)(Math.random() * ((data.maxKey - data.minKey) + 1)));
+    if (keyboard.isSharp(noteToPlay)) {
+      noteToPlay++;
+    }
+    Note note = new Note((byte) noteToPlay);
+    ChordToColourMap map1 = new ChordToColourMap(new ArrayList<Note>(Arrays.asList(note)), Colour.WHITE);
+    nextNotesList.add(map1);
+    chord = new ArrayList<Note>();
+    chord.add(note);
+    playString = "[" + String.valueOf(noteToPlay) + "]";
+    return playString;
+  }
+
+  @Override
+  public String getPlayString() {
+    return playString;
+  }
+
+  @Override
+  public ArrayList<Note> getExpectedChord() {
+    return chord;
+  }
 }

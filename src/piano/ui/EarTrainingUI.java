@@ -2,15 +2,11 @@ package piano.ui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.swing.JFrame;
 
 import piano.ui.buttons.ButtonType;
 
-public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNextNoteCallback, ButtonClickCallback {
+public class EarTrainingUI extends Drawing implements ButtonClickCallback {
 
   final static float dash1[] = {10.0f};
 
@@ -20,7 +16,7 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNex
 
 	public EarTrainingUI() {
 		super();
-		NotesToPlayData data = new NotesToPlayData(this);
+		NotesToPlayData data = new NotesToPlayData();
 		data.minKey = 60;
 		data.maxKey = 71;
 		data.numOctaves = 1;
@@ -31,7 +27,7 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNex
 		menuData.put(65, "Advanced Pitch Training");
 		menuData.put(67, "Chord Training");
 		menuData.put(69, "Main Menu");
-		keyboard = new KeyboardView(this, this, this, menuData, data);
+		keyboard = new KeyboardView(this, menuData, data);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -69,18 +65,6 @@ public class EarTrainingUI extends Drawing implements KeyPressedCallback, GetNex
 		keyboard.mouseMoved(e);
 		this.repaint();
 	}
-
-	@Override
-	public void informKeyPressed(int keyPressed) {}
-
-	@Override
-	public void clearKeys() {}
-
-	@Override
-	public void informExitLoop() {}
-
-	@Override
-	public ArrayList<NoteToColourMap> getNextNotes() { return null; }
 
 	@Override
 	public void informButtonClicked(ButtonType buttonType, int buttonId) {
