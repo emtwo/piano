@@ -27,27 +27,14 @@ public class Utils {
 	    return false;
 	  }
 
-	  HashMap<Integer, Integer> noteMap = new HashMap<Integer, Integer>();
-	  for (int i = 0; i < c1.size(); i++) {
-	    byte key1 = c1.get(i).getValue();
-	    Integer chord1NoteCount = noteMap.get(key1);
-	    if (chord1NoteCount == null) {
-        chord1NoteCount = 0;
-      }
-	    noteMap.put((int) key1, ++chord1NoteCount);
-
-	    byte key2 = c2.get(i).getValue();
-	    Integer chord2NoteCount = noteMap.get((int) key2);
-	    if (chord2NoteCount == null) {
-	      chord2NoteCount = 0;
+	  for (Note note1 : c1) {
+	    boolean noteExists = false;
+	    for (Note note2 : c2) {
+	      if (note1.getValue() == note2.getValue()) {
+	        noteExists = true;
+	      }
 	    }
-	    noteMap.put((int) key2, ++chord2NoteCount);
-	  }
-	  if (noteMap.size() != c1.size()) {
-	    return false;
-	  }
-	  for (Integer count : noteMap.values()) {
-	    if (count != 2) {
+	    if (!noteExists) {
 	      return false;
 	    }
 	  }

@@ -90,10 +90,13 @@ public class KeyboardView extends Drawing {
         if (colour != null) {
           keyboardParserListener.putColor(noteInChord.getValue(), colour);
         } else {
-          keyboardParserListener.putColor(noteInChord.getValue(), map.colour);
+          if (map.colour != null) {
+            keyboardParserListener.putColor(noteInChord.getValue(), map.colour);
+          }
         }
       }
       Thread.sleep(500);
+      keyboardParserListener.clear();
     }
   }
 
@@ -115,7 +118,8 @@ public class KeyboardView extends Drawing {
       return;
     }
     waitForRelease = true;
-    while (keyReleasedCount.get() != chordPressed.get().size()) {
+    while (keyReleasedCount.get() < chordPressed.get().size()) {
+      System.out.println("WAITING FOR RELEASE " + keyReleasedCount.get() + " blee " + chordPressed.get().size());
       if (exitLoop.get() == true) {
         break;
       }
@@ -146,7 +150,6 @@ public class KeyboardView extends Drawing {
 
 			public void run() {
 			  System.out.println("A NEW THREAD");
-				//ArrayList<ChordToColourMap> mapList = computeNoteToPlay();
 				while (!exitLoop.get()) {
 				  try {
 				    Thread.sleep(1000); // Wait for a bit before starting

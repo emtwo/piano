@@ -80,7 +80,7 @@ public class EarTrainingUI extends Drawing implements ButtonClickCallback {
 				nextView = new AdvancedPitchTrainingUI();
 				break;
 			case 67:
-				nextView = new PitchTrainingUI();
+				nextView = new ChordTrainingUI();
 				break;
 			case 69:
 				JFrameStack.popPanel();

@@ -20,6 +20,7 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback {
 	private static final String HELP_TEXT = "Observe the first note and listen to the second note. Play the note you think the second one is. Green means correct, red means incorrect.";
 	private static final String TITLE = "Interval Training";
 	private static final int WIDTH = 1400;
+	private static final String MIDDLE_C = "Middle C";
 
 	private KeyboardView keyboard;
 	private MainMenuButton mainMenu;
@@ -66,6 +67,11 @@ public class IntervalTrainingUI extends Drawing implements KeyPressedCallback {
 		int adv = metrics.stringWidth(TITLE);
 		g.drawString(TITLE, getWidth()/2 - adv/2, 23);
 		g.drawLine(0, 30, getWidth(), 30);
+
+		// Middle C
+    g.setColor(Color.RED);
+    g.drawString(MIDDLE_C, 465, 790);
+    g.drawLine(507, 765, 507, 753);
 
 		mainMenu.paintComponent(g);
 		helpButton.paintComponent(g);

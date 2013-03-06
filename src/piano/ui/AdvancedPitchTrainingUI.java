@@ -19,6 +19,7 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 	private static final int WIDTH = 1400;
 	private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
 	private static final String TITLE = "Advanced Pitch Training";
+	private static final String MIDDLE_C = "Middle C";
 
 	private NotesToPlayData data;
 	private KeyboardView keyboard;
@@ -65,6 +66,11 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 		int adv = metrics.stringWidth(TITLE);
 		g.drawString(TITLE, getWidth()/2 - adv/2, 23);
 		g.drawLine(0, 30, getWidth(), 30);
+
+		// Middle C
+    g.setColor(Color.RED);
+    g.drawString(MIDDLE_C, 465, 790);
+    g.drawLine(507, 765, 507, 753);
 
 		mainMenu.paintComponent(g);
 		helpButton.paintComponent(g);
