@@ -11,15 +11,15 @@ public class PracticeScorePanel extends BaseScorePanel {
         super(name);
 
         if (hand == BOTH_HANDS) {
-            practiceParserListener = new PracticeParserListener(S.combinedChords);
+            practiceParserListener = new PracticeParserListener(this, S.combinedChords);
         } else if (hand == LEFT_HAND) {
             if (S.staves < 2) {
                 System.err.println("Attempting to play left hand of single staffed score");
             } else {
-                practiceParserListener = new PracticeParserListener(S.chords[1]);
+                practiceParserListener = new PracticeParserListener(this, S.chords[1]);
             }
         } else if (hand == RIGHT_HAND) {
-            practiceParserListener = new PracticeParserListener(S.chords[0]);
+            practiceParserListener = new PracticeParserListener(this, S.chords[0]);
         } else {
             System.err.println("Invalid hand: " + hand);
         }

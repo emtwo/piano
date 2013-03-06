@@ -10,10 +10,12 @@ import java.util.concurrent.TimeUnit;
 
 public class PracticeParserListener extends ChordParserListener {
 
+    private PracticeScorePanel SP;
     private Vector<Chord> expectedChords;
     private int nextExpected;
 
-    PracticeParserListener(Vector<Chord> expectedChords) {
+    PracticeParserListener(PracticeScorePanel SP, Vector<Chord> expectedChords) {
+        this.SP = SP;
         this.expectedChords = expectedChords;
         this.nextExpected = 0;
         expectedChords.get(nextExpected).setActive(true).paint();
@@ -24,12 +26,17 @@ public class PracticeParserListener extends ChordParserListener {
     }
 
     private void nextExpected() {
+        int lastPage = expectedChords.get(nextExpected).getPage();
         expectedChords.get(nextExpected).setActive(false).paint();
         ++nextExpected;
         if (nextExpected >= expectedChords.size()) {
             finished();
         } else {
             expectedChords.get(nextExpected).setActive(true).paint();
+        }
+        if (expectedChords.get(nextExpected).getPage() != lastPage) {
+            SP.setPage(expectedChords.get(nextExpected).getPage());
+            SP.repaint();
         }
     }
 
