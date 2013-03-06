@@ -5,6 +5,8 @@
   composer = "Nobuo Uematsu"
 }
 
+\score {
+
  \new PianoStaff <<
  \new Staff = "up" {
    \clef treble
@@ -75,10 +77,11 @@
    }
    \bar "|." \bar "|."
  }
- >>
+ 
 
+ >>
+ 
  \layout { }
 
  \midi { }
-
 }
