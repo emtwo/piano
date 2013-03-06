@@ -1,10 +1,6 @@
 package piano.ui.buttons;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 import javax.swing.JFrame;
 
@@ -40,6 +36,7 @@ public class MainMenuButton extends Button {
 	}
 
 	public void paintComponent(Graphics gc) {
+        ((Graphics2D)gc).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		((Graphics2D) gc).setStroke(new BasicStroke(1));
 		gc.setFont(font);
 

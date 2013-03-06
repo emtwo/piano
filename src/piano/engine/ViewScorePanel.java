@@ -28,9 +28,16 @@ public class ViewScorePanel extends BaseScorePanel {
 
         this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "left");
         this.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "right");
+        this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "space");
         this.getActionMap().put("left", leftAction);
         this.getActionMap().put("right", rightAction);
+        this.getActionMap().put("space", rightAction);
 
 	}
+
+    @Override
+    String getHelpText() {
+        return "Press space to go to the next page, or use the left and right arrow keys to navigate";
+    }
 
 }

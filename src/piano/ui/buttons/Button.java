@@ -1,11 +1,6 @@
 package piano.ui.buttons;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Frame;
-import java.awt.Graphics;
+import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -126,6 +121,8 @@ public abstract class Button extends JPanel {
 	}
 
 	public void paintComponent(Graphics gc) {
+        ((Graphics2D)gc).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+
 		gc.setFont(font);
 
 		FontMetrics metrics = gc.getFontMetrics(font);

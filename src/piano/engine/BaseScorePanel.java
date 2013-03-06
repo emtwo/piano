@@ -1,9 +1,15 @@
 package piano.engine;
 
+import piano.repository.Song;
+import piano.ui.Drawing;
 import piano.ui.JFrameStack;
+import piano.ui.buttons.ButtonType;
+import piano.ui.buttons.HelpButton;
+import piano.ui.buttons.MainMenuButton;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
 import java.util.concurrent.Executors;
@@ -11,30 +17,38 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public abstract class BaseScorePanel extends JPanel {
+public abstract class BaseScorePanel extends Drawing {
     protected String name;
     protected int page = 1;
     protected Vector<BufferedImage> images;
     protected BufferedImage currImage;
     protected PianoAdapterParser piano = PianoAdapterParser.instance();
     protected boolean mute = true;
-    protected Runnable playNextTogetherNote, playNextRightNote, playNextLeftNote, nextPage, finishPlaying;
+    protected Runnable playNextTogetherNote, playNextRightNote, playNextLeftNote, nextPage, finishPlaying, clearMenu;
     protected ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     protected int[] currChords;
     protected Vector<ScheduledFuture> futures = new Vector<ScheduledFuture>();
+    protected ScheduledFuture mouseMoveFuture;
+    protected boolean showMenu = false;
 
+    protected MainMenuButton mainMenu;
+    protected HelpButton helpButton;
 
     public Score S;
 
+    public static final int menuHeight = 30;
+
     public BaseScorePanel(String name) {
-        super(null);
+        super(842, 595);
+
+        mainMenu = new MainMenuButton("< Song Select", 5, 5, 150, 20);
+        helpButton = new HelpButton("?", getHelpText(), 570, 5, 20, 20);
 
         this.setOpaque(true);
         this.name = name;
 
         S = Score.Load(name);
 
-        setBounds(0, 0, S.imageWidth, S.imageHeight);
         setPreferredSize(new Dimension(S.imageWidth, S.imageHeight));
 
         JFrameStack.getFrame().getContentPane().add(this, 1);
@@ -82,10 +96,19 @@ public abstract class BaseScorePanel extends JPanel {
             }
         };
 
+        clearMenu = new Runnable() {
+            public void run() {
+                showMenu = false;
+                repaint(0, 0, 595, menuHeight);
+            }
+        };
+
         setPage(page);
         repaint();
 
     }
+
+    abstract String getHelpText();
 
     protected void setPage(int newPage) {
         if (newPage >= 1 && newPage <= S.pages) {
@@ -219,11 +242,47 @@ public abstract class BaseScorePanel extends JPanel {
         repaint();
     }
 
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         g.drawImage(currImage, 0, 0, null);
+
+        if (showMenu) {
+            mainMenu.paintComponent(g);
+            helpButton.paintComponent(g);
+        }
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
+            refresh();
+            JFrameStack.popPanel();
+        }
+        repaint();
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        mainMenu.computeMouseEntered(e.getX(), e.getY());
+        mainMenu.computeMouseExited(e.getX(), e.getY());
+        //repaint(5, 5, 150, 20);
+
+        helpButton.computeMouseEntered(e.getX(), e.getY());
+        helpButton.computeMouseExited(e.getX(), e.getY());
+        //repaint(570, 5, 20, 20);
+        repaint();
+
+        if (!mainMenu.overButton && !helpButton.overButton) {
+            if (mouseMoveFuture != null) {
+                mouseMoveFuture.cancel(true);
+            }
+            mouseMoveFuture = scheduler.schedule(clearMenu, 1000, TimeUnit.MILLISECONDS);
+            showMenu = true;
+        } else {
+            if (mouseMoveFuture != null) {
+                mouseMoveFuture.cancel(true);
+            }
+        }
     }
 
 }

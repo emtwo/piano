@@ -30,6 +30,11 @@ public class DemoScorePanel extends BaseScorePanel {
         this.getActionMap().put("space", startPlayAction);
     }
 
+    @Override
+    String getHelpText() {
+        return "Press space to start and stop the demo";
+    }
+
     protected void finish() {
         super.finish();
         refresh();
