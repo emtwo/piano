@@ -16,30 +16,54 @@
    \tempo 4 = 100
    \set Score.tempoHideNote = ##t
    \relative c {
-  c'4 c g' g 
+  c'4 c
   | % 2
-  a a g2 
+  g' g 
   | % 3
-  f4 f e e 
+  a a
   | % 4
-  d4 d4 c2 
+  g2 
   | % 5
-  g'4 g f f 
+  f4 f
   | % 6
-  e e <d>2 
+  e e 
   | % 7
-  g4 g f f 
+  d4 d4
   | % 8
-  e e8( f8) e4( d4) 
+  c2 
   | % 9
-  c4 c g' g 
+  g'4 g
   | % 10
-  a a <g >2 
+  f f
   | % 11
-  f4 f e e 
+  e e
   | % 12
-  <d>4 <d>8( e8) <c>2 
+  d2 
   | % 13
+  g4 g
+  | % 14
+  f f 
+  | % 15
+  e e8( f8)
+  | % 16
+  e4( d4) 
+  | % 17
+  c4 c
+  | % 18
+  g' g 
+  | % 19
+  a a
+  |% 20
+  <g >2 
+  | % 21
+  f4 f
+  |% 22
+  e e 
+  | % 23
+  <d>4 <d>8( e8)
+  | % 24
+  <c>2 
+  | % 25
    }
    \bar "|."
  }
@@ -49,29 +73,52 @@
    \key c \major
    \time 2/4
    \relative c {
-       c e 
-  | % 2
-  f e 
+  c
+  |% 2
+  e
   | % 3
-  d c 
-  | % 4
-  f4 g4 e2 
+  f
+  |% 4
+  e 
   | % 5
-  e d
+  d
   | % 6
-  c b4 
+  c 
   | % 7
-  g' e2 
-  | % 8
-  d c2 
+  f4 g4
+  |% 8
+  e2 
   | % 9
-  c4( b4) c2 e 
+  e d
   | % 10
-  f e 
-  | % 11
-  d c 
+  c
+  | %11
+  b4 g'
   | % 12
-  f4 g4 c,2
+  e2
+  | % 13
+  d 
+  |% 14
+  c2 
+  | % 15
+  c4( b4)
+  | % 16
+  c2 
+  | % 17
+  e 
+  | % 18
+  f
+  | % 19
+  e 
+  | % 20
+  d
+  | % 21
+  c 
+  | % 22
+  f4 g4
+  | % 23
+  c,2
+  | % 24
    }
    \bar "|." \bar "|."
  }
