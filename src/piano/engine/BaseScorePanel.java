@@ -42,7 +42,7 @@ public abstract class BaseScorePanel extends Drawing {
         super(842, 595);
 
         mainMenu = new MainMenuButton("< Song Select", 5, 5, 150, 20);
-        helpButton = new HelpButton("?", getHelpText(), 570, 5, 20, 20);
+        helpButton = new HelpButton("?", getHelpText(), 570, 5, 20, 20, this);
 
         this.setOpaque(true);
         this.name = name;

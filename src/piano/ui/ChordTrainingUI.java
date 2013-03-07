@@ -44,7 +44,7 @@ public class ChordTrainingUI extends Drawing implements KeyPressedCallback {
 
     keyboard = new KeyboardView(this, data);
     mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20);
-    helpButton = new HelpButton("?", HELP_TEXT, WIDTH - 25, 5, 20, 20);
+    helpButton = new HelpButton("?", HELP_TEXT, WIDTH - 25, 5, 20, 20, this);
 
     chordDifferences.add(new ArrayList<Integer> (Arrays.asList(2)));
     chordDifferences.add(new ArrayList<Integer> (Arrays.asList(3)));
