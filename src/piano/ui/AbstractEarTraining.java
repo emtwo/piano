@@ -142,9 +142,9 @@ public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
     FontMetrics metrics = g.getFontMetrics(Fonts.italic_very_big);
     String text = "Score: " + score + " / " + (roundNum - 1);
     int adv = metrics.stringWidth(text);
-    g.drawString(text, (WIDTH - adv) + 85, 65);
+    g.drawString(text, (WIDTH - adv) + 88, 75);
 
     text = "Streak: " + streakCount;
-    g.drawString(text, (WIDTH - adv) + 100, 105);
+    g.drawString(text, (WIDTH - adv) + 145, 120);
   }
 }
