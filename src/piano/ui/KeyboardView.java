@@ -120,7 +120,6 @@ public class KeyboardView extends Drawing {
     }
     waitForRelease = true;
     while (keyReleasedCount.get() < chordPressed.get().size()) {
-      System.out.println("WAITING FOR RELEASE " + keyReleasedCount.get() + " blee " + chordPressed.get().size());
       if (exitLoop.get() == true) {
         break;
       }
@@ -140,6 +139,9 @@ public class KeyboardView extends Drawing {
       //play correct input
       NotePlayer.play(keyPressedCallback.getPlayString());
       setExpectedColours(Colour.GREEN);
+      keyPressedCallback.informKeyValid(false);
+    } else {
+      keyPressedCallback.informKeyValid(true);
     }
     chordPressed.set(null);
     Thread.sleep(500);
@@ -150,7 +152,7 @@ public class KeyboardView extends Drawing {
 		Thread thread = new Thread(new Runnable() {
 
 			public void run() {
-			  System.out.println("A NEW THREAD");
+			  keyPressedCallback.roundComplete();
 				while (!exitLoop.get()) {
 				  try {
 				    Thread.sleep(1000); // Wait for a bit before starting
@@ -162,6 +164,7 @@ public class KeyboardView extends Drawing {
             }
 	          waitForRelease();
 	          validateNote();
+	          keyPressedCallback.roundComplete();
 				  } catch (InterruptedException e) {
 				    e.printStackTrace();
 				  }

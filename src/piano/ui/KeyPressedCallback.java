@@ -13,4 +13,6 @@ public interface KeyPressedCallback {
 	public void informExitLoop();
 	public void clearKeys();
 	public String getPlayString();
+	public void informKeyValid(boolean valid);
+  public void roundComplete();
 }

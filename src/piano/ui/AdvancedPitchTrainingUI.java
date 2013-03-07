@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.jfugue.elements.Note;
@@ -14,25 +13,14 @@ import piano.ui.KeyboardParserListener.Colour;
 import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
 
-public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallback {
+public class AdvancedPitchTrainingUI extends AbstractEarTraining {
 
-	private static final int WIDTH = 1400;
 	private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
-	private static final String TITLE = "Advanced Pitch Training";
-	private static final String MIDDLE_C = "Middle C";
-
 	private NotesToPlayData data;
-	private KeyboardView keyboard;
-	private MainMenuButton mainMenu;
-	private HelpButton helpButton;
-	private boolean stopPainting = false;
-
-	private ArrayList<ChordToColourMap> nextNotesList;
-	private ArrayList<Note> chord;
-	private String playString;
 
 	public AdvancedPitchTrainingUI() {
-		super(WIDTH, 800);
+		super();
+		TITLE = "Advanced Pitch Training";
 		data = new NotesToPlayData();
 		data.minKey = 48;
 		data.maxKey = 83;
@@ -48,13 +36,14 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 		if (stopPainting) {
 			return;
 		}
-		super.paintComponent(g);
 		// Clear screen.
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
 		keyboard.setDimensions(getWidth(), getHeight());
 		keyboard.paintComponent(g);
+
+		super.paintComponent(g);
 
 		// Set font and colour
 		g.setColor(Color.BLACK);
@@ -76,58 +65,6 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
 		helpButton.paintComponent(g);
 	}
 
-	@Override
-	public void informChordPressed(ArrayList<Note> chord) {
-		repaint();
-		keyboard.informChordPressed(chord);
-	}
-
-  @Override
-  public void informKeyReleased(int keyReleased) {
-    repaint();
-    keyboard.informKeyReleased();
-  }
-
-	@Override
-	public void informExitLoop() {
-		stopPainting = true;
-		keyboard.informExitLoop();
-	}
-
-	public void mouseClicked(MouseEvent e) {
-		if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
-			JFrameStack.popPanel();
-			informExitLoop();
-			return;
-		}
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		mainMenu.computeMouseEntered(e.getX(), e.getY());
-		mainMenu.computeMouseExited(e.getX(), e.getY());
-
-		helpButton.computeMouseEntered(e.getX(), e.getY());
-		helpButton.computeMouseExited(e.getX(), e.getY());
-		this.repaint();
-	}
-
-	@Override
-	public void clearKeys() {
-		repaint();
-	}
-
-	 @Override
-	  public void switchToView() {
-	    keyboard.switchToView();
-	    stopPainting = false;
-	  }
-
-	@Override
-	public ArrayList<ChordToColourMap> getNextNotes() {
-		return nextNotesList;
-	}
-
   @Override
   public String getNewPlayString() {
     nextNotesList = new ArrayList<ChordToColourMap>();
@@ -145,15 +82,5 @@ public class AdvancedPitchTrainingUI extends Drawing implements KeyPressedCallba
     chord.add(note);
     playString = "[" + String.valueOf(noteToPlay) + "]";
     return playString;
-  }
-
-  @Override
-  public String getPlayString() {
-    return playString;
-  }
-
-  @Override
-  public ArrayList<Note> getExpectedChord() {
-    return chord;
   }
 }
