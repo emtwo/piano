@@ -28,7 +28,9 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
 		super();
 
 		mainMenu = new MainMenuButton("< Main Menu", 5, 5, 150, 20);
-		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20);
+		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20, this);
+		this.add(helpButton);
+		this.add(mainMenu);
     listView = new SongListView(this);
     playView = new PlayChoicesView(this);
     previewView = new SongPreviewView();

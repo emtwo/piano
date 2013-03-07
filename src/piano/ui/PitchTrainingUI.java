@@ -41,7 +41,7 @@ public class PitchTrainingUI extends Drawing implements KeyPressedCallback {
 
 		keyboard = new KeyboardView(this, data);
 		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20);
-		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20);
+		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20, this);
 	}
 
 	public void paintComponent(Graphics g) {

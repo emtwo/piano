@@ -4,15 +4,30 @@ import java.awt.*;
 
 import piano.ui.Fonts;
 
+import javax.swing.*;
+
 public class HelpButton extends Button {
 
-	private String helpText;
+	private JTextArea helpTextArea = new JTextArea();
 
-	public HelpButton(String buttonText, String helpText, int x, int y, int width, int height) {
+	public HelpButton(String buttonText, String helpText, int x, int y, int width, int height, Container container) {
 		super(buttonText, x, y, width, height);
 		super.setDiff(3);
 		super.setFont(Fonts.italic_small_bold);
-		this.helpText = helpText;
+
+		container.add(this);
+		container.add(helpTextArea);
+		helpTextArea.setFont(Fonts.italic_small_bold);
+		helpTextArea.setText(helpText);
+		helpTextArea.setEditable(false);
+		helpTextArea.setLineWrap(true);
+		helpTextArea.setWrapStyleWord(true);
+		helpTextArea.setBackground(Color.WHITE);
+		helpTextArea.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK),
+				BorderFactory.createEmptyBorder(0, 4, 4, 0)));
+		helpTextArea.setBounds(x -180, y + 35, 200, 150);
+		helpTextArea.setVisible(false);
+
 	}
 
 	@Override
@@ -25,22 +40,24 @@ public class HelpButton extends Button {
 		int adv = metrics.stringWidth(text);
 
 		if (overButton) {
+			helpTextArea.setVisible(true);
+
 			g.setColor(Color.CYAN);
 			g.fillRoundRect(x, y, width, height, 8, 8);
-
 			g.setColor(Color.BLACK);
-			drawString(g, helpText, x - 175, y + 50, 200);
 			g.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
-			return;
+		} else {
+			helpTextArea.setVisible(false);
+
+			g.setColor(Color.BLUE);
+			g.fillRoundRect(x, y, width, height, 8, 8);
+
+			g.setColor(Color.WHITE);
+			g.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
 		}
-		g.setColor(Color.BLUE);
-		g.fillRoundRect(x, y, width, height, 8, 8);
 
         g.setColor(Color.BLACK);
         g.drawRoundRect(x, y, width, height, 8, 8);
-
-		g.setColor(Color.WHITE);
-		g.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
 	}
 
 	public void drawString(Graphics g, String s, int x, int y, int width) {
