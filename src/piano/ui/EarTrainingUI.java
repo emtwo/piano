@@ -45,7 +45,7 @@ public class EarTrainingUI extends Drawing implements ButtonClickCallback {
 	  g.fillRect(0, 0, getWidth(), getHeight());
 
 		// draw entire component grey
-    g.setColor(Color.lightGray);
+    g.setColor(Fonts.sub_color);
     g.fillRect(0, 0, getWidth(), getHeight());
 
     // Write title.
