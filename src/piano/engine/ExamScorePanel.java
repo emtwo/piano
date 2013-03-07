@@ -56,6 +56,7 @@ public class ExamScorePanel extends BaseScorePanel {
 
     public void refresh() {
         clearGhostNotes();
+        examParserListener.stop();
         super.refresh();
     }
 
