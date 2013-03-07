@@ -1,5 +1,8 @@
 package piano.ui;
 
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
@@ -10,21 +13,32 @@ import piano.ui.buttons.MainMenuButton;
 
 public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
 
+  protected final int WIDTH;
+  protected String TITLE;
+  protected static final String MIDDLE_C = "Middle C";
+
+  protected int roundNum = 0;
+  protected int score = 0;
+  protected int streakCount = 0;
   protected KeyboardView keyboard;
   protected boolean stopPainting = false;
   protected ArrayList<ChordToColourMap> nextNotesList;
   protected ArrayList<Note> chord;
   protected String playString;
 
+  protected boolean printRound = false;
+
   protected MainMenuButton mainMenu;
   protected HelpButton helpButton;
 
   public AbstractEarTraining(int width, int i) {
     super(width, i);
+    WIDTH = width;
   }
 
   public AbstractEarTraining() {
-    super();
+    super(1400, 800);
+    WIDTH = 1400;
   }
 
   @Override
@@ -90,4 +104,47 @@ public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
 
   @Override
   public String getNewPlayString() { return null; }
+
+  @Override
+  public void informKeyValid(boolean valid) {
+    if (valid) {
+      score++;
+      streakCount++;
+      return;
+    }
+    streakCount = 0;
+  }
+
+  @Override
+  public void roundComplete() {
+    roundNum++;
+    printRound = true;
+    repaint();
+    try {
+      Thread.sleep(1500);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    printRound = false;
+    repaint();
+  }
+
+  @Override
+  public void paintComponent(Graphics g) {
+    if (printRound) {
+      g.setColor(Color.RED);
+      FontMetrics metrics = g.getFontMetrics(Fonts.italic_very_big);
+      int adv = metrics.stringWidth("ROUND " + roundNum);
+      g.drawString("ROUND " + roundNum, (WIDTH/2 - adv/2) + 45, 200);
+    }
+
+    g.setColor(Color.BLUE);
+    FontMetrics metrics = g.getFontMetrics(Fonts.italic_very_big);
+    String text = "Score: " + score + " / " + (roundNum - 1);
+    int adv = metrics.stringWidth(text);
+    g.drawString(text, (WIDTH - adv) + 85, 65);
+
+    text = "Streak: " + streakCount;
+    g.drawString(text, (WIDTH - adv) + 100, 105);
+  }
 }

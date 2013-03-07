@@ -17,13 +17,11 @@ import piano.ui.buttons.MainMenuButton;
 public class PitchTrainingUI extends AbstractEarTraining {
 
 	private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
-	private static final String TITLE = "Pitch Training";
-	private static final String MIDDLE_C = "Middle C";
-
 	private NotesToPlayData data;
 
 	public PitchTrainingUI() {
-		super();
+		super(800, 800);
+		TITLE = "Pitch Training";
 		data = new NotesToPlayData();
 		data.minKey = 60;
 		data.maxKey = 71;
@@ -39,13 +37,14 @@ public class PitchTrainingUI extends AbstractEarTraining {
 		if (stopPainting) {
 			return;
 		}
-		super.paintComponent(g);
 		// Clear screen.
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
 		keyboard.setDimensions(getWidth(), getHeight());
 		keyboard.paintComponent(g);
+
+		super.paintComponent(g);
 
 		// Set font and colour
 		g.setColor(Color.BLACK);

@@ -15,17 +15,13 @@ import piano.ui.buttons.MainMenuButton;
 
 public class ChordTrainingUI extends AbstractEarTraining {
 
-  private static final int WIDTH = 1400;
   private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
-  private static final String TITLE = "Chord Training";
-  private static final String MIDDLE_C = "Middle C";
-
   private NotesToPlayData data;
-
   private ArrayList<ArrayList<Integer>> chordDifferences = new ArrayList<ArrayList<Integer>>();
 
   public ChordTrainingUI() {
-    super(WIDTH, 800);
+    super();
+    TITLE = "Chord Training";
     data = new NotesToPlayData();
     data.minKey = 48;
     data.maxKey = 83;
@@ -55,13 +51,14 @@ public class ChordTrainingUI extends AbstractEarTraining {
     if (stopPainting) {
       return;
     }
-    super.paintComponent(g);
     // Clear screen.
     g.setColor(Color.white);
     g.fillRect(0, 0, getWidth(), getHeight());
 
     keyboard.setDimensions(getWidth(), getHeight());
     keyboard.paintComponent(g);
+
+    super.paintComponent(g);
 
     // Set font and colour
     g.setColor(Color.BLACK);
@@ -87,10 +84,7 @@ public class ChordTrainingUI extends AbstractEarTraining {
     return chordDifferences.get(((int)(Math.random() * (chordDifferences.size()))));
   }
 
-  @Override
-  public String getNewPlayString() {
-    nextNotesList = new ArrayList<ChordToColourMap>();
-    //int rootNote = (48 + (int)(Math.random() * ((71 - 48) + 1)));
+  protected int getRootNote() {
     int rootNote = ((int)(Math.random() * 3));
     switch (rootNote) {
       case 0:
@@ -103,6 +97,13 @@ public class ChordTrainingUI extends AbstractEarTraining {
         rootNote = 72;
         break;
     }
+    return rootNote;
+  }
+
+  @Override
+  public String getNewPlayString() {
+    nextNotesList = new ArrayList<ChordToColourMap>();
+    int rootNote = getRootNote();
     Note note = new Note((byte) rootNote);
     ArrayList<Integer> chordDifferences = chooseRandomChord();
 
