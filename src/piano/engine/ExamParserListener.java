@@ -33,6 +33,12 @@ public class ExamParserListener extends AdapterParserListener {
         metronome.start();
     }
 
+    public void stop() {
+        if (state == counting) {
+            metronome.end();
+        }
+    }
+
     public void finish() {
         if (state == finished) {
             return;

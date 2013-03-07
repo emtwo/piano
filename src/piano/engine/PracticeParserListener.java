@@ -45,10 +45,10 @@ public class PracticeParserListener extends ChordParserListener {
             System.out.print(note.getMusicString() + " ");
         }
         System.out.println();*/
-        if (chord.size() == expectedChords.get(nextExpected).size()) {
-            for (Note note : chord) {
+        //if (chord.size() == expectedChords.get(nextExpected).size()) {
+            for (NotePanel notePanel : expectedChords.get(nextExpected).notes) {
                 boolean matches = false;
-                for (NotePanel notePanel : expectedChords.get(nextExpected).notes) {
+                for (Note note : chord) {
                     if (note.getValue() == notePanel.getValue()) {
                         matches = true;
                         break;
@@ -59,7 +59,7 @@ public class PracticeParserListener extends ChordParserListener {
                 }
             }
             nextExpected();
-        }
+        //}
     }
 
 		@Override
