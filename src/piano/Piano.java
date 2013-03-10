@@ -59,8 +59,13 @@ public class Piano {
             for (File fontFile : fontFiles) {
                 if (fontFile.getName().endsWith(".ttf")) {
                     Font f = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(fontFile));
+					GraphicsEnvironment ge = GraphicsEnvironment
+							.getLocalGraphicsEnvironment();
+
+					ge.registerFont(f);
                 }
             }
+
         } catch (Exception e) {
             System.err.println("Error loading font: ");
             e.printStackTrace();

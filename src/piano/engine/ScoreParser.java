@@ -282,11 +282,6 @@ public class ScoreParser implements ParserListener {
             fonts.put(fontKey, f);
             stream.close();
 
-            /*GraphicsEnvironment ge = GraphicsEnvironment
-                    .getLocalGraphicsEnvironment();
-
-            ge.registerFont(f);*/
-
         } catch (Exception e) {
             e.printStackTrace();
         }
