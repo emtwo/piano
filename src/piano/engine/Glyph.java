@@ -1,7 +1,8 @@
 package piano.engine;
 
 /**
- * MOSTLY TAKEN FROM PRESTO TODO: GIVE CREDIT
+ * The pattern for this file is based off source code from PrestoMusic: http://sourceforge.net/apps/mediawiki/prestomusic
+ * The font itself is Gonville and was developed by Simon Tatham. http://www.chiark.greenend.org.uk/~sgtatham/gonville/
  */
 
 public class Glyph {
