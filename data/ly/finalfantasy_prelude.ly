@@ -17,23 +17,23 @@
    \relative c {
   r4 c'16 d e g c d e g c d e g 
   | % 2
- c g e d c g e d c g e d c r8.
+ c g e d c g e d c g e d c r8 r16
   | % 3
   r4 a16 b c e a b c e a b c e 
   | % 4
-  a e c b a e c b a e c b a r8. 
+  a e c b a e c b a e c b a r8 r16
   | % 5
   r4 c16 d e g c d e g c d e g 
   | % 6
-  c g e d c g e d c g e d c r8. 
+  c g e d c g e d c g e d c r8 r16
   | % 7
   r4 a16 b c e a b c e a b c e 
   | % 8
-  a e c b a e c b a e c b a r8. 
+  a e c b a e c b a e c b a r8 r16
   | % 9
   r4 a16 c f g a c f g a c f g 
   | % 10
-  a g f c a g f c a g f c a r8. 
+  a g f c a g f c a g f c a r8 r16
   | % 11
   r4 b16 d g a b d g a b d g a 
   | % 12
@@ -49,29 +49,29 @@
    \key c \major
    \time 4/4
    \relative c {
-     c16 d e g r2.
+     c16 d e g r2 r4
      | % 2
-     r2. r16 g e d
+     r2 r4 r16 g e d
      | % 3
-     a16 b c e r2.
+     a16 b c e r2 r4
      | % 4
-     r2. r16 e c b
+     r2 r4 r16 e c b
      | % 5
-     c16 d e g r2.
+     c16 d e g r2 r4
      | % 6
-     r2. r16 g16 e d
+     r2 r4 r16 g16 e d
      | % 7
-     a b c e r2.
+     a b c e r2 r4
      | % 8
-     r2. r16 e c b
+     r2 r4 r16 e c b
      | % 9
-     a16 c f g r2.
+     a16 c f g r2 r4
      | % 10
-     r2. r16 g f c
+     r2 r4 r16 g f c
      | % 11
-     g c d f r2.
+     g c d f r2 r4
      |% 12
-     g16 c d f r2.
+     g16 c d f r2 r4
      | % 13
      r1
    }
