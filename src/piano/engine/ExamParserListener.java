@@ -1,6 +1,5 @@
 package piano.engine;
 
-import com.sun.tools.javac.util.Pair;
 import org.jfugue.elements.*;
 
 import java.util.*;
@@ -19,7 +18,7 @@ public class ExamParserListener extends AdapterParserListener {
     private static final double min_tempo = 0.6, max_tempo = 1.4; //min and max tempo variations
     private static final double granularity = 0.000001; //attempt to find best tempo to this degree
 
-    private HashMap<NotePanel, Pair<NotePanel, NotePanel>> noteAttachments;
+    private HashMap<NotePanel, List<NotePanel>> noteAttachments;
 
     private int state;
     private long start;
@@ -76,10 +75,10 @@ public class ExamParserListener extends AdapterParserListener {
         }
 
         attachNotes(bestScale);
-        for (Map.Entry<NotePanel, Pair<NotePanel, NotePanel>> entry : noteAttachments.entrySet()) {
+        for (Map.Entry<NotePanel, List<NotePanel>> entry : noteAttachments.entrySet()) {
             NotePanel ghost = entry.getKey();
-            NotePanel note = entry.getValue().fst;
-            NotePanel reference = entry.getValue().snd;
+            NotePanel note = entry.getValue().get(0);
+            NotePanel reference = entry.getValue().get(1);
 
             ghost.setMillisTime((long) (ghost.getMillisTime() * bestScale));
             note.addGhostNote(ghost, reference);
@@ -119,7 +118,7 @@ public class ExamParserListener extends AdapterParserListener {
 
     private double attachNotes(double scale) {
         int[] c = new int[S.staves];
-        noteAttachments = new HashMap<NotePanel, Pair<NotePanel, NotePanel>>();
+        noteAttachments = new HashMap<NotePanel, List<NotePanel>>();
 
         for (NotePanel ghost : notes) {
 
@@ -188,14 +187,17 @@ public class ExamParserListener extends AdapterParserListener {
                 }
             }
 
-            noteAttachments.put(ghost, new Pair<NotePanel, NotePanel>(attachedNote, referenceNote));
+			List list = new ArrayList<NotePanel>();
+			list.add(attachedNote);
+			list.add(referenceNote);
+            noteAttachments.put(ghost, list);
         }
 
         //calculate score
         double score = 0.0;
-        for (Map.Entry<NotePanel, Pair<NotePanel, NotePanel>> entry : noteAttachments.entrySet()) {
+        for (Map.Entry<NotePanel, List<NotePanel>> entry : noteAttachments.entrySet()) {
             NotePanel ghost = entry.getKey();
-            NotePanel note = entry.getValue().fst;
+            NotePanel note = entry.getValue().get(0);
             if (!ghost.getValue().equals(note.getValue())) {
                 score += wrong_note_penalty;
             } else {
