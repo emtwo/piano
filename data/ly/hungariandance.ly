@@ -1,5 +1,5 @@
 \header {
-  title = "Hungarian Dance no. 5"
+  title = "Hungarian Dance 5"
   composer = "Johannes Brahms"
 }
 
@@ -11,6 +11,8 @@
   \clef treble
   \key c \major
   \time 4/4
+     \tempo "Allegro" 4 = 120
+   \set Score.tempoHideNote = ##t
    \relative c' { r2. e4 | g2. e4 | dis2 e4 gis | e1 | c2 d4 e | r1 | r1 | r1 }
 }
 
