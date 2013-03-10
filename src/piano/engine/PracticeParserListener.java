@@ -18,7 +18,7 @@ public class PracticeParserListener extends ChordParserListener {
         this.SP = SP;
         this.expectedChords = expectedChords;
         this.nextExpected = 0;
-        expectedChords.get(nextExpected).setActive(true).paint();
+        expectedChords.get(nextExpected).setVisible(true);
     }
 
     private void finished() {
@@ -27,12 +27,12 @@ public class PracticeParserListener extends ChordParserListener {
 
     private void nextExpected() {
         int lastPage = expectedChords.get(nextExpected).getPage();
-        expectedChords.get(nextExpected).setActive(false).paint();
+        expectedChords.get(nextExpected).setVisible(false);
         ++nextExpected;
         if (nextExpected >= expectedChords.size()) {
             finished();
         } else {
-            expectedChords.get(nextExpected).setActive(true).paint();
+            expectedChords.get(nextExpected).setVisible(true);
         }
         if (expectedChords.get(nextExpected).getPage() != lastPage) {
             SP.setPage(expectedChords.get(nextExpected).getPage());

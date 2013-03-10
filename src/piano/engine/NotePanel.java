@@ -28,7 +28,6 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
     private Font accidentalFont;
     private int accidentalWidth, accidentalHeight;
     private String accidentalString;       */
-    private boolean active = false;
     private Font font;
     private Note note = null;
     private String noteString;
@@ -37,14 +36,15 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
 
     private static final int resolution = 384;
     private static final int velocity_minimum = 10, velocity_maximum = 120;
-    private static final float[] HSBmin = {0.8f, 0.9f, 0.6f};
-    private static final float[] HSBmax = {1.6f, 1.0f, 1.0f};
-    private static final Color startingColor = Color.green;
+    public static final float[] HSBmin = {0.8f, 0.9f, 0.6f};
+    public static final float[] HSBmax = {1.6f, 1.0f, 1.0f};
+    public static final Color startingColor = Color.green;
 
 
 
     public NotePanel() {
         setOpaque(false);
+        setVisible(false);
     }
 
 	public NotePanel(Note note) {
@@ -144,11 +144,6 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
         this.isTie = true;
         note = new Note((byte) 0);
         note.setAttackVelocity((byte) 0);
-        return this;
-    }
-
-    public NotePanel setActive(boolean active) {
-        this.active = active;
         return this;
     }
 
@@ -259,24 +254,21 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
 
     public void paintGhosts() {
         for (NotePanel ghost : ghostNotes) {
-            ghost.active = true;
-            ghost.repaint();
+            ghost.setVisible(true);
         }
         if (!isTie && !isRest && matchedGhost == null) {
-            active = true;
+            setVisible(true);
         } else {
-            active = false;
+            setVisible(false);
         }
         repaint();
     }
 
     public void disableGhosts() {
         for (NotePanel ghost : ghostNotes) {
-            ghost.active = false;
-            ghost.repaint();
+            ghost.setVisible(false);
         }
-        this.active = false;
-        repaint();
+        this.setVisible(false);
     }
 
 
@@ -331,35 +323,34 @@ public class NotePanel extends JPanel implements Comparable<NotePanel>, Serializ
 
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
-		if (active) {
-            if (isGhost && correct) {
-                //set the a certain colour, and give a brightness in scale with the attack velocity
-                float scale = ((float) (note.getAttackVelocity() - velocity_minimum)) / (velocity_maximum - velocity_minimum);
-                scale = Math.min(Math.max(scale, 0.0f), 1.0f);
+        if (isGhost && correct) {
+            //set the a certain colour, and give a brightness in scale with the attack velocity
+            float scale = ((float) (note.getAttackVelocity() - velocity_minimum)) / (velocity_maximum - velocity_minimum);
+            scale = Math.min(Math.max(scale, 0.0f), 1.0f);
 
-                float hsb[] = Color.RGBtoHSB(startingColor.getRed(), startingColor.getGreen(), startingColor.getBlue(), null);
-                float hue = hsb[0] * (HSBmin[0] + (HSBmax[0] - HSBmin[0]) * scale);
-                float saturation = HSBmin[1] + (HSBmax[1] - HSBmin[1]) * scale;
-                float brightness = HSBmin[2] + (HSBmax[2] - HSBmin[2]) * scale;
+            float hsb[] = Color.RGBtoHSB(startingColor.getRed(), startingColor.getGreen(), startingColor.getBlue(), null);
+            float hue = hsb[0] * (HSBmin[0] + (HSBmax[0] - HSBmin[0]) * scale);
+            float saturation = HSBmin[1] + (HSBmax[1] - HSBmin[1]) * scale;
+            float brightness = HSBmin[2] + (HSBmax[2] - HSBmin[2]) * scale;
 
-                Color c = Color.getHSBColor(hue, saturation, brightness);
-                g.setColor(c);
+            Color c = Color.getHSBColor(hue, saturation, brightness);
+            g.setColor(c);
 
-            } else {
-			    g.setColor(Color.RED);
-            }
+        } else {
+            g.setColor(Color.RED);
+        }
 
-            Font oldFont = g.getFont();
-			g.setFont(font);
-			g.drawString(noteString, absoluteX(), absoluteY());
-            g.setFont(oldFont);
+        Font oldFont = g.getFont();
+        g.setFont(font);
+        g.drawString(noteString, absoluteX(), absoluteY());
+        g.setFont(oldFont);
 
-            /*if (hasAccidental) {
-                System.out.p rintln("yay");
-                g.setFont(accidentalFont);
-                g.drawString(accidentalString, absoluteX(accidentalX), absoluteY(accidentalY));
-            }      */
-		}
+        /*if (hasAccidental) {
+            System.out.p rintln("yay");
+            g.setFont(accidentalFont);
+            g.drawString(accidentalString, absoluteX(accidentalX), absoluteY(accidentalY));
+        }      */
+
 	}
 
 	public void repaint() {

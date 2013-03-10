@@ -1,5 +1,7 @@
 package piano.engine;
 
+import piano.ui.ExamLegend;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -10,11 +12,17 @@ public class ExamScorePanel extends BaseScorePanel {
 
     private Action leftAction, rightAction;
 
+    private ExamLegend legend;
+
     public boolean finished = false;
 
     public ExamScorePanel(String name) {
         super(name);
         clearGhostNotes();
+
+        legend = new ExamLegend(10, menuHeight + 10);
+        helpButton.addPanel(legend);
+
         //listen for keystrokes
         leftAction = new AbstractAction() {
             public void actionPerformed(ActionEvent arg0) {
@@ -46,7 +54,7 @@ public class ExamScorePanel extends BaseScorePanel {
         examTest = new ExamTest(this, examParserListener);
 
         examParserListener.start();
-        //examTest.basicPerfect();
+        examTest.basicPerfect();
     }
 
     @Override
@@ -93,4 +101,5 @@ public class ExamScorePanel extends BaseScorePanel {
             }
         }
     }
+
 }

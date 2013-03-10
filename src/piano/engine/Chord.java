@@ -46,9 +46,9 @@ public class Chord implements Serializable {
         }
     }
 
-	public Chord setActive(boolean active) {
+	public Chord setVisible(boolean visible) {
         for (NotePanel note : notes) {
-            note.setActive(active);
+            note.setVisible(visible);
         }
         return this;
 	}

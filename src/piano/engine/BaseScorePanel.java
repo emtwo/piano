@@ -1,13 +1,10 @@
 package piano.engine;
 
-import piano.repository.Song;
 import piano.ui.Drawing;
 import piano.ui.JFrameStack;
-import piano.ui.buttons.ButtonType;
 import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -98,8 +95,7 @@ public abstract class BaseScorePanel extends Drawing {
 
         clearMenu = new Runnable() {
             public void run() {
-                showMenu = false;
-                repaint(0, 0, 595, menuHeight);
+                repaint();
             }
         };
 
@@ -123,14 +119,12 @@ public abstract class BaseScorePanel extends Drawing {
         // play and highlight the next right hand note
         if (currChords[layer] > 0) {
             Chord lastChord = S.allChords[layer].get(currChords[layer] - 1);
-            lastChord.setActive(false);
-            lastChord.paint();
+            lastChord.setVisible(false);
         }
 
         if (currChords[layer] < S.allChords[layer].size()) {
             Chord chord = S.allChords[layer].get(currChords[layer]);
-            chord.setActive(true);
-            chord.paint();
+            chord.setVisible(true);
             if (!mute) {
                 chord.play();
             }
@@ -142,14 +136,12 @@ public abstract class BaseScorePanel extends Drawing {
         for (int layer = 0; layer < S.staves; ++layer) {
             if (currChords[layer] > 0) {
                 Chord lastChord = S.allChords[layer].get(currChords[layer] - 1);
-                lastChord.setActive(false);
-                lastChord.paint();
+                lastChord.setVisible(false);
             }
 
             if (currChords[layer] < S.allChords[layer].size()) {
                 Chord chord = S.allChords[layer].get(currChords[layer]);
-                chord.setActive(true);
-                chord.paint();
+                chord.setVisible(true);
                 ++currChords[layer];
             }
         }
@@ -233,7 +225,7 @@ public abstract class BaseScorePanel extends Drawing {
         //set all notes to inactive
         for (Vector<Chord> chords : S.allChords) {
             for (Chord chord : chords) {
-                chord.setActive(false);
+                chord.setVisible(false);
             }
         }
 
