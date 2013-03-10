@@ -1,15 +1,19 @@
 package piano.ui;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import org.jfugue.elements.Note;
 
+import piano.engine.NotePlayer;
 import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
+import piano.ui.buttons.ReplayButton;
 
 public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
 
@@ -29,16 +33,17 @@ public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
   protected boolean printRound = false;
 
   protected MainMenuButton mainMenu;
+  protected ReplayButton replay;
   protected HelpButton helpButton;
 
   public AbstractEarTraining(int width, int i) {
     super(width, i);
     WIDTH = width;
+    replay = new ReplayButton(WIDTH - 150, 800 - 30, 140, 20);
   }
 
   public AbstractEarTraining() {
-    super(1400, 800);
-    WIDTH = 1400;
+    this(1400, 800);
   }
 
   @Override
@@ -89,11 +94,20 @@ public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
     if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
       informExitLoop();
       JFrameStack.popPanel();
+    } else if (replay.setMouseClicked(e.getX(), e.getY())) {
+      try {
+        keyboard.replay();
+      } catch (InterruptedException e1) {
+        e1.printStackTrace();
+      }
     }
   }
 
   @Override
   public void mouseMoved(MouseEvent e) {
+    replay.computeMouseEntered(e.getX(), e.getY());
+    replay.computeMouseExited(e.getX(), e.getY());
+
     mainMenu.computeMouseEntered(e.getX(), e.getY());
     mainMenu.computeMouseExited(e.getX(), e.getY());
 
@@ -131,20 +145,44 @@ public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
 
   @Override
   public void paintComponent(Graphics g) {
+    if (stopPainting) {
+      return;
+    }
+    // Clear screen.
+    g.setColor(Color.white);
+    g.fillRect(0, 0, getWidth(), getHeight());
+
+    keyboard.setDimensions(getWidth(), getHeight());
+    keyboard.paintComponent(g);
+
+    FontMetrics metrics = g.getFontMetrics(Fonts.italic_very_big);
     if (printRound) {
       g.setColor(Color.RED);
-      FontMetrics metrics = g.getFontMetrics(Fonts.italic_very_big);
       int adv = metrics.stringWidth("ROUND " + roundNum);
       g.drawString("ROUND " + roundNum, (WIDTH/2 - adv/2) + 45, 200);
     }
 
     g.setColor(Color.BLUE);
-    FontMetrics metrics = g.getFontMetrics(Fonts.italic_very_big);
     String text = "Score: " + score + " / " + (roundNum - 1);
     int adv = metrics.stringWidth(text);
-    g.drawString(text, (WIDTH - adv) + 88, 75);
+    g.drawString(text, (WIDTH - adv) + 98, 75);
 
     text = "Streak: " + streakCount;
-    g.drawString(text, (WIDTH - adv) + 145, 120);
+    g.drawString(text, (WIDTH - adv) + 155, 120);
+
+    // Set font and colour
+    g.setColor(Color.BLACK);
+    g.setFont(Fonts.italic);
+    ((Graphics2D) g).setStroke(new BasicStroke(1));
+
+    // Write title.
+    metrics = g.getFontMetrics(Fonts.italic);
+    adv = metrics.stringWidth(TITLE);
+    g.drawString(TITLE, getWidth()/2 - adv/2, 23);
+    g.drawLine(0, 30, getWidth(), 30);
+
+    mainMenu.paintComponent(g);
+    replay.paintComponent(g);
+    helpButton.paintComponent(g);
   }
 }

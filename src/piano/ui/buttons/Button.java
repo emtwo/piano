@@ -60,7 +60,7 @@ public abstract class Button extends JPanel {
 		Frame.getFrames()[0].setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 
-	protected void outButton() {
+	public void outButton() {
 		overButton = false;
 		Frame.getFrames()[0].setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -97,7 +97,6 @@ public abstract class Button extends JPanel {
 		}
 
 		hoverOut();
-		outButton();
 		return true;
 	}
 
@@ -121,7 +120,7 @@ public abstract class Button extends JPanel {
 	}
 
 	public void paintComponent(Graphics gc) {
-        ((Graphics2D)gc).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+    ((Graphics2D)gc).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
 		gc.setFont(font);
 

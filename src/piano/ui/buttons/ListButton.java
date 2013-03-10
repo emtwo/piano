@@ -16,21 +16,8 @@ public class ListButton extends Button {
 	Song song;
 
 	public ListButton(Song song, int x, int y, int width, int height) {
-		/*
-	}
-		public ListButton(String text, int x, int y, int width, int height,
-				Drawing parent, String column) {
-*/
 		super(song.title, x, y, width, height);
 		this.song = song;
-/*
-		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
-		try {
-			songs = accessor.getAllByCriterion(column, text);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		*/
 	}
 
 	@Override
@@ -41,6 +28,22 @@ public class ListButton extends Button {
 	public void hoverOut() {
 	}
 
+	public void decrementY() {
+	  y -= 30;
+	}
+
+	public void incrementY() {
+	  y += 30;
+	}
+
+	public int getY() {
+	  return this.y;
+	}
+
+	public int getHeight() {
+	  return this.height;
+	}
+
 	@Override
 	public boolean setMouseClicked(int x, int y) {
 		if (!overButton) {
@@ -49,12 +52,6 @@ public class ListButton extends Button {
 
 		return true;
 	}
-/*
-	public void switchView() {
-		((ListView)parent).setSongs(songs);
-		((ListView)parent).switchView();
-	}
-	*/
 
 	public void paintComponent(Graphics gc) {
 		if (selected) {
