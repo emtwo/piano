@@ -95,6 +95,7 @@ public abstract class BaseScorePanel extends Drawing {
 
         clearMenu = new Runnable() {
             public void run() {
+                showMenu = false;
                 repaint();
             }
         };
