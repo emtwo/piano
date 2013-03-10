@@ -1,5 +1,6 @@
 package piano.engine;
 
+import com.sun.tools.javac.util.Pair;
 import org.jfugue.elements.*;
 
 import java.util.*;
@@ -11,7 +12,14 @@ public class ExamParserListener extends AdapterParserListener {
     private static final int playing = 2;
     private static final int finished = 3;
 
-    private static final double attachThres = 0.8; //attach a note if it's within 80% of its duration from starting time
+    private static final double attach_thres = 0.8; //attach a note if it's within 80% of its duration from starting time
+    private static final double wrong_note_penalty = -1.0;
+    private static final double correct_note_bonus = 2.0;
+    private static final double correct_note_dropoff = 200.0; //correct bonus score drops off 1/2 for this much offset
+    private static final double min_tempo = 0.6, max_tempo = 1.4; //min and max tempo variations
+    private static final double granularity = 0.000001; //attempt to find best tempo to this degree
+
+    private HashMap<NotePanel, Pair<NotePanel, NotePanel>> noteAttachments;
 
     private int state;
     private long start;
@@ -50,32 +58,31 @@ public class ExamParserListener extends AdapterParserListener {
         state = finished;
 
 
-        // calculate total offset of notes with their matched notes
-        long totalOffset = 0L;
-        int totalMatchedNotes = 0;
-        attachNotes();
+        double bestScale = 1.0;
+        double bestScore = attachNotes(bestScale);
+
+        //find the scale by matching each ghost note to each real note
         for (NotePanel note : S.combinedNotes) {
-            if(note.getMatchedGhost() != null) {
-                totalOffset += note.getMillisTime() - note.getMatchedGhost().getMillisTime();
-                ++totalMatchedNotes;
+            for (NotePanel ghost : notes) {
+                double timeScale = (double) ghost.getMillisTime() / note.getMillisTime();
+                if (timeScale > min_tempo && timeScale < max_tempo) {
+                    double tScore = attachNotes(timeScale);
+                    if (tScore > bestScore) {
+                        bestScale = timeScale;
+                        bestScore = tScore;
+                    }
+                }
             }
         }
 
-        long offset = Math.round((double) totalOffset / totalMatchedNotes);
+        attachNotes(bestScale);
+        for (Map.Entry<NotePanel, Pair<NotePanel, NotePanel>> entry : noteAttachments.entrySet()) {
+            NotePanel ghost = entry.getKey();
+            NotePanel note = entry.getValue().fst;
+            NotePanel reference = entry.getValue().snd;
 
-        if (offset != 0) {
-            //individually offset each note
-            for (NotePanel ghost : notes) {
-                ghost.setMillisTime(ghost.getMillisTime() + offset);
-            }
-
-            //clear all previously matched notes
-            for (NotePanel note : S.combinedNotes) {
-                note.clearGhostNotes();
-            }
-
-            //reattach notes
-            attachNotes();
+            ghost.setMillisTime((long) (ghost.getMillisTime() * bestScale));
+            note.addGhostNote(ghost, reference);
         }
 
     }
@@ -110,14 +117,17 @@ public class ExamParserListener extends AdapterParserListener {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    private void attachNotes() {
+    private double attachNotes(double scale) {
         int[] c = new int[S.staves];
+        noteAttachments = new HashMap<NotePanel, Pair<NotePanel, NotePanel>>();
 
         for (NotePanel ghost : notes) {
 
+            long ghostTime = (long) (ghost.getMillisTime() * scale);
+
             // move bounding chords up until the current ghost note is between them
             for (int layer = 0; layer < S.staves; ++layer) {
-                while (c[layer] < S.allChords[layer].size() - 1 && S.allChords[layer].get(c[layer] + 1).getMillisTime() < ghost.getMillisTime()) {
+                while (c[layer] < S.allChords[layer].size() - 1 && S.allChords[layer].get(c[layer] + 1).getMillisTime() < ghostTime) {
                     ++c[layer];
                 }
             }
@@ -135,7 +145,7 @@ public class ExamParserListener extends AdapterParserListener {
                         }
                         Chord chord = S.allChords[layer].get(c[layer] + i);
                         if (chord.contains(ghost)) {
-                            long offSet = Math.abs(chord.getMillisTime() - ghost.getMillisTime());
+                            long offSet = Math.abs(chord.getMillisTime() - ghostTime);
                             if (matchOffset == -1L || offSet < matchOffset) {
                                 attachedLayer = layer;
                                 matchOffset = offSet;
@@ -152,7 +162,7 @@ public class ExamParserListener extends AdapterParserListener {
                 }
             }
 
-            // pick which chord to attach the note to. this is based on the constant attachThres
+            // pick which chord to attach the note to. this is based on the constant attach_thres
             Chord attachedChord;
             NotePanel referenceNote;
             if (c[attachedLayer] >= S.allChords[attachedLayer].size() - 1) {
@@ -161,7 +171,7 @@ public class ExamParserListener extends AdapterParserListener {
             } else {
                 Chord chord = S.allChords[attachedLayer].get(c[attachedLayer]);
                 Chord nextChord = S.allChords[attachedLayer].get(c[attachedLayer] + 1);
-                if (ghost.getMillisTime() <= chord.getMillisTime() + attachThres * chord.getMillisDuration()) {
+                if (ghostTime <= chord.getMillisTime() + attach_thres * chord.getMillisDuration()) {
                     attachedChord = chord;
                     referenceNote = nextChord.notes.firstElement();
                 } else {
@@ -178,8 +188,23 @@ public class ExamParserListener extends AdapterParserListener {
                 }
             }
 
-            attachedNote.addGhostNote(ghost, referenceNote);
+            noteAttachments.put(ghost, new Pair<NotePanel, NotePanel>(attachedNote, referenceNote));
         }
+
+        //calculate score
+        double score = 0.0;
+        for (Map.Entry<NotePanel, Pair<NotePanel, NotePanel>> entry : noteAttachments.entrySet()) {
+            NotePanel ghost = entry.getKey();
+            NotePanel note = entry.getValue().fst;
+            if (!ghost.getValue().equals(note.getValue())) {
+                score += wrong_note_penalty;
+            } else {
+                double offset = Math.abs(ghost.getMillisTime() * scale - note.getMillisTime());
+                score += correct_note_bonus * Math.pow(0.5, offset/correct_note_dropoff);
+            }
+        }
+
+        return score;
     }
 
 

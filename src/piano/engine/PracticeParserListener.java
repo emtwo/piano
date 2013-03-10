@@ -41,25 +41,26 @@ public class PracticeParserListener extends ChordParserListener {
     }
 
     public void chordEvent(Vector<Note> chord) {
-        /*for (Note note : chord) {
-            System.out.print(note.getMusicString() + " ");
-        }
-        System.out.println();*/
-        //if (chord.size() == expectedChords.get(nextExpected).size()) {
-            for (NotePanel notePanel : expectedChords.get(nextExpected).notes) {
-                boolean matches = false;
-                for (Note note : chord) {
-                    if (note.getValue() == notePanel.getValue()) {
-                        matches = true;
-                        break;
-                    }
-                }
-                if (!matches) {
-                    return;
+        for (NotePanel notePanel : expectedChords.get(nextExpected).notes) {
+            boolean matches = false;
+            for (int i = 0; i < chord.size(); ++i) {
+                Note note = chord.get(i);
+                if (note.getValue() == notePanel.getValue()) {
+                    matches = true;
+                    chord.remove(i);
+                    break;
                 }
             }
-            nextExpected();
-        //}
+            if (!matches) {
+                return;
+            }
+        }
+
+        //if we get here, we have a match
+        nextExpected();
+        //fire another chord event for the unused notes
+        chordEvent(chord);
+
     }
 
 		@Override
