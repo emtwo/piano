@@ -1,5 +1,5 @@
 \header {
-  title="Canon"
+  title="Canon in D"
   composer = "Pachelbel"
 }
 
@@ -42,4 +42,8 @@ lower = \relative c {
      \new Staff = "upper" \upper
      \new Staff = "lower" \lower
   >>
+  
+  \layout { }
+
+ \midi { }
 }

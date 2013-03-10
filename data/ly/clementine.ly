@@ -23,4 +23,7 @@ lower = \relative c {
      \new Staff = "upper" \upper
      \new Staff = "lower" \lower
   >>
+  \layout { }
+
+ \midi { }
 }
