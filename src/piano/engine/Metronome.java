@@ -26,7 +26,7 @@ public class Metronome {
                 if (active) {
                     NotePlayer.play(beatString);
                 }
-                firstChord.setVisible(active);
+                //firstChord.setVisible(active);
                 active = !active;
             }
         }, 0L, (long) 112500 / tempo, TimeUnit.MILLISECONDS);

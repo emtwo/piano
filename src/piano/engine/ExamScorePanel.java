@@ -26,9 +26,9 @@ public class ExamScorePanel extends BaseScorePanel {
         //listen for keystrokes
         leftAction = new AbstractAction() {
             public void actionPerformed(ActionEvent arg0) {
+                setPage(page - 1);
+                repaint();
                 if (finished) {
-                    setPage(page - 1);
-                    repaint();
                     repaintGhostNotes();
                 }
             }
@@ -36,9 +36,9 @@ public class ExamScorePanel extends BaseScorePanel {
 
         rightAction = new AbstractAction() {
             public void actionPerformed(ActionEvent arg0) {
+                setPage(page + 1);
+                repaint();
                 if (finished) {
-                    setPage(page + 1);
-                    repaint();
                     repaintGhostNotes();
                 }
             }
