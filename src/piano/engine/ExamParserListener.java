@@ -18,8 +18,6 @@ public class ExamParserListener extends AdapterParserListener {
     private static final double min_tempo = 0.6, max_tempo = 1.4; //min and max tempo variations
     private static final double granularity = 0.000001; //attempt to find best tempo to this degree
 
-    private HashMap<NotePanel, List<NotePanel>> noteAttachments;
-
     private int state;
     private long start;
     private LinkedList<NotePanel> notes = new LinkedList<NotePanel>();
@@ -74,23 +72,8 @@ public class ExamParserListener extends AdapterParserListener {
             }
         }
 
-        attachNotes(bestScale);
-
-        // change all the times
-        for (NotePanel ghost : notes) {
-            ghost.setMillisTime((long) (ghost.getMillisTime() * bestScale));
-        }
-
         // attach the notes
-        for (Map.Entry<NotePanel, List<NotePanel>> entry : noteAttachments.entrySet()) {
-            NotePanel ghost = entry.getKey();
-            NotePanel note = entry.getValue().get(0);
-            NotePanel reference = entry.getValue().get(1);
-
-            note.addGhostNote(ghost, reference);
-        }
-
-
+        attachNotes(bestScale, true);
     }
 
     public void noteEvent(Note note, long time) {
@@ -124,8 +107,20 @@ public class ExamParserListener extends AdapterParserListener {
     }
 
     private double attachNotes(double scale) {
+        return attachNotes(scale, false);
+    }
+
+    private double attachNotes(double scale, boolean attach) {
+
+        // change all the times
+        if (attach) {
+            for (NotePanel ghost : notes) {
+                ghost.setMillisTime((long) (ghost.getMillisTime() * scale));
+            }
+        }
+
+        double score = 0.0;
         int[] c = new int[S.staves];
-        noteAttachments = new HashMap<NotePanel, List<NotePanel>>();
 
         for (NotePanel ghost : notes) {
 
@@ -200,24 +195,21 @@ public class ExamParserListener extends AdapterParserListener {
                 }
             }
 
-			List list = new ArrayList<NotePanel>();
-			list.add(attachedNote);
-			list.add(referenceNote);
-            noteAttachments.put(ghost, list);
-        }
+            //attach the node
+            if (attach) {
+                attachedNote.addGhostNote(ghost, referenceNote);
+            }
 
-        //calculate score
-        double score = 0.0;
-        for (Map.Entry<NotePanel, List<NotePanel>> entry : noteAttachments.entrySet()) {
-            NotePanel ghost = entry.getKey();
-            NotePanel note = entry.getValue().get(0);
-            if (!ghost.getValue().equals(note.getValue())) {
+            //calculate score
+            if (!ghost.getValue().equals(attachedNote.getValue())) {
                 score += wrong_note_penalty;
             } else {
-                double offset = Math.abs(ghost.getMillisTime() * scale - note.getMillisTime());
+                double offset = Math.abs(ghost.getMillisTime() * scale - attachedNote.getMillisTime());
                 score += correct_note_bonus * Math.pow(0.5, offset/correct_note_dropoff);
             }
         }
+
+
 
         return score;
     }
