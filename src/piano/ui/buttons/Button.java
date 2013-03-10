@@ -121,7 +121,7 @@ public abstract class Button extends JPanel {
 	}
 
 	public void paintComponent(Graphics gc) {
-        ((Graphics2D)gc).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+    ((Graphics2D)gc).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
 		gc.setFont(font);
 

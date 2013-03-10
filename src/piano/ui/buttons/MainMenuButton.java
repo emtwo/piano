@@ -36,7 +36,7 @@ public class MainMenuButton extends Button {
 	}
 
 	public void paintComponent(Graphics gc) {
-        ((Graphics2D)gc).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+    ((Graphics2D)gc).setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		((Graphics2D) gc).setStroke(new BasicStroke(1));
 		gc.setFont(font);
 

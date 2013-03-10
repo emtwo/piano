@@ -33,36 +33,12 @@ public class AdvancedPitchTrainingUI extends AbstractEarTraining {
 	}
 
 	public void paintComponent(Graphics g) {
-		if (stopPainting) {
-			return;
-		}
-		// Clear screen.
-		g.setColor(Color.white);
-		g.fillRect(0, 0, getWidth(), getHeight());
-
-		keyboard.setDimensions(getWidth(), getHeight());
-		keyboard.paintComponent(g);
-
-		super.paintComponent(g);
-
-		// Set font and colour
-		g.setColor(Color.BLACK);
-		g.setFont(Fonts.italic);
-		((Graphics2D) g).setStroke(new BasicStroke(1));
-
-		// Write title.
-		FontMetrics metrics = g.getFontMetrics(Fonts.italic);
-		int adv = metrics.stringWidth(TITLE);
-		g.drawString(TITLE, getWidth()/2 - adv/2, 23);
-		g.drawLine(0, 30, getWidth(), 30);
-
+	  super.paintComponent(g);
 		// Middle C
+	  g.setFont(Fonts.italic);
     g.setColor(Color.RED);
     g.drawString(MIDDLE_C, 465, 790);
     g.drawLine(507, 765, 507, 753);
-
-		mainMenu.paintComponent(g);
-		helpButton.paintComponent(g);
 	}
 
   @Override

@@ -27,10 +27,10 @@ public class KeyboardView extends Drawing {
 	private final int NUM_KEYS = 7;
 
 	private int width, height, parentWidth, xVal, yVal, keyWidth, blackKeyWidth;
-	private boolean pianoExists;
+	private boolean pianoExists, drawX, drawCheck;
 
 	private HashMap<Integer, String> menuData;
-    private HashMap<Integer, Color> colorData = null;
+  private HashMap<Integer, Color> colorData = null;
 	private NotesToPlayData noteData;
 
 	private AtomicBoolean exitLoop = new AtomicBoolean();
@@ -145,12 +145,17 @@ public class KeyboardView extends Drawing {
     }
     chordPressed.set(null);
     Thread.sleep(500);
+
     keyboardParserListener.clear();
+  }
+
+  public void replay() throws InterruptedException {
+    NotePlayer.play(keyPressedCallback.getPlayString());
+    setExpectedColours(null);
   }
 
 	private void startPlayThread() {
 		Thread thread = new Thread(new Runnable() {
-
 			public void run() {
 			  keyPressedCallback.roundComplete();
 				while (!exitLoop.get()) {
@@ -183,15 +188,16 @@ public class KeyboardView extends Drawing {
 	  Colour colour;
 	  if (Utils.chordsEqual(chordPressed, keyPressedCallback.getExpectedChord())) {
 	    colour = Colour.GREEN;
+	    drawCheck = true;
     } else {
       colour = Colour.RED;
+      drawX = true;
     }
 	  for (Note note : chordPressed) {
 	    byte noteVal = note.getValue();
 	    if (noteVal >= 48 && noteVal <= 83) {
-
+	      keyboardParserListener.putColor(noteVal, colour);
 	    }
-      keyboardParserListener.putColor(noteVal, colour);
 	  }
 	}
 
@@ -217,20 +223,22 @@ public class KeyboardView extends Drawing {
 
 	private void paintKeys(ArrayList<KeyboardKey> keySet, Graphics2D g2) {
 		for (KeyboardKey key : keySet) {
-			g2.setColor(keyboardParserListener.getKeyColor(key.getId()));
+		  Color color = keyboardParserListener.getKeyColor(key.getId());
+			g2.setColor(color);
 			g2.setStroke(new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-			int startX = parentWidth / 2 - 100;
-			int endX = parentWidth / 2 + 100;
-			if (keyboardParserListener.getKeyColor(key.getId()) == Color.RED) {
-				g2.drawLine(startX, 80, endX, 280);
-				g2.drawLine(startX, 280, endX, 80);
-			} else if (keyboardParserListener.getKeyColor(key.getId()) == Color.GREEN) {
-				g2.drawLine(startX + 50, 280, endX, 80);
-				g2.drawLine(startX, 210, startX + 50, 280);
-			}
+	    int startX = parentWidth / 2 - 100;
+	    int endX = parentWidth / 2 + 100;
+	    if (color.equals(Color.RED) && drawX) {
+	      g2.drawLine(startX, 80, endX, 280);
+	      g2.drawLine(startX, 280, endX, 80);
+	    } else if (color.equals(Color.GREEN) && drawCheck) {
+	      g2.drawLine(startX + 50, 280, endX, 80);
+	      g2.drawLine(startX, 210, startX + 50, 280);
+	    }
 			g2.setStroke(new BasicStroke(5));
 			key.paintComponent(g2);
 		}
+		drawX = drawCheck = false;
 	}
 
 	/**

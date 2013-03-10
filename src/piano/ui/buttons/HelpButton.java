@@ -112,6 +112,5 @@ public class HelpButton extends Button {
 	@Override
 	public void hoverOut() {
 		// TODO Auto-generated method stub
-
 	}
 }
