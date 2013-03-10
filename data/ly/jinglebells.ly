@@ -2,7 +2,7 @@
   title = "Jingle Bells"
   composer = "James Pierpont"
 }
-\version "2.16.2"
+\version "2.16.0"
 
 \score {
   \new PianoStaff <<

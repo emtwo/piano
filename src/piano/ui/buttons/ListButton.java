@@ -28,6 +28,22 @@ public class ListButton extends Button {
 	public void hoverOut() {
 	}
 
+	public void decrementY() {
+	  y -= 30;
+	}
+
+	public void incrementY() {
+	  y += 30;
+	}
+
+	public int getY() {
+	  return this.y;
+	}
+
+	public int getHeight() {
+	  return this.height;
+	}
+
 	@Override
 	public boolean setMouseClicked(int x, int y) {
 		if (!overButton) {

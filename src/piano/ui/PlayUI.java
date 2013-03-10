@@ -43,23 +43,26 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
-		// Set font and colour
-		g.setColor(Color.BLACK);
-		g.setFont(Fonts.italic);
-		((Graphics2D) g).setStroke(new BasicStroke(1));
-
-		// Write title.
-		FontMetrics metrics = g.getFontMetrics(Fonts.italic);
-		int adv = metrics.stringWidth(TITLE);
-		g.drawString(TITLE, getWidth()/2 - adv/2, 23);
-		g.drawLine(0, 30, getWidth(), 30);
-
 		listView.paintComponent(g);
 		playView.paintComponent(g);
 		previewView.paintComponent(g);
 
-		mainMenu.paintComponent(g);
-		helpButton.paintComponent(g);
+    g.setColor(Color.white);
+    g.fillRect(0, 0, getWidth(), 30);
+
+    mainMenu.paintComponent(g);
+    helpButton.paintComponent(g);
+
+		// Set font and colour
+    g.setColor(Color.BLACK);
+    g.setFont(Fonts.italic);
+    ((Graphics2D) g).setStroke(new BasicStroke(1));
+
+    // Write title.
+    FontMetrics metrics = g.getFontMetrics(Fonts.italic);
+    int adv = metrics.stringWidth(TITLE);
+    g.drawString(TITLE, getWidth()/2 - adv/2, 23);
+    g.drawLine(0, 30, getWidth(), 30);
 	}
 
 	public void mouseClicked(MouseEvent e) {
