@@ -10,7 +10,7 @@ public class ExamScorePanel extends BaseScorePanel {
     private ExamParserListener examParserListener;
     private ExamTest examTest;
 
-    private Action leftAction, rightAction;
+    private Action leftAction, rightAction, escapeAction;
 
     private ExamLegend legend;
 
@@ -44,17 +44,25 @@ public class ExamScorePanel extends BaseScorePanel {
             }
         };
 
+        escapeAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent arg0) {
+                finish();
+            }
+        };
+
         this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "left");
         this.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "right");
+        this.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"), "escape");
         this.getActionMap().put("left", leftAction);
         this.getActionMap().put("right", rightAction);
+        this.getActionMap().put("escape", escapeAction);
 
         examParserListener = new ExamParserListener(this);
         piano.addParserListener(examParserListener);
         examTest = new ExamTest(this, examParserListener);
 
         examParserListener.start();
-        examTest.basicPerfect();
+        //examTest.basicPerfect();
     }
 
     @Override
