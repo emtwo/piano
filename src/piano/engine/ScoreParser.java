@@ -113,7 +113,7 @@ public class ScoreParser implements ParserListener {
                 String S = LYIn.readLine();
 
                 //TODO: detect new staff location better
-                if ((S.contains("\\new Staff") && (S.contains("down")) || S.contains("lower")) || S.contains("NEW STAFF")) {
+                if ((S.contains("\\new Staff") && (S.contains("down") || S.contains("lower")) || S.contains("NEW STAFF"))) {
                     staffLine = line;
                     staves = 2;
                 }
