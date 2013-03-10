@@ -335,6 +335,7 @@ public class ScoreParser implements ParserListener {
 
             //attach staff lines
             for (int layer = 0; layer < staves; ++layer) {
+                NotePanel prevNote = null;
                 for (Chord chord : chords[layer]) {
                     for (NotePanel note : chord.notes) {
                         double staffLine = 0.0;
@@ -343,7 +344,21 @@ public class ScoreParser implements ParserListener {
                                 staffLine = line;
                             }
                         }
+                        if (prevNote != null) {
+                            if (Math.abs(staffLine - prevNote.staffLine) > 0.001) {
+                                //either reached the end of the line, or the note is really high/low
+                                //make a hacky guess if the note is really high/low,
+                                //and if so, set its staffline equal to the previous note's
+                                if (prevNote.x < note.x + 1.0) {
+                                    note.setStaffLine(prevNote.staffLine);
+                                    System.out.println("YAY");
+                                    prevNote = note;
+                                    continue;
+                                }
+                            }
+                        }
                         note.setStaffLine(staffLine);
+                        prevNote = note;
                     }
                 }
             }

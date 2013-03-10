@@ -75,14 +75,21 @@ public class ExamParserListener extends AdapterParserListener {
         }
 
         attachNotes(bestScale);
+
+        // change all the times
+        for (NotePanel ghost : notes) {
+            ghost.setMillisTime((long) (ghost.getMillisTime() * bestScale));
+        }
+
+        // attach the notes
         for (Map.Entry<NotePanel, List<NotePanel>> entry : noteAttachments.entrySet()) {
             NotePanel ghost = entry.getKey();
             NotePanel note = entry.getValue().get(0);
             NotePanel reference = entry.getValue().get(1);
 
-            ghost.setMillisTime((long) (ghost.getMillisTime() * bestScale));
             note.addGhostNote(ghost, reference);
         }
+
 
     }
 
@@ -170,7 +177,13 @@ public class ExamParserListener extends AdapterParserListener {
             } else {
                 Chord chord = S.allChords[attachedLayer].get(c[attachedLayer]);
                 Chord nextChord = S.allChords[attachedLayer].get(c[attachedLayer] + 1);
-                if (ghostTime <= chord.getMillisTime() + attach_thres * chord.getMillisDuration()) {
+                if (chord.contains(ghost)) {
+                    attachedChord = chord;
+                    referenceNote = nextChord.notes.firstElement();
+                } else if (nextChord.contains(ghost)) {
+                    attachedChord = nextChord;
+                    referenceNote = chord.notes.firstElement();
+                } else if (ghostTime <= chord.getMillisTime() + attach_thres * chord.getMillisDuration()) {
                     attachedChord = chord;
                     referenceNote = nextChord.notes.firstElement();
                 } else {
