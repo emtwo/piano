@@ -67,7 +67,7 @@ public class ExamScorePanel extends BaseScorePanel {
 
     @Override
     String getHelpText() {
-        return "Play the song as if you were performing for an exam. Follow along with the red notes and see how you did when the song is finished";
+        return "Play the song as if you were performing for an exam. Press escape when you are finished playing.";
     }
 
     public void refresh() {
