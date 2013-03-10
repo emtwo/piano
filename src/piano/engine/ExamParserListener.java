@@ -93,7 +93,7 @@ public class ExamParserListener extends AdapterParserListener {
                 state = playing;
                 metronome.end();
                 metronome = null;
-                SP.play();
+                //SP.play();
                 start = new Date().getTime();
             }
 
