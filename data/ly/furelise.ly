@@ -27,7 +27,7 @@
  \key a \minor
  \time 3/8
  \override Score.MetronomeMark #'transparent = ##t
- \tempo 4 = 72
+ \tempo "Andante" 4 = 72
  \repeat volta 2 {
  \partial 8 e''16\pp^\markup { \bold "Poco moto." } dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' gis' b'
  c''8 r16 e' e'' dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' c'' b' }

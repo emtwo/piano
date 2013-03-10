@@ -13,7 +13,7 @@
    \clef treble
    \key c \major
    \time 3/4
-   \tempo 4 = 200
+   \tempo "Presto" 4 = 175
    \set Score.tempoHideNote = ##t
    \relative c' { 
      c2.\mp c2. c2 d4 e2. e2 d4 e2 f4

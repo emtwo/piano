@@ -1,7 +1,7 @@
 \version "2.15.40"
 
  \header {
-  title = "Some Easy Bullshit"
+  title = "Some Easy Notes"
   composer = "Steven"
 }
 

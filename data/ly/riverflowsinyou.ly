@@ -4,11 +4,15 @@
 }
 \version "2.16.2"
 
-upper = \relative c''' {
+\score {
+  \new PianoStaff <<
+     \new Staff = "upper" {
   \clef treble
   \key a \major
   \time 4/4
-  a8 gis8 a8 gis8 a8 e8 a8 d,8 ~ |
+     \tempo "Adagio" 4 = 65
+   \set Score.tempoHideNote = ##t
+  \relative c''' { a8 gis8 a8 gis8 a8 e8 a8 d,8 ~ |
   d2 a4 cis4 |
   a'8 gis8 a8 gis8 a8 e8 a8 d,8 ~ |
   d2 a4 cis4 | 
@@ -23,15 +27,13 @@ upper = \relative c''' {
   a16 a,16 e'16 a,16 a'16 b16 a16 gis16 a16 a,16 e'16 a,16 a'16 b16 a16 gis16 |
   a16 b16 cis16 d16 e16 cis16 b16 a16 gis8 b,8 a'16 b16 a16 gis16 |
   a16 a,16 e'16 a,16 a'16 b16 a16 gis16 a16 a,16 e'16 a,16 a'16 b16 a16 gis16 |
-  
-  
+  }
 }
-
-lower = \relative c {
+     \new Staff = "lower" {
   \clef bass
   \key a \major
   \time 4/4
-  fis8 cis'8 fis4 d,8 a'8 e'4 ~ |
+  \relative c { fis8 cis'8 fis4 d,8 a'8 e'4 ~ |
   e1 |
   fis,8 cis'8 fis4 d,8 a'8 e'4 ~ |
   e1 |
@@ -45,13 +47,8 @@ lower = \relative c {
   a,,8 e'8 cis'4 gis8 b8 e4 |
   fis,8 cis'8 fis8 fis,8 d8 a'8 e'8 d,8 |
   a8 e'8 cis'8 a,8 e'8 b'8 e8 e,8 |
-  fis8 cis'8 fis8 fis,8 d8 a'8 e'8 d,8 
+  fis8 cis'8 fis8 fis,8 d8 a'8 e'8 d,8 }
 }
-
-\score {
-  \new PianoStaff <<
-     \new Staff = "upper" \upper
-     \new Staff = "lower" \lower
   >>
   
   \layout { }

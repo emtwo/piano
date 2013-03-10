@@ -2,7 +2,7 @@
 
  \header {
   title = "I'm a Little Teapot"
-  composer = "Traditional"
+  composer = "G. H. Sanders & C. Z. Kelley"
 }
 
 \score {
@@ -13,7 +13,7 @@
    \clef treble
    \key c \major
    \time 4/4
-   \tempo "Lively" 4 = 132
+   \tempo "Vivace" 4 = 132
    \set Score.tempoHideNote = ##t
    \relative c' { r1 d2 g2 e2 g2 d2. r4
                   r1 r1 r1 r1
