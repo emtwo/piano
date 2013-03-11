@@ -14,8 +14,8 @@ public class ExamParserListener extends AdapterParserListener {
     private static final double attach_thres = 0.8; //attach a note if it's within 80% of its duration from starting time
     private static final double wrong_note_penalty = -1.0;
     private static final double correct_note_bonus = 2.0;
-    private static final double correct_note_dropoff = 200.0; //correct bonus score drops off 1/2 for this much offset
-    private static final double min_tempo = 0.6, max_tempo = 1.4; //min and max tempo variations
+    private static final double correct_note_dropoff = 100.0; //correct bonus score drops off 1/2 for this much offset
+    private static final double min_tempo = 0.6, max_tempo = 3.0; //min and max tempo variations
     private static final double granularity = 0.000001; //attempt to find best tempo to this degree
 
     private int state;
@@ -115,7 +115,7 @@ public class ExamParserListener extends AdapterParserListener {
         // change all the times
         if (attach) {
             for (NotePanel ghost : notes) {
-                ghost.setMillisTime((long) (ghost.getMillisTime() * scale));
+                ghost.setMillisTime(Math.round(ghost.getMillisTime() * scale));
             }
         }
 
@@ -124,7 +124,13 @@ public class ExamParserListener extends AdapterParserListener {
 
         for (NotePanel ghost : notes) {
 
-            long ghostTime = (long) (ghost.getMillisTime() * scale);
+            long ghostTime;
+
+            if (attach) {
+                ghostTime = ghost.getMillisTime();
+            } else {
+                ghostTime = Math.round(ghost.getMillisTime() * scale);
+            }
 
             // move bounding chords up until the current ghost note is between them
             for (int layer = 0; layer < S.staves; ++layer) {
@@ -145,7 +151,7 @@ public class ExamParserListener extends AdapterParserListener {
                             break;
                         }
                         Chord chord = S.allChords[layer].get(c[layer] + i);
-                        if (chord.contains(ghost)) {
+                        if (chord.find(ghost) != null) {
                             long offSet = Math.abs(chord.getMillisTime() - ghostTime);
                             if (matchOffset == -1L || offSet < matchOffset) {
                                 attachedLayer = layer;
@@ -172,10 +178,10 @@ public class ExamParserListener extends AdapterParserListener {
             } else {
                 Chord chord = S.allChords[attachedLayer].get(c[attachedLayer]);
                 Chord nextChord = S.allChords[attachedLayer].get(c[attachedLayer] + 1);
-                if (chord.contains(ghost)) {
+                if (chord.find(ghost) != null && chord.find(ghost).getMatchedGhost() == null) {
                     attachedChord = chord;
                     referenceNote = nextChord.notes.firstElement();
-                } else if (nextChord.contains(ghost)) {
+                } else if (nextChord.find(ghost) != null) {
                     attachedChord = nextChord;
                     referenceNote = chord.notes.firstElement();
                 } else if (ghostTime <= chord.getMillisTime() + attach_thres * chord.getMillisDuration()) {

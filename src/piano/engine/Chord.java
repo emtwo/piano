@@ -53,13 +53,13 @@ public class Chord implements Serializable {
         return this;
 	}
 
-    public boolean contains(NotePanel note) {
+    public NotePanel find(NotePanel note) {
         for (NotePanel n : notes) {
             if (n.getValue().equals(note.getValue())) {
-                return true;
+                return n;
             }
         }
-        return false;
+        return null;
     }
 
 	public int size() {
