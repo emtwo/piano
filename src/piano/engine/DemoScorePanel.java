@@ -37,6 +37,7 @@ public class DemoScorePanel extends BaseScorePanel {
 
     protected void finish() {
         super.finish();
+        playing = false;
         refresh();
     }
 }
