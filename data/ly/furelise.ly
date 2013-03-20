@@ -1,7 +1,7 @@
 \version "2.16.0"
 
  \header {
-  title = "Für Elise"
+  title = "Für Elise Modified"
   subtitle = "Clavierstuck in A Minor - WoO 59"
   composer = "Ludwig van Beethoven"
   mutopiatitle = "Für Elise"
@@ -28,15 +28,21 @@
  \time 3/8
  \override Score.MetronomeMark #'transparent = ##t
  \tempo "Andante" 4 = 72
- \repeat volta 2 {
- \partial 8 e''16\pp^\markup { \bold "Poco moto." } dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' gis' b'
- c''8 r16 e' e'' dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' c'' b' }
- \alternative { { a'4 } { a'8 \bar "" r16 b' \partial 8 c''16 d'' } }
- \repeat volta 2 {
+ \partial 8 { e''16\pp^\markup { \bold "Poco moto." } dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' gis' b'
+ c''8 r16 e' e'' dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' c'' b' a'4 e''16 dis''
+| % 9
+e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' gis' b'
+ c''8 r16 e' e'' dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' c'' b'  a'8 r16 b' c''16 d'' }
+ |% 17
+ {
  e''8. g'16[ f'' e''] d''8. f'16[ e'' d''] c''8. e'16[ d'' c''] b'8 r16 e'[ e''] r r e''[ e'''] r r dis''
  e''8 r16 dis'' e'' dis'' e''16 dis'' e'' b' d'' c''
- a'8 r16 c' e' a' b'8 r16 e' gis' b' c''8 r16 e' e'' dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' c'' b' }
- \alternative { { a'8 r16 b'[ c'' d''] } { a'8 r16 <e' c''>[ <f' c''> <e' g' c''>] } }
+ a'8 r16 c' e' a' b'8 r16 e' gis' b' c''8 r16 e' e'' dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' c'' b' a'8 r16 b'[ c'' d'']
+ | % 30
+  e''8. g'16[ f'' e''] d''8. f'16[ e'' d''] c''8. e'16[ d'' c''] b'8 r16 e'[ e''] r r e''[ e'''] r r dis''
+ e''8 r16 dis'' e'' dis'' e''16 dis'' e'' b' d'' c''
+ a'8 r16 c' e' a' b'8 r16 e' gis' b' c''8 r16 e' e'' dis'' e'' dis'' e'' b' d'' c'' a'8 r16 c' e' a' b'8 r16 e' c'' b' a'8 r16 <e' c''>[ <f' c''> <e' g' c''>]
+ }
 
  \grace { f'16[ a'] } c''4 f''16. e''32 e''8([ d'']) bes''16. a''32 a''16( g'' f'' e'' d'' c'')
  bes'8[ a'] \appoggiatura bes'32 a'32[ g' a' bes'] c''4 d''16[ dis''] e''8. e''16[ f'' a'] c''4 d''16. b'32
@@ -70,18 +76,26 @@
  \clef bass
  \key a \minor
  \time 3/8
- \repeat volta 2 {
- \partial 8 r8\pp R4. a,16\sustainOn e a r16 r8\sustainOff e,16\sustainOn e gis r r8\sustainOff
+ \partial 8 { r8\pp R4. a,16\sustainOn e a r16 r8\sustainOff e,16\sustainOn e gis r r8\sustainOff
  a,16\sustainOn e a r r8\sustainOff R4. a,16\sustainOn e a r r8\sustainOff
- e,16\sustainOn e gis r r8\sustainOff }
- \alternative { { a,16 e a r } { a,16[ e \bar "" a16] r \partial 8 r8 } }
- \repeat volta 2 {
+ e,16\sustainOn e gis r r8\sustainOff  a,16 e a r r8
+  | % 9
+  R4. a,16\sustainOn e a r16 r8\sustainOff e,16\sustainOn e gis r r8\sustainOff
+ a,16\sustainOn e a r r8\sustainOff R4. a,16\sustainOn e a r r8\sustainOff
+ e,16\sustainOn e gis r r8\sustainOff a,16[ e \bar "" a16] r r8 }
+ | % 17
+ {
  c16\sustainOn g c' r r8\sustainOff g,16\sustainOn g b r r8\sustainOff
  a,16\sustainOn e a r r8 e,16 e e' r r \clef treble e'16[ e''] r r dis''[ e''] r\sustainOff r16 dis''[ e''] r r8 R4.
  \clef bass a,16\sustainOn e a r16 r8\sustainOff e,16\sustainOn e gis r r8\sustainOff
  a,16\sustainOn e a r r8\sustainOff R4. a,16\sustainOn e a r r8\sustainOff
- e,16\sustainOn e gis r r8\sustainOff }
- \alternative { { a,16 e a r r8 } { a,16[ e a] <bes c'>[ <a c'> <g bes c'>] } }
+ e,16\sustainOn e gis r r8\sustainOff a,16 e a r r8
+ | % 30
+  c16\sustainOn g c' r r8\sustainOff g,16\sustainOn g b r r8\sustainOff
+ a,16\sustainOn e a r r8 e,16 e e' r r \clef treble e'16[ e''] r r dis''[ e''] r\sustainOff r16 dis''[ e''] r r8 R4.
+ \clef bass a,16\sustainOn e a r16 r8\sustainOff e,16\sustainOn e gis r r8\sustainOff
+ a,16\sustainOn e a r r8\sustainOff R4. a,16\sustainOn e a r r8\sustainOff
+ e,16\sustainOn e gis r r8\sustainOff  a,16[ e a] <bes c'>[ <a c'> <g bes c'>] }
 
  f16 a c' a c' a f bes d' bes d' bes f e' <f g bes> e' <f g bes> e' f a c' a c' a f a c' a c' a e a c' a <d d'> f
  g16 e' g e' g f' \clef treble <c' e'>8 r16 <f' g'>[ <e' g'> <d' f' g'>] <c' e' g'>8 \clef bass <f a>8[ <g b>]
@@ -97,7 +111,7 @@
  <e, a,> <e, a,> <e, a,> <e, a,> <e, gis,> <e, gis,> <a,, a,> a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
  bes, bes, bes, bes, bes, bes, bes, bes, bes, bes, bes, bes, bes, bes, bes, bes, bes, bes,
  b,! b, b, b, b, b, c4 r8 <e gis>8 r r
- a,,8\sustainOn r <a c' e'> <a c' e'> r <a c' e'> <a c' e'> r <a c' e'> <a c' e'> r r R4.
+ a,8\sustainOn r <a c' e'> <a c' e'> r <a c' e'> <a c' e'> r <a c' e'> <a c' e'> r r R4.
 
  R4.\sustainOff a,16\sustainOn e a r r8\sustainOff e,16\sustainOn e gis r r8\sustainOff
  a,16\sustainOn e a r r8\sustainOff R4.
@@ -106,7 +120,7 @@
  a,16\sustainOn e a r r8\sustainOff e,16\sustainOn e( e') r r
  \clef treble e'16([ e'']) r r dis''([ e'']) r\sustainOff r dis''([ e'']) r r8 R4.
  \clef bass a,16\sustainOn e a r16 r8\sustainOff e,16\sustainOn e gis r r8\sustainOff a,16 e a r r8 R4.
- a,16\sustainOn e a r r8\sustainOff e,16\sustainOn e gis r r8\sustainOff <a,, a,>8 r \bar "|."
+ a,16\sustainOn e a r r8\sustainOff e,16\sustainOn e gis r r8\sustainOff < a,>8 r \bar "|."
 }
 >>
 
