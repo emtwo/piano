@@ -3,6 +3,7 @@ package piano.engine;
 import org.jfugue.elements.*;
 
 import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -40,14 +41,14 @@ public class PracticeParserListener extends ChordParserListener {
         }
     }
 
-    public void chordEvent(Vector<Note> chord) {
+    public void chordEvent(ArrayList<Note> chord) {
         for (NotePanel notePanel : expectedChords.get(nextExpected).notes) {
             boolean matches = false;
-            for (int i = 0; i < chord.size(); ++i) {
-                Note note = chord.get(i);
-                if (note.getValue() == notePanel.getValue()) {
+            while (!chord.isEmpty()) {
+                byte val = chord.get(0).getValue();
+                chord.remove(0);
+                if (val == notePanel.getValue()) {
                     matches = true;
-                    chord.remove(i);
                     break;
                 }
             }

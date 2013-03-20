@@ -105,8 +105,8 @@ public class KeyboardParserListener extends ChordParserListener {
 	}
 
   @Override
-  public void chordEvent(Vector<Note> chord) {
-    callback.informChordPressed(new ArrayList<Note>(chord));
+  public void chordEvent(ArrayList<Note> chord) {
+    callback.informChordPressed(chord);
   }
 
 	@Override
