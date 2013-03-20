@@ -11,34 +11,35 @@ import piano.repository.Song;
 import piano.repository.SongDatabaseAccessor;
 
 public class TestSongDatabaseAccessor {
-	/*
+
 	@Test
 	public void testAddSongFetchAllSongs() throws SQLException {
 		SongDatabaseAccessor accessor = SongDatabaseAccessor.getDatabaseAccessor();
 		accessor.wipe();
 
 		// Create strings to be used to create Song.
-		final String midiPath  = "music/midi/Sometimes.mid";
-		final String imagePath = "music/images/britney_spears.jpg";
-		final String title     = Song.getSongTitle(midiPath);
-		final String author    = "Britney Spears";
-		final String category  = "Pop";
+    final String title     = "Fur Elise";
+    final String subtitle  = "Subtitle";
+    final String composer  = "Beethoven";
+    final String style     = "Classical";
+    final String date      = "Some Date";
+    final String copyright = "1990";
+    final String name      = "id";
 
 		// Create & add song to database.
-		Song song = new Song(midiPath, imagePath, title, author, category);
+		Song song = new Song(title, subtitle, composer, style, date, copyright, name);
 		accessor.addSong(song);
 
 		List<Song> songsInDB = accessor.getAllSongs();
 
 		// Test the item we added is correctly the only one in the database.
 		assertEquals(1, songsInDB.size());
-		assertEquals(midiPath,  songsInDB.get(0).midiPath);
-		assertEquals(imagePath, songsInDB.get(0).imagePath);
-		assertEquals(title,     songsInDB.get(0).title);
-		assertEquals(author,    songsInDB.get(0).author);
-		assertEquals(category,  songsInDB.get(0).category);
+		assertEquals(title,    songsInDB.get(0).title);
+		assertEquals(subtitle, songsInDB.get(0).subtitle);
+		assertEquals(composer, songsInDB.get(0).composer);
+		assertEquals(style,    songsInDB.get(0).style);
+		assertEquals(date,     songsInDB.get(0).date);
 
 		accessor.close();
 	}
-	*/
 }
