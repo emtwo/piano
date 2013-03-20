@@ -1,7 +1,7 @@
 \version "2.16.0"
 
  \header {
-  title = "Für Elise Modified"
+  title = "Für Elise"
   subtitle = "Clavierstuck in A Minor - WoO 59"
   composer = "Ludwig van Beethoven"
   mutopiatitle = "Für Elise"
