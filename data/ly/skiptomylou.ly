@@ -2,7 +2,7 @@
   title = "Skip to My Lou"
   composer = "American Frontier Song"
 }
-\version "2.16.0"
+\version "2.15.40"
 
 \score {
   \new PianoStaff <<

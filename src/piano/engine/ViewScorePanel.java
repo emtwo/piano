@@ -3,6 +3,7 @@ package piano.engine;
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 public class ViewScorePanel extends BaseScorePanel {
 
@@ -14,15 +15,13 @@ public class ViewScorePanel extends BaseScorePanel {
         //listen for keystrokes
         leftAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent arg0) {
-                setPage(page - 1);
-                repaint();
+                prevPage();
 			}
         };
 
         rightAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent arg0) {
-                setPage(page + 1);
-                repaint();
+                nextPage();
 			}
         };
 
@@ -35,9 +34,27 @@ public class ViewScorePanel extends BaseScorePanel {
 
 	}
 
+    public void nextPage() {
+        setPage(page + 1);
+        repaint();
+    }
+
+    public void prevPage() {
+        setPage(page - 1);
+        repaint();
+    }
+
+    protected void mouseClickedNoButton(MouseEvent e) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            nextPage();
+        } else if (SwingUtilities.isRightMouseButton(e)) {
+            prevPage();
+        }
+    }
+
     @Override
     String getHelpText() {
-        return "Press space to go to the next page, or use the left and right arrow keys to navigate";
+        return "Press space to go to the next page, or click/right click to navigate";
     }
 
 }

@@ -3,6 +3,7 @@ package piano.engine;
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 public class DemoScorePanel extends BaseScorePanel {
 
@@ -16,13 +17,7 @@ public class DemoScorePanel extends BaseScorePanel {
 
         startPlayAction = new AbstractAction() {
             public void actionPerformed(ActionEvent arg0) {
-                if (!playing) {
-                    playing = true;
-                    play();
-                } else {
-                    refresh();
-                    playing = false;
-                }
+                playPause();
             }
         };
 
@@ -30,9 +25,23 @@ public class DemoScorePanel extends BaseScorePanel {
         this.getActionMap().put("space", startPlayAction);
     }
 
+    public void playPause() {
+        if (!playing) {
+            playing = true;
+            play();
+        } else {
+            refresh();
+            playing = false;
+        }
+    }
+
+    protected void mouseClickedNoButton(MouseEvent e) {
+        playPause();
+    }
+
     @Override
     String getHelpText() {
-        return "Press space to start and stop the demo";
+        return "Press space or click to start and stop the demo";
     }
 
     protected void finish() {

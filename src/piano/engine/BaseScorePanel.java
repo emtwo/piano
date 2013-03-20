@@ -21,7 +21,7 @@ public abstract class BaseScorePanel extends Drawing {
     protected BufferedImage currImage;
     protected PianoAdapterParser piano = PianoAdapterParser.instance();
     protected boolean mute = true;
-    protected Runnable playNextTogetherNote, playNextRightNote, playNextLeftNote, nextPage, finishPlaying, clearMenu;
+    protected Runnable playNextTogetherNote, playNextRightNote, playNextLeftNote, turnPage, finishPlaying, clearMenu;
     protected ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     protected int[] currChords;
     protected Vector<ScheduledFuture> futures = new Vector<ScheduledFuture>();
@@ -80,7 +80,7 @@ public abstract class BaseScorePanel extends Drawing {
             }
         };
 
-        nextPage = new Runnable() {
+        turnPage = new Runnable() {
             public void run() {
                 setPage(page + 1);
                 repaint();
@@ -180,7 +180,7 @@ public abstract class BaseScorePanel extends Drawing {
                 if (time[0] == time[1]) {
                     futures.add(scheduler.schedule(playNextTogetherNote, startTime + time[0], TimeUnit.MILLISECONDS));
                     if (S.allChords[0].get(cNote[0]).getPage() > cPage) {
-                        futures.add(scheduler.schedule(nextPage, startTime + time[0], TimeUnit.MILLISECONDS));
+                        futures.add(scheduler.schedule(turnPage, startTime + time[0], TimeUnit.MILLISECONDS));
                         ++cPage;
                     }
                     for (int layer = 0; layer < S.staves; ++layer) {
@@ -246,12 +246,19 @@ public abstract class BaseScorePanel extends Drawing {
         }
     }
 
+    abstract protected void mouseClickedNoButton(MouseEvent e);
+
     public void mouseClicked(MouseEvent e) {
         if (mainMenu.setMouseClicked(e.getX(), e.getY())) {
             refresh();
             JFrameStack.popPanel();
+            repaint();
+        } else if (helpButton.setMouseClicked(e.getX(), e.getY())) {
+
+        } else {
+            mouseClickedNoButton(e);
         }
-        repaint();
+
     }
 
     @Override

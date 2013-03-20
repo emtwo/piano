@@ -2,7 +2,7 @@
   title = "G Major Scale"
   composer = "-"
 }
-\version "2.16.0"
+\version "2.15.40"
 
 \score {
   \new PianoStaff <<

@@ -2,7 +2,7 @@
   title = "Minuet in G"
   composer = "Bach"
 }
-\version "2.16.0"
+\version "2.15.40"
 
 \score {
   \new PianoStaff <<
