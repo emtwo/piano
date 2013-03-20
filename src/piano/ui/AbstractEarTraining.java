@@ -165,10 +165,11 @@ public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
     g.setColor(Color.BLUE);
     String text = "Score: " + score + " / " + (roundNum - 1);
     int adv = metrics.stringWidth(text);
+	int xPos = (WIDTH - adv) + 98;
     g.drawString(text, (WIDTH - adv) + 98, 75);
 
     text = "Streak: " + streakCount;
-    g.drawString(text, (WIDTH - adv) + 155, 120);
+    g.drawString(text, xPos, 120);
 
     // Set font and colour
     g.setColor(Color.BLACK);
