@@ -1,9 +1,10 @@
 package piano.ui;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
 
 import piano.ui.buttons.ButtonType;
 
@@ -15,6 +16,7 @@ public class PianoUI extends Drawing implements ButtonClickCallback {
 
 	private NotesToPlayData data;
 	private KeyboardView keyboard;
+    private Image bg_image;
 
 	public PianoUI() throws IOException {
 		super();
@@ -23,6 +25,7 @@ public class PianoUI extends Drawing implements ButtonClickCallback {
 		data.maxKey = 71;
 		data.numOctaves = 1;
 
+        bg_image = ImageIO.read(new File("data/music_background.jpg"));
 		HashMap<Integer, String> menuData = new HashMap<Integer, String>();
 		menuData.put(64, "Play");
 		menuData.put(67, "Ear Training");
@@ -40,20 +43,8 @@ public class PianoUI extends Drawing implements ButtonClickCallback {
 		g.setColor(Color.white);
 	  g.fillRect(0, 0, getWidth(), getHeight());
 
-		// draw entire component grey
-    g.setColor(Fonts.main_color);
-    g.fillRect(0, 0, getWidth(), getHeight());
-
-    // Write title.
-		g.setColor(Color.BLACK);
-		g.setFont(Fonts.big);
-		g.drawString("Piano", 20, 150);
-		g.drawString("Like a", 20, 200);
-		g.drawString("Pro", 20, 250);
-
-		// Write "by Mastodon".
-		g.setFont(Fonts.italic);
-		g.drawString("By: Mastodon", 20, 300);
+        // draw background image
+        g.drawImage(bg_image, 0, 0, null);
 
 		// Draw piano image
 		keyboard.setDimensions(250, 0, getWidth(), getHeight());
