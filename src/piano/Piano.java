@@ -112,7 +112,7 @@ public class Piano {
 
   public static void createAndShowGUI() throws IOException {
     //Create and set up the window.
-    JFrame frame = new JFrame("Piano Like a Pro");
+    JFrame frame = new JFrame("Rhapsody");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     JFrameStack.setJFrameStack(frame);
 
