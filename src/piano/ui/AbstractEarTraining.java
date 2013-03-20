@@ -15,12 +15,13 @@ import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
 import piano.ui.buttons.ReplayButton;
 
-public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
+public abstract class AbstractEarTraining extends Drawing implements KeyPressedCallback {
 
   protected final int WIDTH;
   protected String TITLE;
   protected static final String MIDDLE_C = "Middle C";
 
+  protected NotesToPlayData data;
   protected int roundNum = 0;
   protected int score = 0;
   protected int streakCount = 0;

@@ -263,7 +263,7 @@ public class KeyboardView extends Drawing {
 		int keyXVal = xVal;
 		int blackKeyXVal = keyXVal + (keyWidth - blackKeyWidth / 2);
 		for (int i = noteData.minKey; i < noteData.maxKey + 1; i++) {
-			if (KeyboardParserListener.isSharp(i)) {
+			if (Utils.isSharp(i)) {
 				blackKeyList.add(new KeyboardKey("", blackKeyXVal, yVal, blackKeyWidth, (int) (height * 0.6), true, i));
 				blackKeyXVal += keyWidth;
 			} else {
@@ -297,7 +297,7 @@ public class KeyboardView extends Drawing {
 		int keyYVal = yVal;
 		int blackKeyYVal = keyYVal + (keyWidth - blackKeyWidth / 2);
 		for (int i = noteData.minKey; i < noteData.maxKey + 1; i++) {
-			if (KeyboardParserListener.isSharp(i)) {
+			if (Utils.isSharp(i)) {
 				blackKeyList.add(new KeyboardKey("", xVal, blackKeyYVal, (int) (width * 0.6), blackKeyWidth, true, i));
 				blackKeyYVal += keyWidth;
 			} else {
@@ -354,7 +354,7 @@ public class KeyboardView extends Drawing {
 	}
 
 	public boolean isSharp(int i) {
-		return KeyboardParserListener.isSharp(i);
+		return Utils.isSharp(i);
 	}
 
     public void addColorData(HashMap<Integer, Color> ls) {
