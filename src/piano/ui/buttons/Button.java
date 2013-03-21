@@ -2,8 +2,12 @@ package piano.ui.buttons;
 
 import java.awt.*;
 
-import javax.swing.JFrame;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+
+import org.jdesktop.swingx.JXPanel;
 
 import piano.ui.ButtonClickCallback;
 import piano.ui.Drawing;

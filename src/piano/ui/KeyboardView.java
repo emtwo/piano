@@ -283,7 +283,7 @@ public class KeyboardView extends Drawing {
 		int blackKeyXVal = keyXVal + (keyWidth - blackKeyWidth / 2);
 		for (int i = noteData.minKey; i < noteData.maxKey + 1; i++) {
 			if (Utils.isSharp(i)) {
-				blackKeyList.add(new KeyboardKey("", blackKeyXVal, yVal, blackKeyWidth, (int) (height * 0.6), true, i));
+				blackKeyList.add(new KeyboardKey("", blackKeyXVal, yVal + 3, blackKeyWidth, (int) (height * 0.6), true, i));
 				blackKeyXVal += keyWidth;
 			} else {
 				keyList.add(new KeyboardKey("", keyXVal, yVal, keyWidth, height, false, i));
@@ -322,12 +322,12 @@ public class KeyboardView extends Drawing {
 			} else {
 				String data = menuData.get(i);
 				if (data != null) {
-				  KeyboardKey k = new KeyboardKey(data, xVal, keyYVal, width, keyWidth, false, i);
+				  KeyboardKey k = new KeyboardKey(data, xVal - 3, keyYVal, width, keyWidth, false, i);
 				  if (colorData != null && colorData.get(i) != null)
 				    k.setHoverColor(colorData.get(i));
 				  keyList.add(k);
 				} else {
-					keyList.add(new KeyboardKey("", xVal, keyYVal, width, keyWidth, false, i));
+					keyList.add(new KeyboardKey("", xVal - 3, keyYVal, width, keyWidth, false, i));
 				}
 				keyYVal += keyWidth;
 			}
