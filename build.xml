@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="piano">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../Desktop/eclipse"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit_4.8.2.v4_8_2_v20110321-1705/junit.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+    </path>
+    <path id="piano.classpath">
+        <pathelement location="bin"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+        <pathelement location="jfugue-4.1.0-SNAPSHOT.jar"/>
+        <pathelement location="log4j-1.2.17.jar"/>
+        <pathelement location="sqlitejdbc-v056.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="piano.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="KeyboardView">
+        <java classname="piano.ui.KeyboardView" failonerror="true" fork="yes">
+            <classpath refid="piano.classpath"/>
+        </java>
+    </target>
+    <target name="Piano">
+        <java classname="piano.Piano" failonerror="true" fork="yes">
+            <classpath refid="piano.classpath"/>
+        </java>
+    </target>
+    <target name="PianoUI">
+        <java classname="piano.ui.PianoUI" failonerror="true" fork="yes">
+            <classpath refid="piano.classpath"/>
+        </java>
+    </target>
+    <target name="TestFrames">
+        <java classname="piano.TestFrames" failonerror="true" fork="yes">
+            <classpath refid="piano.classpath"/>
+        </java>
+    </target>
+    <target name="TestSong">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestSong" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="TestSongDatabase">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestSongDatabase" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="TestSongDatabaseAccessor">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestSongDatabaseAccessor" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="TestAbstractEarTraining">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestAbstractEarTraining" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="TestPitchTrainingLogic">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestPitchTrainingLogic" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="TestAdvancedPitchTrainingLogic">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestAdvancedPitchTrainingLogic" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="TestIntervalTrainingLogic">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestIntervalTrainingLogic" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="TestChordTrainingLogic">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestChordTrainingLogic" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="TestChordTrainingLogic.testAlwaysCChord">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestChordTrainingLogic" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="TestAdvancedChordTrainingLogic">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestAdvancedChordTrainingLogic" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="piano.test">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestAbstractEarTraining" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestAdvancedChordTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestAdvancedPitchTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestChordTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestIntervalTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestPitchTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestSongDatabase" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestSongDatabaseAccessor" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="test">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="piano.test.TestAbstractEarTraining" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestAdvancedChordTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestAdvancedPitchTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestChordTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestIntervalTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestPitchTrainingLogic" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestSongDatabase" todir="${junit.output.dir}"/>
+            <test name="piano.test.TestSongDatabaseAccessor" todir="${junit.output.dir}"/>
+            <classpath refid="piano.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
