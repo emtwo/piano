@@ -17,7 +17,6 @@ import piano.ui.buttons.MainMenuButton;
 public class IntervalTrainingUI extends AbstractEarTraining {
 
 	private static final String HELP_TEXT = "Observe the first note and listen to the second note. Play the note you think the second one is. Green means correct, red means incorrect.";
-	private NotesToPlayData data;
 
 	public IntervalTrainingUI() {
 		super();

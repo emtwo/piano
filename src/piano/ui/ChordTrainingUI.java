@@ -16,7 +16,6 @@ import piano.ui.buttons.MainMenuButton;
 public class ChordTrainingUI extends AbstractEarTraining {
 
   private static final String HELP_TEXT = "Listen to the note and play the note you think it is. Green means correct, red means incorrect.";
-  private NotesToPlayData data;
   private ArrayList<ArrayList<Integer>> chordDifferences = new ArrayList<ArrayList<Integer>>();
 
   public ChordTrainingUI() {

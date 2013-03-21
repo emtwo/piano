@@ -2,6 +2,8 @@ package piano;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jfugue.elements.Note;
 
@@ -9,6 +11,14 @@ public class Utils {
 	// First width/height are to be nested in B.
 	public static Point centerDrawing(int width, int height, Point B, int width2, int height2) {
 		return new Point(B.x + (width2/2 - width/2), B.y + (height2/2 - height/2));
+	}
+
+	public static boolean isSharp(int i) {
+	  int mod = i % 12;
+	  if (mod == 1 || mod == 3 || mod == 6 || mod == 8 || mod == 10) {
+	    return true;
+	  }
+	  return false;
 	}
 
 	public static boolean chordsEqual(ArrayList<Note> c1, ArrayList<Note> c2) {
