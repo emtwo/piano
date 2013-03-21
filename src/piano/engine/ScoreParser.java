@@ -79,6 +79,7 @@ public class ScoreParser implements ParserListener {
 
     private void invokeLilyPond() {
         exec("convert-ly -e data/ly/" + name + ".ly");
+        exec("rm data/ly/" + name + ".ly~");
         exec("lilypond --png -dresolution=72 --ps --output=data/out/" + name + " data/ly/" + name + ".ly");
     }
 

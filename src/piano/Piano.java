@@ -21,7 +21,7 @@ public class Piano {
 
 	public Piano() throws IOException {
 	  boolean softInstall = false;
-      boolean hardInstall = false;
+      boolean hardInstall = true;
 
 	  if (hardInstall) {
       ScoreParser.hardInstall = true;
