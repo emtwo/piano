@@ -2,9 +2,7 @@ package piano.ui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,7 +15,6 @@ import piano.ui.buttons.MainMenuButton;
 public class IntervalTrainingUI extends AbstractEarTraining {
 
 	private static final String HELP_TEXT = "Observe the first note and listen to the second note. Play the note you think the second one is. Green means correct, red means incorrect.";
-	private NotesToPlayData data;
 
 	public IntervalTrainingUI() {
 		super();
@@ -43,10 +40,18 @@ public class IntervalTrainingUI extends AbstractEarTraining {
 	}
 
   @Override
+  public ArrayList<Note> getIgnoreInput() {
+    return nextNotesList.get(0).chord;
+  }
+
+  @Override
   public String getNewPlayString() {
     nextNotesList = new ArrayList<ChordToColourMap>();
     int interval = (0 + (int)(Math.random() * 17)) - 8;
     int noteToPlay = (60 + (int)(Math.random() * ((71 - 60) + 1)));
+    if (interval == 0) {
+      interval++;
+    }
     Colour colour;
     if (keyboard.isSharp(noteToPlay + interval)) {
       colour = Colour.BLACK;

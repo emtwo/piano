@@ -15,13 +15,14 @@ import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
 import piano.ui.buttons.ReplayButton;
 
-public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
+public abstract class AbstractEarTraining extends Drawing implements KeyPressedCallback {
 
   protected final int WIDTH;
   protected String TITLE;
   protected static final String MIDDLE_C = "Middle C";
 
-  protected int roundNum = 0;
+  protected NotesToPlayData data;
+  protected int roundNum = 1;
   protected int score = 0;
   protected int streakCount = 0;
   protected KeyboardView keyboard;
@@ -121,6 +122,7 @@ public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
 
   @Override
   public void informKeyValid(boolean valid) {
+    roundNum++;
     if (valid) {
       score++;
       streakCount++;
@@ -131,7 +133,6 @@ public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
 
   @Override
   public void roundComplete() {
-    roundNum++;
     printRound = true;
     repaint();
     try {
@@ -141,6 +142,11 @@ public class AbstractEarTraining extends Drawing implements KeyPressedCallback {
     }
     printRound = false;
     repaint();
+  }
+
+  @Override
+  public ArrayList<Note> getIgnoreInput() {
+    return null;
   }
 
   @Override

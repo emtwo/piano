@@ -24,15 +24,16 @@ public class Piano {
       boolean hardInstall = false;
 
 	  if (hardInstall) {
-	    populateDatabase();		// Note: this is some pre-processing that should be done as an "install"
-        ScoreParser.hardInstall = true;
-        renderScores();
-      }
+      ScoreParser.hardInstall = true;
+      renderScores();
+    }
 
-      if (softInstall) {
-          ScoreParser.hardInstall = false;
-          renderScores();
-      }
+	  if (softInstall) {
+	    ScoreParser.hardInstall = false;
+      renderScores();
+	  }
+
+	  populateDatabase();   // Note: this is some pre-processing that should be done as an "install"
 
     PianoAdapterParser.instance();
     NotePlayer.init(); // this takes some time, so initialize music players

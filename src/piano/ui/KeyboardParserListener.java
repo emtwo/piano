@@ -91,14 +91,6 @@ public class KeyboardParserListener extends ChordParserListener {
 		}
 	}
 
-	public static boolean isSharp(int i) {
-		int mod = i % 12;
-		if (mod == 1 || mod == 3 || mod == 6 || mod == 8 || mod == 10) {
-			return true;
-		}
-		return false;
-	}
-
 	public void clear() {
 		resetKeyColours();
 		callback.clearKeys();
