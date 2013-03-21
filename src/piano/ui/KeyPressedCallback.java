@@ -15,4 +15,5 @@ public interface KeyPressedCallback {
 	public String getPlayString();
 	public void informKeyValid(boolean valid);
   public void roundComplete();
+  public ArrayList<Note> getIgnoreInput();
 }

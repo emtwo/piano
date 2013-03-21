@@ -34,6 +34,7 @@ public class KeyboardView extends Drawing {
 	private NotesToPlayData noteData;
 
 	private AtomicBoolean exitLoop = new AtomicBoolean();
+	private AtomicBoolean replay = new AtomicBoolean();
 	private AtomicInteger keyReleasedCount = new AtomicInteger(0);
 	private AtomicReference<ArrayList<Note>> chordPressed = new AtomicReference<ArrayList<Note>>(null);
 
@@ -108,6 +109,11 @@ public class KeyboardView extends Drawing {
       if (exitLoop.get() == true) {
         break;
       }
+      if (replay.get()) {
+        replay.set(false);
+        NotePlayer.play(keyPressedCallback.getPlayString());
+        setExpectedColours(null);
+      }
       Thread.sleep(100); // Reduce CPU throttling.
     }
     showKeyboardInput = false;
@@ -131,10 +137,14 @@ public class KeyboardView extends Drawing {
 
   // Although we already checked if the chord was played correctly in order to colour it
   // we check here once keys are released because now the correct keys can be shown.
-  private void validateNote() throws InterruptedException {
+  private boolean validateNote() throws InterruptedException {
     Thread.sleep(600);
     keyboardParserListener.clear();
-    if (!Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getExpectedChord())) {
+    if (Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getIgnoreInput())) {
+      System.out.println("the chord is to be ignored");
+      chordPressed.set(null);
+      return false;
+    } else if (!Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getExpectedChord())) {
       Thread.sleep(800);
       //play correct input
       NotePlayer.play(keyPressedCallback.getPlayString());
@@ -147,28 +157,35 @@ public class KeyboardView extends Drawing {
     Thread.sleep(500);
 
     keyboardParserListener.clear();
+    return true;
   }
 
   public void replay() throws InterruptedException {
-    NotePlayer.play(keyPressedCallback.getPlayString());
-    setExpectedColours(null);
+    replay.set(true);
   }
 
 	private void startPlayThread() {
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
+			  boolean validNote = true;
 			  keyPressedCallback.roundComplete();
 				while (!exitLoop.get()) {
 				  try {
 				    Thread.sleep(1000); // Wait for a bit before starting
-				    NotePlayer.play(keyPressedCallback.getNewPlayString());
-	          setExpectedColours(null);
+				    if (validNote) {
+				      NotePlayer.play(keyPressedCallback.getNewPlayString());
+				      setExpectedColours(null);
+				    }
+				    validNote = true;
 	          waitForInput();
 	          if (exitLoop.get() == true) {
               break;
             }
 	          waitForRelease();
-	          validateNote();
+	          if (!validateNote()) {
+	            validNote = false;
+	            continue;
+	          }
 	          keyPressedCallback.roundComplete();
 				  } catch (InterruptedException e) {
 				    e.printStackTrace();
@@ -186,7 +203,9 @@ public class KeyboardView extends Drawing {
 
 	  this.chordPressed.set(chordPressed);
 	  Colour colour;
-	  if (Utils.chordsEqual(chordPressed, keyPressedCallback.getExpectedChord())) {
+	  if (Utils.chordsEqual(chordPressed, keyPressedCallback.getIgnoreInput())) {
+	    colour = Colour.BLUE;
+	  } else if (Utils.chordsEqual(chordPressed, keyPressedCallback.getExpectedChord())) {
 	    colour = Colour.GREEN;
 	    drawCheck = true;
     } else {
@@ -303,12 +322,10 @@ public class KeyboardView extends Drawing {
 			} else {
 				String data = menuData.get(i);
 				if (data != null) {
-                    KeyboardKey k = new KeyboardKey(data, xVal, keyYVal, width, keyWidth, false, i);
-
-                    if (colorData != null && colorData.get(i) != null)
-                        k.setHoverColor(colorData.get(i));
-
-					keyList.add(k);
+				  KeyboardKey k = new KeyboardKey(data, xVal, keyYVal, width, keyWidth, false, i);
+				  if (colorData != null && colorData.get(i) != null)
+				    k.setHoverColor(colorData.get(i));
+				  keyList.add(k);
 				} else {
 					keyList.add(new KeyboardKey("", xVal, keyYVal, width, keyWidth, false, i));
 				}
