@@ -22,7 +22,7 @@ public abstract class AbstractEarTraining extends Drawing implements KeyPressedC
   protected static final String MIDDLE_C = "Middle C";
 
   protected NotesToPlayData data;
-  protected int roundNum = 0;
+  protected int roundNum = 1;
   protected int score = 0;
   protected int streakCount = 0;
   protected KeyboardView keyboard;
@@ -122,6 +122,7 @@ public abstract class AbstractEarTraining extends Drawing implements KeyPressedC
 
   @Override
   public void informKeyValid(boolean valid) {
+    roundNum++;
     if (valid) {
       score++;
       streakCount++;
@@ -132,7 +133,6 @@ public abstract class AbstractEarTraining extends Drawing implements KeyPressedC
 
   @Override
   public void roundComplete() {
-    roundNum++;
     printRound = true;
     repaint();
     try {
@@ -142,6 +142,11 @@ public abstract class AbstractEarTraining extends Drawing implements KeyPressedC
     }
     printRound = false;
     repaint();
+  }
+
+  @Override
+  public ArrayList<Note> getIgnoreInput() {
+    return null;
   }
 
   @Override
