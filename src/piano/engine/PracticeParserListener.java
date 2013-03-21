@@ -42,25 +42,36 @@ public class PracticeParserListener extends ChordParserListener {
     }
 
     public void chordEvent(ArrayList<Note> chord) {
+        int latestNote = 0;
         for (NotePanel notePanel : expectedChords.get(nextExpected).notes) {
             boolean matches = false;
-            while (!chord.isEmpty()) {
-                byte val = chord.get(0).getValue();
-                chord.remove(0);
-                if (val == notePanel.getValue()) {
+            int noteIndex = 0;
+            for (Note note : chord) {
+                if (note.getValue() == notePanel.getValue()) {
                     matches = true;
                     break;
                 }
+                ++noteIndex;
             }
             if (!matches) {
                 return;
+            }
+            if (latestNote < noteIndex) {
+                latestNote = noteIndex;
             }
         }
 
         //if we get here, we have a match
         nextExpected();
+
+        //remove notes earlier than the ones used for the chord
+        ArrayList<Note> newChord = new ArrayList<Note>();
+        for (int i = latestNote + 1; i < chord.size(); ++i) {
+            newChord.add(chord.get(i));
+        }
+
         //fire another chord event for the unused notes
-        chordEvent(chord);
+        chordEvent(newChord);
 
     }
 
