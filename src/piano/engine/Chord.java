@@ -34,7 +34,7 @@ public class Chord implements Serializable {
             return;
         }
 		notes.add(note);
-        if (!note.isRest) {
+        if (!note.isRest && !note.isTie) {
             if (!musicString.isEmpty()) {
                 musicString = musicString.concat("+");
             }

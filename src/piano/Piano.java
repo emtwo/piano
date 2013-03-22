@@ -26,6 +26,8 @@ public class Piano {
 	  if (hardInstall) {
       ScoreParser.hardInstall = true;
       renderScores();
+
+      populateDatabase();
     }
 
 	  if (softInstall) {
@@ -33,7 +35,6 @@ public class Piano {
       renderScores();
 	  }
 
-	  populateDatabase();   // Note: this is some pre-processing that should be done as an "install"
 
     PianoAdapterParser.instance();
     NotePlayer.init(); // this takes some time, so initialize music players
