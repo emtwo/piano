@@ -105,7 +105,13 @@ public class KeyboardView extends Drawing {
   private void waitForInput() throws InterruptedException {
     showKeyboardInput = true;
     // Wait for user to press key
-    while (chordPressed.get() == null) {
+    while (chordPressed.get() == null ||
+        Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getIgnoreInput())) {
+
+      if (Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getIgnoreInput())) {
+        chordPressed.set(null);
+      }
+
       if (exitLoop.get() == true) {
         break;
       }
@@ -137,14 +143,10 @@ public class KeyboardView extends Drawing {
 
   // Although we already checked if the chord was played correctly in order to colour it
   // we check here once keys are released because now the correct keys can be shown.
-  private boolean validateNote() throws InterruptedException {
+  private void validateNote() throws InterruptedException {
     Thread.sleep(600);
     keyboardParserListener.clear();
-    if (Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getIgnoreInput())) {
-      System.out.println("the chord is to be ignored");
-      chordPressed.set(null);
-      return false;
-    } else if (!Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getExpectedChord())) {
+    if (!Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getExpectedChord())) {
       Thread.sleep(800);
       //play correct input
       NotePlayer.play(keyPressedCallback.getPlayString());
@@ -157,7 +159,6 @@ public class KeyboardView extends Drawing {
     Thread.sleep(500);
 
     keyboardParserListener.clear();
-    return true;
   }
 
   public void replay() throws InterruptedException {
@@ -167,25 +168,19 @@ public class KeyboardView extends Drawing {
 	private void startPlayThread() {
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
-			  boolean validNote = true;
 			  keyPressedCallback.roundComplete();
 				while (!exitLoop.get()) {
 				  try {
 				    Thread.sleep(1000); // Wait for a bit before starting
-				    if (validNote) {
-				      NotePlayer.play(keyPressedCallback.getNewPlayString());
-				      setExpectedColours(null);
-				    }
-				    validNote = true;
+				    NotePlayer.play(keyPressedCallback.getNewPlayString());
+				    setExpectedColours(null);
+
 	          waitForInput();
 	          if (exitLoop.get() == true) {
               break;
             }
 	          waitForRelease();
-	          if (!validateNote()) {
-	            validNote = false;
-	            continue;
-	          }
+	          validateNote();
 	          keyPressedCallback.roundComplete();
 				  } catch (InterruptedException e) {
 				    e.printStackTrace();
