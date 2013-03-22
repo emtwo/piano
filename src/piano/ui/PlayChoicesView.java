@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import piano.ui.buttons.ButtonType;
-import piano.ui.buttons.ListButton;
 import piano.ui.buttons.StartButton;
 
 public class PlayChoicesView extends Drawing {
@@ -15,16 +14,16 @@ public class PlayChoicesView extends Drawing {
 
 	public PlayChoicesView(ButtonClickCallback callback) {
 		super();
-		int x = 800 / 3 + 1;
-		int width1 = 133;
-		int width2 = 266;
+		int x = 800 / 3 + 3;
+		int width1 = 128;
+		int width2 = 261;
 		int y = 699;
-		view = new StartButton("View", x, y, width1, 50);
-		demo = new StartButton("Demo", (x + width1), y, width1, 50);
-		practice = new StartButton("Practice", x + width1*2, y, width1, 50);
-		exam = new StartButton("Exam", x + width1*3, y, width1, 50);
-		practicel = new StartButton("Practice (Left)", x, y + 50, width2, 50);
-		practicer = new StartButton("Practice (Right)", x + width2, y + 50, width2, 50);
+		view = new StartButton("View", x, y, width1, 45);
+		demo = new StartButton("Demo", (x + width1 + 5), y, width1, 45);
+		practice = new StartButton("Practice", x + width1*2 + 5*2, y, width1, 45);
+		exam = new StartButton("Exam", x + width1*3 + 5*3, y, width1, 45);
+		practicel = new StartButton("Practice (Left)", x, y + 50, width2, 45);
+		practicer = new StartButton("Practice (Right)", x + width2 + 5, y + 50, width2, 45);
 		this.callback = callback;
 	}
 

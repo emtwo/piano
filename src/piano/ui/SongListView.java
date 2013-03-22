@@ -28,7 +28,7 @@ public class SongListView extends Drawing {
 		try {
 			listSongs = accessor.getAllSongs();
 
-			int y = 73;
+			int y = 30;
 			for (Song song : listSongs) {
 				listButtons.add(new ListButton(song, 0, y, width, 50));
 				y += 50;
@@ -38,7 +38,10 @@ public class SongListView extends Drawing {
 		}
 		scrollDownButton = new ScrollButton(new String("\u25BC"), width / 2, 799 - 50, width / 2, 50);
 		scrollUpButton = new ScrollButton(new String("\u25B2"), 0, 799 - 50, width / 2, 50);
+
 		this.callback = callback;
+		listButtons.get(0).setSelected(true);
+		currentSelection = listButtons.get(0).getSong();
 	}
 
 	@Override
@@ -72,7 +75,7 @@ public class SongListView extends Drawing {
 	    return;
 	  }
     if (scrollUpButton.setMouseClicked(e.getX(), e.getY())) {
-      if (firstButton.getY() >= 72) {
+      if (firstButton.getY() >= 29) {
         scrollUpButton.outButton();
         return;
       }
@@ -83,7 +86,7 @@ public class SongListView extends Drawing {
     }
     for (ListButton button : listButtons) {
       // Don't register clicks on non-visible buttons.
-      if (button.getY() + button.getHeight() < 72 || button.getY() + button.getHeight() > 750) {
+      if (button.getY() + button.getHeight() < 29 || button.getY() + button.getHeight() > 750) {
         continue;
       }
 			if (button.setMouseClicked(e.getX(), e.getY())) {
@@ -102,13 +105,8 @@ public class SongListView extends Drawing {
 	  for (ListButton button : listButtons) {
       button.paintComponent(g);
     }
-    g.setColor(Color.white);
-    g.fillRect(0, 30, 800, 42);
 
 	  g.setColor(Color.BLACK);
-    g.setFont(Fonts.italic);
-		g.drawString("CHOOSE A SONG:", 10, 62);
-		g.drawLine(0, 72, 800, 72);
 		g.drawLine(800 / 3, 30, 800 / 3, 800);
 
 		scrollUpButton.paintComponent(g);

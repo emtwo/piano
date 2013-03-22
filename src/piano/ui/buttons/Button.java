@@ -2,9 +2,7 @@ package piano.ui.buttons;
 
 import java.awt.*;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import piano.ui.ButtonClickCallback;
 import piano.ui.Drawing;
 import piano.ui.Fonts;
