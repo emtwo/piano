@@ -352,7 +352,6 @@ public class ScoreParser implements ParserListener {
                                 //and if so, set its staffline equal to the previous note's
                                 if (prevNote.x < note.x + 1.0) {
                                     note.setStaffLine(prevNote.staffLine);
-                                    System.out.println("YAY");
                                     prevNote = note;
                                     continue;
                                 }

@@ -24,6 +24,7 @@ public abstract class BaseScorePanel extends Drawing {
     protected Runnable playNextTogetherNote, playNextRightNote, playNextLeftNote, turnPage, finishPlaying, clearMenu;
     protected ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     protected int[] currChords;
+    protected int currTogetherChord = 0;
     protected Vector<ScheduledFuture> futures = new Vector<ScheduledFuture>();
     protected ScheduledFuture mouseMoveFuture;
     protected boolean showMenu = false;
@@ -130,6 +131,7 @@ public abstract class BaseScorePanel extends Drawing {
                 chord.play();
             }
             ++currChords[layer];
+            ++currTogetherChord;
         }
     }
 
@@ -150,8 +152,10 @@ public abstract class BaseScorePanel extends Drawing {
         //System.out.println(S.allChords[0].get(currChords[0] - 1).musicString + ": " + S.allChords[0].get(currChords[0] - 1).getMillisTime());
 
         if (!mute) {
-            NotePlayer.play(S.allChords[0].get(currChords[0] - 1).musicString + "+" + S.allChords[1].get(currChords[1] - 1).musicString);
+            S.combinedAllChords.get(currTogetherChord).play();
         }
+
+        ++currTogetherChord;
     }
 
     protected void repaintActiveNotes() {
@@ -164,45 +168,24 @@ public abstract class BaseScorePanel extends Drawing {
 
     public void play() {
         refresh();
-
         long startTime = 100L;
-        long[] time = {0L, 0L};
-        int cNote[] = {0, 0};
         int cPage = 1;
 
-        // schedules all chords to be played
-        if (S.staves > 1) {
-            while (cNote[0] < S.allChords[0].size() && cNote[1] < S.allChords[1].size()) {
-                for (int layer = 0; layer < S.staves; ++layer) {
-                    time[layer] = S.allChords[layer].get(cNote[layer]).getMillisTime();
+        for (Chord chord : S.combinedAllChords) {
+            long time = startTime + chord.getMillisTime();
+            if (chord.layer == 1) {
+                futures.add(scheduler.schedule(playNextRightNote, time, TimeUnit.MILLISECONDS));
+            } else if (chord.layer == 2) {
+                futures.add(scheduler.schedule(playNextLeftNote, time, TimeUnit.MILLISECONDS));
+            } else if (chord.layer == 3) {
+                futures.add(scheduler.schedule(playNextTogetherNote, time, TimeUnit.MILLISECONDS));
+                if (chord.getPage() > cPage) {
+                    futures.add(scheduler.schedule(turnPage, time, TimeUnit.MILLISECONDS));
+                    ++cPage;
                 }
-
-                if (time[0] == time[1]) {
-                    futures.add(scheduler.schedule(playNextTogetherNote, startTime + time[0], TimeUnit.MILLISECONDS));
-                    if (S.allChords[0].get(cNote[0]).getPage() > cPage) {
-                        futures.add(scheduler.schedule(turnPage, startTime + time[0], TimeUnit.MILLISECONDS));
-                        ++cPage;
-                    }
-                    for (int layer = 0; layer < S.staves; ++layer) {
-                        ++(cNote[layer]);
-                    }
-                } else if (time[0] < time[1]) {
-                    futures.add(scheduler.schedule(playNextRightNote, startTime + time[0], TimeUnit.MILLISECONDS));
-                    ++(cNote[0]);
-                } else {
-                    futures.add(scheduler.schedule(playNextLeftNote, startTime + time[1], TimeUnit.MILLISECONDS));
-                    ++(cNote[1]);
-                }
-            }
-        }
-
-        // schedule last notes if one hand finishes before the other or if there is only one hand
-        for (int layer = 0; layer < S.staves; ++layer) {
-            while (cNote[layer] < S.allChords[layer].size()) {
-                time[layer] = S.allChords[layer].get(cNote[layer]).getMillisTime();
-                Runnable r = (layer == 0) ? playNextRightNote : playNextLeftNote;
-                futures.add(scheduler.schedule(r, startTime + time[layer], TimeUnit.MILLISECONDS));
-                ++(cNote[layer]);
+            } else {
+                System.err.println("Error, chord layer is not set properly");
+                System.err.println(chord.layer);
             }
         }
 
@@ -222,6 +205,7 @@ public abstract class BaseScorePanel extends Drawing {
         for (int layer = 0; layer < S.staves; ++layer) {
             currChords[layer] = 0;
         }
+        currTogetherChord = 0;
 
         //set all notes to inactive
         for (Vector<Chord> chords : S.allChords) {

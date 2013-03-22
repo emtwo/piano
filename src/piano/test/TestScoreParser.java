@@ -1,8 +1,10 @@
 package piano.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import piano.engine.Chord;
 import piano.engine.NotePanel;
 import piano.engine.Score;
 import piano.engine.ScoreParser;
@@ -22,6 +24,14 @@ public class TestScoreParser {
         assertEquals(score.combinedChords.size(), 25);
         assertEquals(score.allChords[0].size(), 24);
         assertEquals(score.allChords[1].size(), 29);
+
+        for (Chord chord : score.combinedAllChords) {
+            assertTrue(chord.layer > 0 && chord.layer <= 3);
+        }
+
+        for (Chord chord : score.combinedChords) {
+            assertTrue(chord.layer > 0 && chord.layer <= 3);
+        }
 
         NotePanel firstNoteRightHand = score.allChords[0].get(0).notes.get(0);
         NotePanel firstNoteLeftHand = score.allChords[1].get(0).notes.get(0);

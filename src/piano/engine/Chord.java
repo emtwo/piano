@@ -6,7 +6,7 @@ import java.util.Vector;
 public class Chord implements Serializable {
 	public Vector<NotePanel> notes = new Vector<NotePanel>();
 
-    //private NotePlayer player = new NotePlayer();
+    public int layer = 0;
     public String musicString = "";
 
 	public Chord() {}
@@ -34,10 +34,12 @@ public class Chord implements Serializable {
             return;
         }
 		notes.add(note);
-        if (!musicString.isEmpty()) {
-            musicString = musicString.concat("+");
+        if (!note.isRest) {
+            if (!musicString.isEmpty()) {
+                musicString = musicString.concat("+");
+            }
+            musicString = musicString.concat(note.getMusicString());
         }
-        musicString = musicString.concat(note.getMusicString());
 	}
 
     public void addChord(Chord chord) {
@@ -111,7 +113,9 @@ public class Chord implements Serializable {
     }
 
 	public void play() {
-        NotePlayer.play(musicString);
+        if (!musicString.isEmpty()) {
+            NotePlayer.play(musicString);
+        }
 	}
 
 	public void paint() {

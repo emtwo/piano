@@ -7,11 +7,6 @@ import java.awt.LinearGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 
-import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.image.GaussianBlurFilter;
-import org.jdesktop.swingx.painter.*;
-import org.jdesktop.swingx.painter.effects.ShadowPathEffect;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
