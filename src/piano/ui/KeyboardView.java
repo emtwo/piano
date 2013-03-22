@@ -148,6 +148,9 @@ public class KeyboardView extends Drawing {
     keyboardParserListener.clear();
     if (!Utils.chordsEqual(chordPressed.get(), keyPressedCallback.getExpectedChord())) {
       Thread.sleep(800);
+      if (exitLoop.get() == true) {
+        return;
+      }
       //play correct input
       NotePlayer.play(keyPressedCallback.getPlayString());
       setExpectedColours(Colour.GREEN);
@@ -172,6 +175,9 @@ public class KeyboardView extends Drawing {
 				while (!exitLoop.get()) {
 				  try {
 				    Thread.sleep(1000); // Wait for a bit before starting
+				    if (exitLoop.get() == true) {
+              break;
+            }
 				    NotePlayer.play(keyPressedCallback.getNewPlayString());
 				    setExpectedColours(null);
 
