@@ -3,6 +3,7 @@ package piano.ui.buttons;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
@@ -30,19 +31,24 @@ public class ScrollButton extends Button {
     int adv = metrics.stringWidth(text);
 
     if (overButton) {
-      gc.setColor(Color.ORANGE);
+      GradientPaint gp = new GradientPaint(x, y, Color.black, x, y + height, Color.gray);
+      ((Graphics2D) gc).setPaint(gp);
       gc.fillRect(x, y, width, height);
-      gc.setColor(Color.BLACK);
+      gc.setColor(Color.WHITE);
       gc.drawRect(x, y, width, height);
       gc.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
       return;
     }
 
-    gc.setColor(Color.BLACK);
+    GradientPaint gp = new GradientPaint(x, y, Color.gray, x, y + height, Color.black);
+    ((Graphics2D) gc).setPaint(gp);
+    gc.fillRoundRect(x, y, width, height, 5, 5);
     gc.fillRect(x, y, width, height);
 
     gc.setColor(Color.WHITE);
-    gc.drawRect(x, y, width, height);
     gc.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
+
+    gc.setColor(Color.BLACK);
+    gc.drawRect(x, y, width, height);
   }
 }

@@ -3,6 +3,7 @@ package piano.ui;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -32,8 +33,9 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
 		this.add(helpButton);
 		this.add(mainMenu);
     listView = new SongListView(this);
-    playView = new PlayChoicesView(this);
     previewView = new SongPreviewView();
+    informButtonClicked(ButtonType.SONG_SELECTION, 0);
+    playView = new PlayChoicesView(this);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -50,10 +52,15 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
     g.setColor(Color.white);
     g.fillRect(0, 0, getWidth(), 30);
 
+    GradientPaint gp = new GradientPaint(0, 0, Color.white, 0, 30, Color.LIGHT_GRAY);
+    ((Graphics2D) g).setPaint(gp);
+    g.fillRect(0, 0, getWidth(), 30);
+    g.drawLine(0, 30, getWidth(), 30);
+
     mainMenu.paintComponent(g);
     helpButton.paintComponent(g);
 
-		// Set font and colour
+    // Set font and colour
     g.setColor(Color.BLACK);
     g.setFont(Fonts.italic);
     ((Graphics2D) g).setStroke(new BasicStroke(1));
@@ -62,7 +69,6 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
     FontMetrics metrics = g.getFontMetrics(Fonts.italic);
     int adv = metrics.stringWidth(TITLE);
     g.drawString(TITLE, getWidth()/2 - adv/2, 23);
-    g.drawLine(0, 30, getWidth(), 30);
 	}
 
 	public void mouseClicked(MouseEvent e) {
@@ -90,7 +96,7 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
   public void informButtonClicked(ButtonType buttonType, int buttonId) {
     Song song = listView.getCurrentSelection();
     if (song != null) {
-        if (buttonType == buttonType.SONG_SELECTION) {
+        if (buttonType == ButtonType.SONG_SELECTION) {
             LilyImage image = new LilyImage(song.name);
             previewView.setImage(image);
         } else {
@@ -117,7 +123,6 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
               default:
                   score = new ViewScorePanel(song.name);
             }
-            //score.switchToView();
             JFrameStack.pushPanel(score);
     }
 

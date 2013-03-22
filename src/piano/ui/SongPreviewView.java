@@ -20,20 +20,13 @@ public class SongPreviewView extends Drawing {
 	public SongPreviewView() {}
 
 	public void paintComponent(Graphics g) {
-		String text = "PREVIEW:";
-
-		g.setFont(Fonts.italic);
-		FontMetrics metrics = g.getFontMetrics(Fonts.italic);
-		int adv = metrics.stringWidth(text);
-		g.drawString(text, ((800 / 3) * 2 - adv / 2), 62);
-
 		if (image != null) {
 		  BufferedImage bImage = image.get(0);
 		  if (bImage == null) {
 		    return;
 		  }
-	    int x = (800 / 3) + 20;
-	    g.drawImage(bImage.getScaledInstance(500, 600, Image.SCALE_DEFAULT), x, 75, this);
+	    int x = (800 / 3) + 5;
+	    g.drawImage(bImage.getScaledInstance(530, 660, Image.SCALE_DEFAULT), x, 32, this);
 		}
 	}
 

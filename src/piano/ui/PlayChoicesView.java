@@ -3,10 +3,7 @@ package piano.ui;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
-import javax.swing.BoxLayout;
-
 import piano.ui.buttons.ButtonType;
-import piano.ui.buttons.ListButton;
 import piano.ui.buttons.StartButton;
 
 public class PlayChoicesView extends Drawing {

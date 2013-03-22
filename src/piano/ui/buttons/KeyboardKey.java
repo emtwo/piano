@@ -53,8 +53,10 @@ public class KeyboardKey extends Button {
 			if (overButton) {
 				g2.setColor(hoverColor);
 			}
-			GradientPaint gp = new GradientPaint(x, y, new Color(80, 80, 80), x + width, y + height, Color.black);
-      g2.setPaint(gp);
+			if (g2.getColor() == Color.black) {
+			  GradientPaint gp = new GradientPaint(x, y, new Color(80, 80, 80), x + width, y + height, Color.black);
+	      g2.setPaint(gp);
+			}
 			g2.fillRoundRect(x, y, width, height, 5, 5);
 			return;
 		}

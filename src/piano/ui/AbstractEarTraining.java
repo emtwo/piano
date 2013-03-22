@@ -3,6 +3,7 @@ package piano.ui;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 
 import org.jfugue.elements.Note;
 
-import piano.engine.NotePlayer;
 import piano.ui.buttons.HelpButton;
 import piano.ui.buttons.MainMenuButton;
 import piano.ui.buttons.ReplayButton;
@@ -171,11 +171,16 @@ public abstract class AbstractEarTraining extends Drawing implements KeyPressedC
     g.setColor(Color.BLUE);
     String text = "Score: " + score + " / " + (roundNum - 1);
     int adv = metrics.stringWidth(text);
-	int xPos = (WIDTH - adv) + 98;
+    int xPos = (WIDTH - adv) + 98;
     g.drawString(text, (WIDTH - adv) + 98, 75);
 
     text = "Streak: " + streakCount;
     g.drawString(text, xPos, 120);
+
+    GradientPaint gp = new GradientPaint(0, 0, Color.white, 0, 30, Color.LIGHT_GRAY);
+    ((Graphics2D) g).setPaint(gp);
+    g.fillRect(0, 0, getWidth(), 30);
+    g.drawLine(0, 30, getWidth(), 30);
 
     // Set font and colour
     g.setColor(Color.BLACK);
@@ -186,7 +191,6 @@ public abstract class AbstractEarTraining extends Drawing implements KeyPressedC
     metrics = g.getFontMetrics(Fonts.italic);
     adv = metrics.stringWidth(TITLE);
     g.drawString(TITLE, getWidth()/2 - adv/2, 23);
-    g.drawLine(0, 30, getWidth(), 30);
 
     mainMenu.paintComponent(g);
     replay.paintComponent(g);

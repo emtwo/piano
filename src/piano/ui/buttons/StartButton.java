@@ -43,7 +43,7 @@ public class StartButton extends Button {
 		int adv = metrics.stringWidth(text);
 
 		if (overButton) {
-		  GradientPaint gp = new GradientPaint(x, y, Color.orange, x + width, y + height, Color.orange.darker());
+		  GradientPaint gp = new GradientPaint(x, y, Color.LIGHT_GRAY, x, y + height, Color.white);
 	    ((Graphics2D) gc).setPaint(gp);
 			gc.fillRoundRect(x, y, width, height, 5, 5);
 			gc.setColor(Color.BLACK);
@@ -52,7 +52,7 @@ public class StartButton extends Button {
 			return;
 		}
 
-		GradientPaint gp = new GradientPaint(x, y, new Color(34, 139, 34), x + width, y + height, new Color(34, 115, 34));
+		GradientPaint gp = new GradientPaint(x, y, Color.white, x, y + height, Color.LIGHT_GRAY);
     ((Graphics2D) gc).setPaint(gp);
 		gc.fillRoundRect(x, y, width, height, 5, 5);
 
