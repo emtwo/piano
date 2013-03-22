@@ -1,8 +1,12 @@
 package piano.ui.buttons;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.List;
 
 import piano.repository.Song;
@@ -55,13 +59,19 @@ public class ListButton extends Button {
 
 	public void paintComponent(Graphics gc) {
 		if (selected) {
-		  gc.setColor(new Color(34, 139, 34));
-			gc.fillRect(x, y, width, height);
+		  GradientPaint gp = new GradientPaint(x, y, Color.gray, x, y + height, Color.LIGHT_GRAY);
+		  ((Graphics2D) gc).setPaint(gp);
+      gc.fillRect(x, y, width, height);
 		} else if (overButton) {
-		  gc.setColor(Color.LIGHT_GRAY);
-		  gc.fillRect(x, y, width, height);
+		  GradientPaint gp = new GradientPaint(x, y, new Color(210, 210, 245), x, y + height,Color.white);
+	    ((Graphics2D) gc).setPaint(gp);
+		  gc.fillRect(x, y + 1, width, height);
 		}
+		((Graphics2D) gc).setStroke(new BasicStroke(1));
 		if (overButton || selected) {
+		  gc.setColor(Color.LIGHT_GRAY);
+	    gc.drawLine(x, y + height, x + width, y + height);
+
 		  gc.setColor(Color.black);
       truncateAndPrintText(text, 800 / 3, x + 10, y, gc);
       gc.setFont(Fonts.italic_small);
@@ -69,11 +79,16 @@ public class ListButton extends Button {
       return;
 		}
 
-		gc.setColor(Color.white);
-		gc.fillRect(x, y, width, height);
+		GradientPaint gp = new GradientPaint(x, y, Color.white, x, y + height, new Color(245, 245, 245));
+    ((Graphics2D) gc).setPaint(gp);
+		gc.fillRect(x, y + 1, width, height);
+
+    gc.setColor(Color.LIGHT_GRAY);
+    gc.drawLine(x, y + height, x + width, y + height);
 
 		gc.setColor(Color.black);
 		truncateAndPrintText(text, 800 / 3, x + 10, y, gc);
+
 		gc.setFont(Fonts.italic_small);
 		gc.drawString(song.composer, x + 10, y + 43);
 	}

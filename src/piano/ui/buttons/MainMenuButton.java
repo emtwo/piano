@@ -45,16 +45,23 @@ public class MainMenuButton extends Button {
 		int adv = metrics.stringWidth(text);
 
 		if (overButton) {
+		  GradientPaint gp = new GradientPaint(x, y, Color.gray, x, y + height, Color.LIGHT_GRAY);
+			((Graphics2D) gc).setPaint(gp);
+			gc.fillRoundRect(x, y, width, height, 10, 10);
+
 			gc.setColor(Color.BLACK);
 			gc.drawRoundRect(x, y, width, height, 10, 10);
 			gc.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
 			return;
 		}
 
-		gc.setColor(Color.BLACK);
+		//gc.setColor(Color.BLACK);
+		GradientPaint gp = new GradientPaint(x, y, Color.LIGHT_GRAY, x, y + height, Color.gray);
+    ((Graphics2D) gc).setPaint(gp);
 		gc.fillRoundRect(x, y, width, height, 10, 10);
 
-		gc.setColor(Color.WHITE);
+		gc.setColor(Color.BLACK);
+		gc.drawRoundRect(x, y, width, height, 10, 10);
 		gc.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
 	}
 }

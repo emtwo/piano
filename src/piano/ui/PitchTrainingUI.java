@@ -28,7 +28,7 @@ public class PitchTrainingUI extends AbstractEarTraining {
 		data.useBlackKeys = true;
 
 		keyboard = new KeyboardView(this, data);
-		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 150, 20);
+		mainMenu = new MainMenuButton("< Ear Training Menu", 5, 5, 160, 20);
 		helpButton = new HelpButton("?", HELP_TEXT, 775, 5, 20, 20, this);
 	}
 

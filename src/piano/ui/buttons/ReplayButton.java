@@ -3,6 +3,7 @@ package piano.ui.buttons;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -46,16 +47,18 @@ public class ReplayButton extends Button {
     int adv = metrics.stringWidth(text);
 
     if (overButton) {
-      gc.setColor(Color.ORANGE);
-      gc.fillRect(x, y, width, height);
+      GradientPaint gp = new GradientPaint(x, y, new Color(34, 139, 34), x, y + height, new Color(34, 200, 34));
+      ((Graphics2D) gc).setPaint(gp);
+      gc.fillRoundRect(x, y, width, height, 10, 10);
       gc.setColor(Color.BLACK);
       gc.drawRoundRect(x, y, width, height, 10, 10);
       gc.drawString(text, x + (width - adv) / 2, y + (height - hgt) / 2 + hgt - diff);
       return;
     }
 
-    gc.setColor(new Color(34, 139, 34));
-    gc.fillRect(x, y, width, height);
+    GradientPaint gp = new GradientPaint(x, y, new Color(34, 200, 34), x, y + height, new Color(34, 139, 34));
+    ((Graphics2D) gc).setPaint(gp);
+    gc.fillRoundRect(x, y, width, height, 10, 10);
 
     gc.setColor(Color.BLACK);
     gc.drawRoundRect(x, y, width, height, 10, 10);
