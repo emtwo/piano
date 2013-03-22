@@ -52,9 +52,11 @@ public class PlayUI extends Drawing implements ButtonClickCallback {
     g.setColor(Color.white);
     g.fillRect(0, 0, getWidth(), 30);
 
-    GradientPaint gp = new GradientPaint(0, 0, Color.white, 0, 30, Color.LIGHT_GRAY);
+    GradientPaint gp = new GradientPaint(0, 0, Color.LIGHT_GRAY, 0, 30, Color.gray);
     ((Graphics2D) g).setPaint(gp);
     g.fillRect(0, 0, getWidth(), 30);
+
+    g.setColor(Color.black);
     g.drawLine(0, 30, getWidth(), 30);
 
     mainMenu.paintComponent(g);
